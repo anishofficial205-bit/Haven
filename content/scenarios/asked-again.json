@@ -1,0 +1,99 @@
+{
+  "id": "asked-again",
+  "title": "Just this once",
+  "domain": "relationships",
+  "hook": "You said no on Tuesday. It's Thursday and he's asking again.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 3,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "Kabir wants you at his friend's house party on Saturday. You said no on Tuesday: you have an exam on Monday, and honestly you don't enjoy those parties. He asked again on Wednesday. Now it's Thursday.\nKabir: pleeeease. just this once. for me?",
+      "choices": [
+        {
+          "label": "\"Okay fine. I'll come for a bit.\"",
+          "consequence": "He sends five hearts. You put the phone down, already dreading Saturday and a little annoyed at yourself.",
+          "expert_note": "Saying yes to stop the asking is not the same as wanting to go. A yes you were worn down into isn't a real yes.",
+          "next": "n2"
+        },
+        {
+          "label": "\"I already said no. Asking again doesn't change it.\"",
+          "consequence": "Three dots. Then:\nKabir: wow ok. didn't know it was such a big deal.",
+          "expert_note": "Clear, and not cruel. His sulk tells you something about how he handles a no. It isn't proof that you were harsh.",
+          "next": "n2"
+        },
+        {
+          "label": "\"Can't. Exam.\" (again)",
+          "consequence": "Kabir: you can study sunday na. come on.\nYour reason just became a problem for him to solve.",
+          "expert_note": "A reason gives the other person something to argue with. You never owe one. \"I don't want to\" is enough.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "Friday night, he calls.\nKabir: Everyone's bringing someone. I'll look stupid standing there alone. If you loved me, you'd come.",
+      "choices": [
+        {
+          "label": "\"That's not fair. One party isn't a test of whether I love you.\"",
+          "consequence": "Silence on the line.\nKabir: ...okay. That came out wrong.",
+          "expert_note": "\"If you loved me\" turns your no into a verdict on the whole relationship. Naming that, calmly, takes the test off the table.",
+          "next": "n3"
+        },
+        {
+          "label": "Feel guilty. Maybe you are being selfish.",
+          "consequence": "You say you'll think about it. He sounds happier at once. You lie awake wondering how you ended up apologising.",
+          "expert_note": "Guilt is the lever being pulled here, even if he doesn't mean it that way. Feeling guilty doesn't make your no wrong.",
+          "next": "n3"
+        },
+        {
+          "label": "\"I'm going to hang up now. Let's talk tomorrow.\"",
+          "consequence": "Kabir: Seriously?\nYou say goodnight and end the call. Your heart is going fast.",
+          "expert_note": "You're allowed to end a conversation that's going in circles. It's a pause, not a punishment.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "Saturday, 4 p.m.\nKabir: last time i'm asking. coming or not?",
+      "choices": [
+        {
+          "label": "\"Not coming. Have fun, and tell me about it tomorrow?\"",
+          "consequence": "A thumbs up. Nothing else all evening.",
+          "expert_note": "A no can come with warmth. You refused the party, not him, and you said so.",
+          "next": "end_a"
+        },
+        {
+          "label": "Go.",
+          "consequence": "You get dressed. The party is fine. Loud. You leave at eleven.",
+          "expert_note": "Going is a choice you're allowed to make. It's worth being honest with yourself about why you made it.",
+          "next": "end_b"
+        },
+        {
+          "label": "\"We need to talk about how you keep asking after I say no.\"",
+          "consequence": "Kabir: it's just a party??\nYou call him.",
+          "expert_note": "You moved from answering the question to questioning the pattern. That's a harder conversation, and a more useful one.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "No, and still together",
+      "text": "He goes alone. On Sunday he's a bit distant, then sends photos. After your exam he says, \"I shouldn't have pushed that much.\" You're not sure it won't happen again.",
+      "takeaway": "Repeated asking is pressure, not persistence. A no doesn't have to be said three times to count."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "You went",
+      "text": "You study on Sunday with a headache. Kabir is happy. You notice that the way to make the asking stop was to give in, and you wonder what happens when it's about something bigger.",
+      "takeaway": "A yes you were worn into isn't the same as a yes you chose."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "The bigger conversation",
+      "text": "It's an uncomfortable call. He says you're overthinking. Then he goes quiet, and admits his friends tease him when he turns up alone. Nothing gets tied up neatly. But for the first time you talked about the pattern and not the party.",
+      "takeaway": "You can question the asking itself, not just answer it."
+    }
+  }
+}

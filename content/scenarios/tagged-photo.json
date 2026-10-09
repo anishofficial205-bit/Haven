@@ -1,0 +1,99 @@
+{
+  "id": "tagged-photo",
+  "title": "Photo number four",
+  "domain": "digital",
+  "hook": "You're tagged in a photo you hate. 40 likes and counting.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 6,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "Arjun has posted ten photos from the college fest. In the fourth one you're mid-bite, eyes half shut, tagged. Forty likes. The comments are all 😂. You hate it.",
+      "choices": [
+        {
+          "label": "Quietly untag yourself",
+          "consequence": "The tag is gone. The photo is still up. Someone types your name in the comments anyway.",
+          "expert_note": "Untagging is a real tool, and it's yours to use. It doesn't tell Arjun anything, though.",
+          "next": "n2"
+        },
+        {
+          "label": "DM him: \"Bro, please take the 4th one down. I really don't like it.\"",
+          "consequence": "Arjun: lol you look fine. it's funny",
+          "expert_note": "A direct ask is fair. \"You look fine\" answers a question you didn't ask. This is about whether you're okay with it being up.",
+          "next": "n2"
+        },
+        {
+          "label": "Comment: \"delete this 😭\"",
+          "consequence": "It gets six likes.\nArjun: never\nThe joke just made the photo bigger.",
+          "expert_note": "Joking lets you say it without risk. It also makes it easy for everyone to treat it as a joke.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "Later that night.\nArjun: everyone's liking it though. you're overreacting, it's one photo",
+      "choices": [
+        {
+          "label": "\"I'm not asking if it's a good photo. I'm asking you to take it down.\"",
+          "consequence": "A few minutes pass.\nArjun: ok ok removing. didn't know you felt that strongly",
+          "expert_note": "You didn't debate the photo. You repeated the ask. How strongly you feel is yours to decide, not his.",
+          "next": "n3"
+        },
+        {
+          "label": "\"Fine, whatever.\"",
+          "consequence": "The photo stays. You check the likes more times than you want to admit.",
+          "expert_note": "\"Whatever\" tells him it's settled. It isn't settled for you, and only you know that.",
+          "next": "n3"
+        },
+        {
+          "label": "\"Can you at least ask before posting me next time?\"",
+          "consequence": "Arjun: who asks?? \nArjun: ok fine",
+          "expert_note": "You let this one go and set the rule for the future. That's a real trade, and yours to make.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "A week later you've got a great group photo from Diwali night. Everyone looks good. Except Meher, who is laughing with her eyes completely shut. Your thumb is over Share.",
+      "choices": [
+        {
+          "label": "Send it to the group first: \"ok to post?\"",
+          "consequence": "You drop it in the chat and wait.",
+          "expert_note": "It costs a minute. It's also exactly what you wanted from Arjun.",
+          "next": "end_a"
+        },
+        {
+          "label": "Post it. She looks happy.",
+          "consequence": "It's up. The likes start coming in.",
+          "expert_note": "It looks fine to you. That's the same thing Arjun said.",
+          "next": "end_b"
+        },
+        {
+          "label": "Crop Meher out and post",
+          "consequence": "You trim the edge of the photo and post it.",
+          "expert_note": "You tried to protect her without asking her. Guessing can go wrong in either direction.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "Ask first",
+      "text": "Meher: omg not that one, use the 2nd\nIt takes four minutes. Arjun replies \"since when do we ask 😂\" and then, a few days later, asks before his next post.",
+      "takeaway": "Ask before you post or tag someone. It takes a minute, and it's their face."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "Posted",
+      "text": "Meher likes it. Then she DMs you: \"hey can you remove it, my relatives follow me.\" You take it down, and think of Arjun.",
+      "takeaway": "What looks fine to you can land differently for the person in it. Asking first is the only way to know."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "Cropped",
+      "text": "No harm done. Later Meher asks why she isn't in the picture, and sounds a bit left out.",
+      "takeaway": "Asking beats guessing, both ways. People usually want a say, not to be left out."
+    }
+  }
+}

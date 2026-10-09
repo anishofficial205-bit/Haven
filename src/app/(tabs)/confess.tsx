@@ -89,7 +89,13 @@ export default function ConfessScreen() {
             post={item}
             onOpen={() => router.push({ pathname: '/post/[id]', params: { id: item.id } })}
             onMenu={() =>
-              setMenu({ targetType: 'post', id: item.id, isMine: item.is_mine, isSaved: item.is_saved })
+              setMenu({
+                targetType: 'post',
+                id: item.id,
+                isMine: item.is_mine,
+                isSaved: item.is_saved,
+                canFeature: item.status === 'published',
+              })
             }
           />
         )}

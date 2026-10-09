@@ -1,4 +1,4 @@
-import { Ban, Bookmark, BookmarkCheck, Flag, type LucideIcon } from 'lucide-react-native';
+import { Ban, Bookmark, BookmarkCheck, Flag, Pin, Sparkles, type LucideIcon } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -7,6 +7,8 @@ import { BottomSheet } from '@/components/BottomSheet';
 import { Button } from '@/components/Button';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { useAuth } from '@/lib/auth';
+import { useSetFeatured, useSetHighlight } from '@/lib/mod';
 import {
   REPORT_REASONS,
   useBlockAuthor,
@@ -23,6 +25,10 @@ export type MenuTarget = {
   isMine: boolean;
   /** Only posts can be saved. Leave undefined for replies. */
   isSaved?: boolean;
+  /** Moderators only: a published confession can be pinned as confession of the day */
+  canFeature?: boolean;
+  /** Moderators only: an answer to a weekly question can be highlighted. Pass its current state. */
+  highlighted?: boolean;
 };
 
 type Props = {
@@ -43,6 +49,9 @@ export function PostMenu({ target, onClose, onBlocked }: Props) {
   const save = useToggleSave();
   const report = useReport();
   const block = useBlockAuthor();
+  const feature = useSetFeatured();
+  const highlight = useSetHighlight();
+  const isModerator = useAuth().profile?.role === 'moderator';
 
   const close = () => {
     const wasBlocked = step === 'blocked';
@@ -54,7 +63,7 @@ export function PostMenu({ target, onClose, onBlocked }: Props) {
   };
 
   if (!target) return null;
-  const { targetType, id, isMine, isSaved } = target;
+  const { targetType, id, isMine, isSaved, canFeature, highlighted } = target;
 
   const title = {
     menu: strings.menu.title,
@@ -89,6 +98,18 @@ export function PostMenu({ target, onClose, onBlocked }: Props) {
           {isSaved !== undefined
             ? row(isSaved ? BookmarkCheck : Bookmark, isSaved ? strings.menu.unsave : strings.menu.save, () => {
                 save.mutate({ postId: id, saved: isSaved });
+                close();
+              })
+            : null}
+          {isModerator && canFeature
+            ? row(Pin, strings.mod.feature, () => {
+                feature.mutate(id);
+                close();
+              })
+            : null}
+          {isModerator && highlighted !== undefined
+            ? row(Sparkles, highlighted ? strings.mod.unhighlight : strings.mod.highlight, () => {
+                highlight.mutate({ replyId: id, on: !highlighted });
                 close();
               })
             : null}

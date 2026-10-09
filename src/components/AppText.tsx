@@ -1,6 +1,7 @@
 import { Text, type TextProps } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
+import { TEXT_SCALE, useSettings } from '@/lib/settings';
 import { typography, type TextVariant } from '@/theme';
 
 type Props = TextProps & {
@@ -12,5 +13,8 @@ type Props = TextProps & {
 /** All text in the app goes through this, so font and size stay consistent. */
 export function AppText({ variant = 'body', color, style, ...rest }: Props) {
   const theme = useTheme();
-  return <Text {...rest} style={[typography[variant], { color: color ?? theme.text }, style]} />;
+  const scale = TEXT_SCALE[useSettings().textSize];
+  const base = typography[variant];
+  const sized = { ...base, fontSize: base.fontSize * scale, lineHeight: base.lineHeight * scale };
+  return <Text {...rest} style={[sized, { color: color ?? theme.text }, style]} />;
 }

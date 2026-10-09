@@ -36,6 +36,13 @@ type AuthValue = {
   signOut: () => Promise<void>;
   acknowledgeRecoveryCode: () => void;
   acceptConsent: () => Promise<void>;
+  setAvatar: (avatarId: number) => Promise<void>;
+  /** Checks the current password first, then replaces it. */
+  changePassword: (current: string, next: string) => Promise<'ok' | 'wrong_current'>;
+  /** Makes a fresh recovery code. The old one stops working. */
+  newRecoveryCode: () => Promise<string>;
+  /** Permanently deletes the account and everything it owns. */
+  deleteAccount: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -145,6 +152,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .eq('id', userId!);
       if (error) throw error;
       await queryClient.invalidateQueries({ queryKey: ['profile', userId] });
+    },
+
+    async setAvatar(avatarId) {
+      const { error } = await supabase.from('profiles').update({ avatar_id: avatarId }).eq('id', userId!);
+      if (error) throw error;
+      await queryClient.invalidateQueries({ queryKey: ['profile', userId] });
+    },
+
+    async changePassword(current, next) {
+      const check = await supabase.auth.signInWithPassword({
+        email: usernameToEmail(profile!.username),
+        password: current,
+      });
+      if (check.error) {
+        if (check.error.status === 400) return 'wrong_current';
+        throw check.error;
+      }
+      const { error } = await supabase.auth.updateUser({ password: next });
+      if (error) throw error;
+      return 'ok';
+    },
+
+    async newRecoveryCode() {
+      const { data, error } = await supabase.rpc('create_recovery_code');
+      if (error) throw error;
+      return data as string;
+    },
+
+    async deleteAccount() {
+      const { error } = await supabase.rpc('delete_my_account');
+      if (error) throw error;
+      // The account is gone; clear what this phone remembers of it.
+      await supabase.auth.signOut({ scope: 'local' });
+      setShowRecovery(false);
+      setRecoveryCode(null);
+      queryClient.clear();
     },
   };
 

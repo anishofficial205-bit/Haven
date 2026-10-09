@@ -67,6 +67,24 @@ const dark: Palette = {
 };
 
 export const palettes = { light, dark } as const;
+
+/** Applied on top of the palette when High contrast is switched on in Settings. */
+export const highContrast: Record<'light' | 'dark', Partial<Palette>> = {
+  light: {
+    text: '#000000',
+    textSecondary: '#2B2540',
+    border: '#4A4166',
+    primary: '#45209A',
+    surfaceAlt: '#E4DAF8',
+  },
+  dark: {
+    text: '#FFFFFF',
+    textSecondary: '#E6E0F5',
+    border: '#A99BD0',
+    primary: '#D2C2FF',
+    surfaceAlt: '#342A55',
+  },
+};
 export type SchemeName = keyof typeof palettes;
 
 export const spacing = {

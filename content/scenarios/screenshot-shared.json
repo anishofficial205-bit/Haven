@@ -1,0 +1,99 @@
+{
+  "id": "screenshot-shared",
+  "title": "The screenshot",
+  "domain": "digital",
+  "hook": "Your 1 a.m. rant just landed in the hostel group.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 2,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "Last week, at 1 a.m., you vented to Tanvi about your roommate. The mugs, the alarms, all of it. This afternoon the Wing C group lights up. Tanvi has posted a screenshot of your chat.\nTanvi: lol she is SO done 😂\nSeen by 14. Your roommate Ishita hasn't reacted yet.",
+      "choices": [
+        {
+          "label": "Reply in the group: \"wow. thanks, Tanvi.\"",
+          "consequence": "The group goes silent. Two laughing emojis appear. Tanvi DMs you: \"omg chill, it was funny\". Now everyone is watching a fight.",
+          "expert_note": "Calling it out in public feels fair, and it is your right. It often turns the story into the fight, though, instead of what she did.",
+          "next": "n2"
+        },
+        {
+          "label": "DM Tanvi: \"Please delete that. I told you that privately.\"",
+          "consequence": "She deletes it in two minutes. \"sorry sorry, didn't think\". Fourteen people still saw it.",
+          "expert_note": "Direct, private and specific. You said what you need without an audience. Deleting can't unsend it, but it stops it spreading.",
+          "next": "n2"
+        },
+        {
+          "label": "Say nothing and mute the group",
+          "consequence": "The screenshot stays up. By dinner Ishita is polite and cold. You don't know who has seen what.",
+          "expert_note": "Freezing is one of the most common reactions there is. It isn't a failure. Silence just leaves other people to decide what it all meant.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "That evening your phone buzzes.\nTanvi: are you actually mad? it wasn't even that bad. everyone screenshots.",
+      "choices": [
+        {
+          "label": "\"It's fine, forget it.\"",
+          "consequence": "She sends a heart. The awkwardness ends. You notice you now think twice before texting her anything real.",
+          "expert_note": "\"It's fine\" ends the awkward moment and keeps the problem. Trust usually shrinks quietly, like this.",
+          "next": "n3"
+        },
+        {
+          "label": "\"It's not about how bad it was. I said it to you, not to 14 people.\"",
+          "consequence": "Three dots for a long time.\nTanvi: ok. that's fair. i didn't think of it like that.",
+          "expert_note": "You named the real issue: permission, not content. That gives her something to understand instead of something to defend.",
+          "next": "n3"
+        },
+        {
+          "label": "\"Would you be okay if I posted your chats?\"",
+          "consequence": "Tanvi: that's different\nA minute later.\nTanvi: ok maybe not",
+          "expert_note": "Turning it around can land. It can also start a scoreboard. It works best as an honest question, not a gotcha.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "You get back to the room. Ishita is on her bed with her laptop. She has definitely seen it.",
+      "choices": [
+        {
+          "label": "\"I should have said it to you, not about you. I'm sorry.\"",
+          "consequence": "Ishita doesn't look up for a while.\nIshita: Yeah. You should have.\nA long silence.\nIshita: The mug thing. I'll stop.",
+          "expert_note": "Two things happened here and you owned yours. That doesn't make what Tanvi did okay. Both can be true.",
+          "next": "end_a"
+        },
+        {
+          "label": "\"Tanvi shouldn't have shared that.\"",
+          "consequence": "Ishita: But you still said it.\nShe goes back to her laptop.",
+          "expert_note": "You're right that sharing it was wrong. From where Ishita sits, the words hurt whoever showed them to her.",
+          "next": "end_b"
+        },
+        {
+          "label": "Act normal. Ask if she wants chai.",
+          "consequence": "Ishita: I'm good.\nYou both scroll your phones a metre apart.",
+          "expert_note": "Acting normal is a way to get through the evening. It leaves both of you guessing what the other is thinking.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "Messy, but talking",
+      "text": "It isn't fixed. But you two are talking in the room instead of about each other in chats. The next time Tanvi wants to forward something of yours, she asks first, half joking.",
+      "takeaway": "What you say in private stays private unless you say otherwise. Sharing needs permission."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "Two true things",
+      "text": "Tanvi broke your trust, and your words hurt Ishita. Dinner is quiet. By the end of the week it still isn't resolved.",
+      "takeaway": "Someone sharing your words without asking is on them, even when the rest of the situation is messy."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "Nobody mentions it",
+      "text": "The group moves on to memes. Ishita stays polite. You've stopped venting to Tanvi, and you miss it.",
+      "takeaway": "When nobody names it, nobody learns that a screenshot needed a yes first."
+    }
+  }
+}

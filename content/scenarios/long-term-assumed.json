@@ -1,0 +1,99 @@
+{
+  "id": "long-term-assumed",
+  "title": "We're together, na",
+  "domain": "relationships",
+  "hook": "Two years in. He's stopped asking.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 4,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "Movie night at Dev's flat. His flatmates are out. You've been together two years. You're tired, and tonight you really did just want the movie. Halfway through, he leans in and starts kissing you, and it's clear where he thinks this is going. He hasn't asked. He hasn't asked in a long time.",
+      "choices": [
+        {
+          "label": "Go along with it. It's easier.",
+          "consequence": "You go quiet. He doesn't notice. You feel a long way from your own body, watching the film over his shoulder.",
+          "expert_note": "Going quiet is not a yes. After two years it's easy for both people to stop checking, and silence starts to pass for agreement.",
+          "next": "n2"
+        },
+        {
+          "label": "\"Hey. Not tonight. Can we just watch the movie?\"",
+          "consequence": "He pulls back.\nDev: Seriously? What's wrong?",
+          "expert_note": "Clear and kind. Nothing has to be \"wrong\" for you to not want something tonight.",
+          "next": "n2"
+        },
+        {
+          "label": "Shift away and say you're tired",
+          "consequence": "Dev: You're always tired.\nHe says it lightly, keeps his arm round you, and tries again ten minutes later.",
+          "expert_note": "Hints are easy to miss, and easy to ignore. Words are harder to get around.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "He pauses the film.\nDev: We've been together two years. Why are you being weird about it?",
+      "choices": [
+        {
+          "label": "\"Two years doesn't mean yes every time. I want you to ask.\"",
+          "consequence": "He's quiet for a bit.\nDev: I didn't know I had to ask. I thought that was the point of being comfortable.",
+          "expert_note": "Being comfortable with someone makes asking easier, not unnecessary. You've just told him something he may honestly never have been told.",
+          "next": "n3"
+        },
+        {
+          "label": "\"Sorry. It's me. I'm just off today.\"",
+          "consequence": "Dev: Okay.\nHe presses play. He's sulking. You spend the rest of the film managing his mood instead of resting.",
+          "expert_note": "You took the blame for a boundary to keep things smooth. Now his feelings are your job, and yours have gone missing.",
+          "next": "n3"
+        },
+        {
+          "label": "\"Do you ever not feel like it?\"",
+          "consequence": "Dev: ...Yeah. Sometimes.\nYou: And what do you want me to do then?\nDev: ...Notice, I guess.",
+          "expert_note": "A real question, asked without heat, let him find the answer himself. People hold on to what they work out better than what they're told.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "The credits roll.\nDev: Are we okay?",
+      "choices": [
+        {
+          "label": "\"We're okay. I just need you to check in, not assume.\"",
+          "consequence": "Dev: Okay. I can do that.\nHe sounds unsure, but he means it.",
+          "expert_note": "You said what you need in one sentence he can act on. That's how a boundary becomes a habit.",
+          "next": "end_a"
+        },
+        {
+          "label": "\"Yeah. All good.\"",
+          "consequence": "He smiles, relieved, and goes to get water.",
+          "expert_note": "\"All good\" closes the evening. It also tells him nothing needs to change.",
+          "next": "end_b"
+        },
+        {
+          "label": "\"I don't know yet. I need to think about tonight.\"",
+          "consequence": "He nods slowly. He doesn't like it, but he doesn't argue.",
+          "expert_note": "Not knowing is an honest answer. You don't owe anyone an instant verdict on how you feel.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "A new habit, maybe",
+      "text": "The next week he asks, \"Is this okay?\" It's awkward and you both laugh. Some days he forgets. It's a start.",
+      "takeaway": "Consent is ongoing. Being together is not a standing yes."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "All good",
+      "text": "Things go back to normal. Normal is that he doesn't ask, and you don't say.",
+      "takeaway": "Silence isn't a yes, even after years."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "Not sure yet",
+      "text": "He drops you home without saying much. You type a message to a friend, then delete it. You don't know what you want to say yet, and that's allowed. If it keeps happening, talking it through with someone can help.",
+      "takeaway": "You're allowed to be unsure, and to take your time working out what you want."
+    }
+  }
+}

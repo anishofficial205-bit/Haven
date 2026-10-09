@@ -65,15 +65,25 @@ and saves. `PostCard`, `ReplyCard`, `ReactionBar` and `PostMenu` are shared by c
 (phase 7) spaces. Posts with trigger warnings render placeholder lines, never the real text, until
 "Show anyway" is tapped.
 
+## Where things live
+
+- `src/lib/mod.ts` + `src/app/mod/` moderator tools (all gated again in SQL by `is_moderator()`)
+- `src/lib/scenarios.ts` loads every `content/scenarios/*.json` via `require.context`
+- `src/lib/spaces.ts`, `src/lib/help.ts`, `src/lib/safety.ts` data for spaces, help requests, blocks/reports
+- `src/lib/settings.tsx` theme, text size and high contrast (stored on the device only)
+- Password reset and account deletion are SQL functions (`0005`, `0006`), not Edge Functions
+
 ## Progress
 
 - [x] Phase 1 Foundation
 - [x] Phase 2 Onboarding and account (password reset is a database function, not an Edge Function)
 - [x] Phase 3 Safety layer (screenshot blocking and app-switcher hiding are untested: need a real phone)
 - [x] Phase 4 Confessions (seeing another person's post, report, block and auto-hide need a second account to test)
-- [ ] Phase 5 Moderation
-- [ ] Phase 6 Scenarios
-- [ ] Phase 7 Spaces
-- [ ] Phase 8 Professional help
-- [ ] Phase 9 Profile and settings
-- [ ] Phase 10 Polish and test prep
+- [x] Phase 5 Moderation
+- [x] Phase 6 Scenarios
+- [x] Phase 7 Spaces
+- [x] Phase 8 Professional help
+- [x] Phase 9 Profile and settings
+- [x] Phase 10 Polish and test prep (eas.json added; no EAS build has been run)
+
+Not yet verified on a real phone, or with two accounts and a moderator. See README.

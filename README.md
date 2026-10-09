@@ -39,7 +39,7 @@ The app stores accounts and posts in Supabase, a free hosted database.
    Pick any name, choose the region **Mumbai (ap-south-1)**, and save the
    database password somewhere safe.
 2. Wait a minute or two until the project finishes setting up.
-3. In the left sidebar open **SQL Editor**. For each of these five files, in
+3. In the left sidebar open **SQL Editor**. For each of these six files, in
    this order: open the file on your Mac, copy everything in it, paste it into
    the editor, and press **Run**. Each one should say "Success".
    1. `supabase/migrations/0001_schema.sql`
@@ -47,6 +47,7 @@ The app stores accounts and posts in Supabase, a free hosted database.
    3. `supabase/migrations/0003_feeds.sql`
    4. `supabase/migrations/0004_seed.sql`
    5. `supabase/migrations/0005_accounts.sql`
+   6. `supabase/migrations/0006_moderation.sql`
 4. Open **Authentication > Sign In / Providers > Email** and turn **Confirm
    email** OFF. (The app never asks for a real email, so there is nothing to
    confirm.)
@@ -72,9 +73,18 @@ this folder. The `.env` file itself is never uploaded to git.
 
 ### Add a scenario
 
-Add one JSON file to `content/scenarios/`, following the format in
-[docs/SPEC.md](docs/SPEC.md) section 5.3. No code changes needed. *(The
-scenario player arrives in phase 6.)*
+Add one JSON file to `content/scenarios/`. The easiest way is to copy an
+existing one (for example `family-hug.json`) and change the words. No code
+changes are needed; restart the app and it appears in the list.
+
+- `domain` is one of `family`, `friends`, `relationships`, `digital`, `college_work`.
+- Every choice needs a `label`, a `consequence`, an `expert_note`, and a `next`
+  that matches the name of another node.
+- An ending is a node with `"outcome": true`, a `title`, a `text` and a `takeaway`.
+- In any text, a line that starts with a name and a colon, like `Mom: Why?`,
+  becomes a speech bubble. A line starting with `You:` appears on the right.
+- `"draft": true` shows a "Draft" label. Remove that line once the scenario has
+  been reviewed.
 
 ### Make someone a moderator
 
@@ -87,14 +97,61 @@ update public.profiles set role = 'moderator' where username = 'their_username';
 
 To undo it, run the same line with `'user'` instead of `'moderator'`.
 
+They then sign out and back in. A **Mod queue** row appears on their Profile
+page. From there a moderator can:
+
+- approve or reject waiting replies, held posts and reported content
+- ban whoever wrote something (for 1, 7 or 30 days, or permanently) without
+  ever seeing who they are
+- answer help requests on a professional's behalf (**Requests** tab)
+- set each space's weekly question (**Tools** tab)
+
+Two more moderator actions live in the three-dot menu on the content itself:
+**Make confession of the day** on a published confession, and **Highlight this
+answer** on an answer to a weekly question.
+
 ### Reset the database
 
 This deletes every post, reply and setting. In the **SQL Editor**:
 
 1. Paste and run `supabase/reset.sql`.
-2. Run the five files from step 2.3 again, in order.
+2. Run the six files from step 2.3 again, in order.
 
 Accounts are separate: delete them under **Authentication > Users**.
+
+### Build an Android app file for testers
+
+This makes an `.apk` file testers can install without Expo Go. You need a free
+account at [expo.dev](https://expo.dev) first.
+
+```bash
+npx eas-cli@latest build --profile preview --platform android
+```
+
+The first time, it asks you to sign in and to create a project and a signing
+key: answer yes. The build takes 10 to 20 minutes on Expo's servers and ends
+with a link to download the file. In this build, screenshots are blocked on
+Android (that is what hides the app in the recent-apps list).
+
+Before a build, EAS needs your two Supabase values as well. Run these once,
+pasting your own values:
+
+```bash
+npx eas-cli@latest env:create --environment preview --name EXPO_PUBLIC_SUPABASE_URL --value "https://your-project.supabase.co" --visibility plaintext
+```
+
+```bash
+npx eas-cli@latest env:create --environment preview --name EXPO_PUBLIC_SUPABASE_KEY --value "your-publishable-key" --visibility plaintext
+```
+
+### If your phone can't open the app from the QR code
+
+Some Wi-Fi networks stop devices talking to each other. Start the app this way
+instead, and scan the new QR code:
+
+```bash
+npx expo start --tunnel
+```
 
 ### Remove the sample posts
 
@@ -125,7 +182,7 @@ npm run test:db
 ```
 
 `test:db` loads the SQL files into a temporary in-memory database and checks
-about 100 security rules: that one user can never find out who wrote a post,
+about 140 security rules: that one user can never find out who wrote a post,
 that nobody can approve their own reply, that deleting an account removes
 everything, and so on. It does not touch your Supabase project.
 
@@ -133,13 +190,16 @@ everything, and so on. It does not touch your Supabase project.
 
 ```
 src/app/              screens (one file per screen)
+  (onboarding)/       intro slides, age check, sign up, sign in
   (tabs)/             Home, Scenarios, Confess, Spaces, Help
-  profile/            profile and settings
+  scenario/ space/ question/ post/ help/   screens opened from the tabs
+  profile/ settings/ about/ mod/            profile, settings, moderator tools
 src/components/       reusable pieces (header, cards, panic button, ...)
 src/lib/              Supabase connection and helpers
 src/i18n/en.ts        all wording
 src/theme.ts          colours, type, spacing
-content/              scenarios and other bundled content
+content/scenarios/     one JSON file per scenario
+content/helplines.json helpline numbers
 supabase/migrations/  the database, as SQL
 docs/SPEC.md          the product spec
 ```

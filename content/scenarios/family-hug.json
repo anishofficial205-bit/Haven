@@ -1,0 +1,99 @@
+{
+  "id": "family-hug",
+  "title": "The hug at the wedding",
+  "domain": "family",
+  "hook": "Your uncle insists on a hug. Everyone's watching.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 1,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "It's your cousin Riya's sangeet. The hall is loud, the aunties are in a row of gold chairs, and your mom is steering you by the elbow towards Suresh uncle. Dad's cousin. You've met him maybe twice.\nSuresh uncle: Arre! Itne bade ho gaye! Come, give your uncle a hug.\nHis arms are already open. The aunties are watching.",
+      "choices": [
+        {
+          "label": "Hug him anyway",
+          "consequence": "It's over in three seconds. His hand stays on your back a little longer than you'd like. Everyone smiles. You feel that small sour feeling you already know.",
+          "expert_note": "Going along to keep the peace is something almost everyone does. It doesn't mean you wanted it. Noticing that sour feeling is where a boundary starts.",
+          "next": "n2"
+        },
+        {
+          "label": "Fold your hands: \"Namaste, uncle!\"",
+          "consequence": "You smile, fold your hands and take half a step back. He pauses, then laughs a bit too loudly. \"Bahut formal ho gaye!\" One aunty raises an eyebrow. Nobody dies.",
+          "expert_note": "A different greeting is a complete answer. You showed respect without handing over your body. Awkward is not the same as rude.",
+          "next": "n2"
+        },
+        {
+          "label": "Pretend your phone is ringing",
+          "consequence": "You hold up your phone, mouth \"one second\" and walk off. It works. From across the hall you can see him, and you know this comes back at dinner.",
+          "expert_note": "Getting out is a valid move when you need one. It just doesn't tell anyone where the line is, so the moment tends to come round again.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "Near the buffet, your mom pulls you to one side.\nMom: Why are you being so stiff with Suresh uncle? He's family. Log kya kahenge.",
+      "choices": [
+        {
+          "label": "\"Sorry. I'll be nicer.\"",
+          "consequence": "Mom relaxes straight away and hands you a plate. The evening goes smoothly. You spend it rehearsing what you wish you'd said.",
+          "expert_note": "Apologising for a boundary quietly teaches you it was wrong to have one. Keeping the peace tonight is okay. It's worth noticing what it cost.",
+          "next": "n3"
+        },
+        {
+          "label": "\"I'm not being rude. I just don't like hugging people I barely know.\"",
+          "consequence": "Mom sighs. \"In our time nobody asked us.\" But she doesn't push. Later you catch her watching you, thinking.",
+          "expert_note": "Calm, about your own feeling, and no accusation in it. Parents rarely agree on the spot. Hearing it said plainly is often the first time they consider it at all.",
+          "next": "n3"
+        },
+        {
+          "label": "\"He makes me uncomfortable, Mom.\"",
+          "consequence": "Mom goes quiet. \"Did he do something?\" You say no, it's just a feeling. She looks at you for a second. \"Stay near me then.\"",
+          "expert_note": "You don't need proof to feel uncomfortable. Telling one adult you trust changes who is looking out for you in that room.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "End of the night. Everyone is doing goodbyes at the door. Suresh uncle is walking towards you and his arms are opening again. Mom is standing next to you.",
+      "choices": [
+        {
+          "label": "Step forward with a namaste: \"Good night, uncle. Safe drive.\"",
+          "consequence": "You get there first, hands folded, voice warm. He stops, and folds his hands back, a little stiffly.",
+          "expert_note": "Going first lets you set the greeting instead of reacting to his. Warm words and a clear body can go together.",
+          "next": "end_a"
+        },
+        {
+          "label": "Let it happen. It's one more hug.",
+          "consequence": "It's quick. Nothing terrible happens. You hold your breath through it.",
+          "expert_note": "Choosing not to fight this one, tonight, is also a choice. It doesn't use up your right to choose differently next time.",
+          "next": "end_b"
+        },
+        {
+          "label": "Glance at Mom",
+          "consequence": "Mom sees your face. Her hand lands on your back. \"Chalo chalo, we're getting late!\" and she is already moving you towards the car.",
+          "expert_note": "Asking for backup, even with a look, is not weakness. Most boundaries hold better with one more person behind them.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "The namaste holds",
+      "text": "In the car, Dad says you've become \"too modern\". Mom says nothing. You feel shaky, and also a little taller than you did this morning.",
+      "takeaway": "Your body, your call, even with family. A respectful no is still respectful."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "One more hug",
+      "text": "On the ride home you think about the next wedding, in December, and realise you'd like to have a plan by then.",
+      "takeaway": "Going along once doesn't cancel your right to say no next time."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "Mom moves first",
+      "text": "She never brings it up again. You're not sure she really understood. But she moved.",
+      "takeaway": "You don't have to hold a boundary alone. One person in your corner changes the room."
+    }
+  }
+}

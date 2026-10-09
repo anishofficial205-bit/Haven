@@ -16,6 +16,7 @@ import { useSchemeName, useTheme } from '@/hooks/useTheme';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { PanicProvider } from '@/lib/panic';
 import { hideFromAppSwitcher } from '@/lib/privacy';
+import { SettingsProvider } from '@/lib/settings';
 
 SplashScreen.preventAutoHideAsync();
 hideFromAppSwitcher();
@@ -35,11 +36,13 @@ export default function RootLayout() {
   // only the calculator and none of the screens below exist at all.
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <PanicProvider>
-          <RootNavigator />
-        </PanicProvider>
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <PanicProvider>
+            <RootNavigator />
+          </PanicProvider>
+        </AuthProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
 }
@@ -88,6 +91,20 @@ function RootNavigator() {
           <Stack.Screen name="profile/index" />
           <Stack.Screen name="post/[id]" />
           <Stack.Screen name="compose" />
+          <Stack.Screen name="scenario/[id]" />
+          <Stack.Screen name="space/[id]" />
+          <Stack.Screen name="question/[id]" />
+          <Stack.Screen name="help/[type]" />
+          <Stack.Screen name="help/professional/[id]" />
+          <Stack.Screen name="help/request/[id]" />
+          <Stack.Screen name="help/requests/index" />
+          <Stack.Screen name="help/requests/[id]" />
+          <Stack.Screen name="settings/index" />
+          <Stack.Screen name="settings/privacy" />
+          <Stack.Screen name="settings/account" />
+          <Stack.Screen name="settings/appearance" />
+          <Stack.Screen name="about/[page]" />
+          <Stack.Screen name="mod/index" />
         </Stack.Protected>
         <Stack.Screen name="policy" />
         <Stack.Screen name="helplines" />

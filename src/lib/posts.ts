@@ -30,6 +30,7 @@ type ReactionState = {
  * by design: `is_mine` is all anyone ever learns about who wrote something.
  */
 export type PostCard = ReactionState & {
+  featured_on: string | null;
   id: string;
   kind: 'confession' | 'space_post';
   space_id: string | null;
@@ -130,8 +131,13 @@ export function useCreateReply(postId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ kind, body }: { kind: ReplyKind; body: string }) => {
-      const { error } = await supabase.from('replies').insert({ post_id: postId, kind, body: body.trim() });
+      const { data, error } = await supabase
+        .from('replies')
+        .insert({ post_id: postId, kind, body: body.trim() })
+        .select('moderation_reason')
+        .single();
       if (error) throw error;
+      return data as { moderation_reason: string | null };
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: keys.replies(postId) }),
   });
@@ -223,5 +229,38 @@ export function useBlockAuthor() {
         queryClient.invalidateQueries({ queryKey: keys.posts }),
         queryClient.invalidateQueries({ queryKey: ['replies'] }),
       ]),
+  });
+}
+
+export function useConfessionOfTheDay() {
+  return useQuery({
+    queryKey: ['posts', 'featured'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('confession_of_the_day');
+      if (error) throw error;
+      return ((data as PostCard[])[0] ?? null) as PostCard | null;
+    },
+  });
+}
+
+export function useMyPosts() {
+  return useQuery({
+    queryKey: ['posts', 'mine'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('my_posts');
+      if (error) throw error;
+      return data as PostCard[];
+    },
+  });
+}
+
+export function useSavedPosts() {
+  return useQuery({
+    queryKey: ['posts', 'saved'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('saved_posts');
+      if (error) throw error;
+      return data as PostCard[];
+    },
   });
 }

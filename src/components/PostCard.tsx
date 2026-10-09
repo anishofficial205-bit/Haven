@@ -39,7 +39,10 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
 
   const status =
     post.status === 'pending' ? strings.post.pending
-    : post.status === 'rejected' ? strings.post.rejected
+    : post.status === 'rejected'
+      ? post.moderation_reason && post.moderation_reason in strings.guidelines
+        ? strings.post.rejectedBecause(strings.guidelines[post.moderation_reason as keyof typeof strings.guidelines])
+        : strings.post.rejected
     : post.status === 'hidden' ? strings.post.hidden
     : null;
 
@@ -53,6 +56,7 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
             {timeAgo(post.created_at)}
           </AppText>
         </View>
+        {post.post_type ? <Chip label={strings.spaces.postTypes[post.post_type]} /> : null}
         {post.is_mine ? <Chip label={strings.post.yours} /> : null}
         {post.is_seed ? <Chip label={strings.post.sample} /> : null}
         {onMenu && !preview ? (

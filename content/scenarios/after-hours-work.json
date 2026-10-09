@@ -1,0 +1,99 @@
+{
+  "id": "after-hours-work",
+  "title": "Dinner with the team lead",
+  "domain": "college_work",
+  "hook": "You said no to dinner. Now he's gone cold.",
+  "trigger_warnings": [],
+  "draft": true,
+  "order": 5,
+  "start": "n1",
+  "nodes": {
+    "n1": {
+      "text": "Week three of your internship. It's 6:40 p.m. and the office is emptying. Your team lead stops at your desk. He signs off on your review.\nVikram: You're doing well. Let's get dinner tonight, just us. I'll tell you how things really work here.",
+      "choices": [
+        {
+          "label": "\"Thank you, but I need to get home. Could we do coffee in the office tomorrow?\"",
+          "consequence": "Vikram: Hm. Sure.\nHis face closes a little. He walks off without saying bye.",
+          "expert_note": "You kept the professional part and dropped the part that felt off: after hours, alone. Offering office hours is a fair counter.",
+          "next": "n2"
+        },
+        {
+          "label": "Go. You can't afford to annoy him.",
+          "consequence": "Dinner is mostly fine. A lot of personal questions. He insists on dropping you home. You get in at eleven feeling like you were at work for five extra hours you couldn't leave.",
+          "expert_note": "When someone controls your review, your room to choose gets squeezed. Going doesn't mean you were okay with it.",
+          "next": "n2"
+        },
+        {
+          "label": "\"Sorry, I have plans tonight.\"",
+          "consequence": "Vikram: Tomorrow, then.\nHe says it like it's settled.",
+          "expert_note": "An excuse buys you tonight, and that is often the right move in the moment. The invitation usually comes back.",
+          "next": "n2"
+        }
+      ]
+    },
+    "n2": {
+      "text": "Over the next few days, something shifts. You're dropped from a client call. Your messages get \"ok.\" and nothing more. At the coffee machine, a colleague lowers her voice.\nSneha: Did something happen with Vikram? He gets like this when people say no to his dinners.",
+      "choices": [
+        {
+          "label": "\"Wait. It's not just me?\"",
+          "consequence": "Sneha tells you she started CC'ing another senior on everything and saving his messages. \"It didn't fix him. It covered me.\"",
+          "expert_note": "Learning it's a pattern changes the question from \"what did I do?\" to \"what does he do?\" Other people's experience is information.",
+          "next": "n3"
+        },
+        {
+          "label": "\"No, no. All fine.\"",
+          "consequence": "Sneha: Okay. If it isn't, tell me.\nYou go back to your desk, alone with it.",
+          "expert_note": "Saying nothing is a way of protecting yourself when you don't know who's safe. The door she opened is still there.",
+          "next": "n3"
+        },
+        {
+          "label": "Start writing down dates and what was said",
+          "consequence": "It feels dramatic. A week later, when you can't remember which day the call was, you're glad you did.",
+          "expert_note": "Notes with dates are quiet power. You may never use them. They turn a feeling into a record.",
+          "next": "n3"
+        }
+      ]
+    },
+    "n3": {
+      "text": "Friday. HR sends the mid-internship feedback form. One box reads: \"Anything about your work environment you'd like to share?\" Your college also has an internship coordinator. Five weeks to go.",
+      "choices": [
+        {
+          "label": "Write what happened in the form. Just the facts.",
+          "consequence": "You write four plain sentences with dates. Your finger hovers. You press submit.",
+          "expert_note": "Facts and dates, no adjectives. Putting it on record means it no longer lives only in your head.",
+          "next": "end_a"
+        },
+        {
+          "label": "Leave it blank. Talk to your college coordinator instead.",
+          "consequence": "You book ten minutes with her on Monday and tell her all of it.",
+          "expert_note": "When the person with power is the problem, someone outside that line of power can do things you can't.",
+          "next": "end_b"
+        },
+        {
+          "label": "Leave it blank. Keep your head down for five weeks.",
+          "consequence": "You type \"N/A\" and close the tab.",
+          "expert_note": "Getting through it is a legitimate goal. Not reporting doesn't mean it didn't happen or didn't matter.",
+          "next": "end_c"
+        }
+      ]
+    },
+    "end_a": {
+      "outcome": true,
+      "title": "On record",
+      "text": "HR replies: \"Noted, thank you.\" Nothing visible changes. Vikram stays curt. Two weeks later you're moved to Sneha's project and nobody says why.",
+      "takeaway": "Power makes saying no feel risky. Putting things on record is one way to share that risk."
+    },
+    "end_b": {
+      "outcome": true,
+      "title": "Someone outside",
+      "text": "She listens without interrupting. \"You're not the first from that company.\" She offers to move you, or to check in every week. You stay, with the weekly call.",
+      "takeaway": "When the problem is the person in charge, look for someone outside their reach."
+    },
+    "end_c": {
+      "outcome": true,
+      "title": "Five weeks",
+      "text": "You finish the internship. The letter is lukewarm. You still think you were right to say no. You also wish it hadn't cost you anything.",
+      "takeaway": "Saying no to someone with power over you can cost something. That cost is on them, not you."
+    }
+  }
+}
