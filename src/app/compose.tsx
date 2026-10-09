@@ -13,6 +13,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { looksLikePersonalInfo } from '@/lib/moderation';
+import { goBack } from '@/lib/nav';
 import {
   CONFESSION_MAX,
   SPACE_POST_MAX,
@@ -122,7 +123,7 @@ export default function ComposeScreen() {
         </ScrollView>
         {footer(
           <>
-            <Button label={spaceId ? strings.common.back : copy.backToFeed} onPress={() => router.back()} />
+            <Button label={spaceId ? strings.common.back : copy.backToFeed} onPress={() => goBack('/compose')} />
             <Button
               variant="text"
               label={copy.viewPost}

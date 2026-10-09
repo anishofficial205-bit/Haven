@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { usePathname } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { AppText } from '@/components/AppText';
 import { PanicButton } from '@/components/PanicButton';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { goBack } from '@/lib/nav';
 import { minTapSize, spacing } from '@/theme';
 
 /**
@@ -16,10 +17,11 @@ import { minTapSize, spacing } from '@/theme';
 export function ScreenHeader({ title }: { title: string }) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const pathname = usePathname();
   return (
     <View style={[styles.bar, { paddingTop: insets.top + spacing.xs, backgroundColor: theme.background }]}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => goBack(pathname)}
         accessibilityRole="button"
         accessibilityLabel={strings.common.back}
         style={styles.back}>

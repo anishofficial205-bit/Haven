@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { usePathname } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { goBack } from '@/lib/nav';
 import { minTapSize, spacing } from '@/theme';
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
 export function FormScreen({ title, subtitle, canGoBack = true, children, footer }: Props) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const pathname = usePathname();
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -30,7 +32,7 @@ export function FormScreen({ title, subtitle, canGoBack = true, children, footer
       <View style={styles.bar}>
         {canGoBack ? (
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => goBack(pathname)}
             accessibilityRole="button"
             accessibilityLabel={strings.common.back}
             style={styles.back}>

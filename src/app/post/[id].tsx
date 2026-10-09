@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -10,6 +10,7 @@ import { ReplyComposer } from '@/components/ReplyComposer';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { goBack } from '@/lib/nav';
 import { useCreateReply, usePost, useReplies } from '@/lib/posts';
 import { useBlockScreenshots } from '@/lib/privacy';
 import { spacing } from '@/theme';
@@ -76,7 +77,7 @@ export default function PostDetailScreen() {
         <ReplyComposer onSend={(reply) => createReply.mutateAsync(reply)} sending={createReply.isPending} />
       ) : null}
 
-      <PostMenu target={menu} onClose={() => setMenu(null)} onBlocked={() => router.back()} />
+      <PostMenu target={menu} onClose={() => setMenu(null)} onBlocked={() => goBack('/post/')} />
     </KeyboardAvoidingView>
   );
 }
