@@ -39,13 +39,14 @@ The app stores accounts and posts in Supabase, a free hosted database.
    Pick any name, choose the region **Mumbai (ap-south-1)**, and save the
    database password somewhere safe.
 2. Wait a minute or two until the project finishes setting up.
-3. In the left sidebar open **SQL Editor**. For each of these four files, in
+3. In the left sidebar open **SQL Editor**. For each of these five files, in
    this order: open the file on your Mac, copy everything in it, paste it into
    the editor, and press **Run**. Each one should say "Success".
    1. `supabase/migrations/0001_schema.sql`
    2. `supabase/migrations/0002_security.sql`
    3. `supabase/migrations/0003_feeds.sql`
    4. `supabase/migrations/0004_seed.sql`
+   5. `supabase/migrations/0005_accounts.sql`
 4. Open **Authentication > Sign In / Providers > Email** and turn **Confirm
    email** OFF. (The app never asks for a real email, so there is nothing to
    confirm.)
@@ -91,7 +92,7 @@ To undo it, run the same line with `'user'` instead of `'moderator'`.
 This deletes every post, reply and setting. In the **SQL Editor**:
 
 1. Paste and run `supabase/reset.sql`.
-2. Run the four files from step 2.3 again, in order.
+2. Run the five files from step 2.3 again, in order.
 
 Accounts are separate: delete them under **Authentication > Users**.
 

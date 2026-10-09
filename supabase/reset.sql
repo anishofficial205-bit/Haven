@@ -33,6 +33,8 @@ drop function if exists public.saved_posts();
 drop function if exists public.confession_of_the_day();
 drop function if exists public.list_replies(uuid, uuid);
 drop function if exists public.block_author(text, uuid);
+drop function if exists public.create_recovery_code();
+drop function if exists public.reset_password_with_recovery_code(text, text, text);
 drop function if exists public.username_available(text);
 drop function if exists public.is_moderator();
 drop function if exists public.is_banned();

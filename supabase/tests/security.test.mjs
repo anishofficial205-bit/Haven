@@ -1,11 +1,12 @@
 import { PGlite } from '@electric-sql/pglite';
+import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
 // Loads supabase/migrations into an in-memory Postgres (with Supabase's roles and
 // auth.uid() stubbed) and checks the security rules. Run with: npm run test:db
 const MIG = process.argv[2] ?? path.join(import.meta.dirname, '..', 'migrations');
-const db = new PGlite();
+const db = new PGlite({ extensions: { pgcrypto } });
 let pass = 0, fail = 0;
 const ok = (name, cond, extra = '') => {
   if (cond) { pass++; console.log('  ok   ' + name); }
@@ -25,10 +26,12 @@ const denied = async (name, sql) => {
 await db.exec(`
   create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls;
   create schema auth;
-  create table auth.users (id uuid primary key default gen_random_uuid(), email text unique, raw_user_meta_data jsonb);
+  create schema extensions;
+  create table auth.users (id uuid primary key default gen_random_uuid(), email text unique, raw_user_meta_data jsonb, encrypted_password text, updated_at timestamptz);
+  create table auth.sessions (id uuid primary key default gen_random_uuid(), user_id uuid references auth.users (id) on delete cascade);
   create function auth.uid() returns uuid language sql stable as $$
     select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-  grant usage on schema auth to anon, authenticated, service_role;
+  grant usage on schema auth, extensions to anon, authenticated, service_role;
   grant usage on schema public to anon, authenticated, service_role;
   alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
   alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
@@ -213,6 +216,36 @@ await as(A);
 const msgs = await q(`select sender from help_messages order by created_at`);
 ok('thread: user then staff', msgs.length === 2 && msgs[0].sender === 'user' && msgs[1].sender === 'staff');
 ok('status accepted', (await q(`select status from help_requests`))[0].status === 'accepted');
+
+console.log('\nrecovery codes');
+await as(B);
+const code = (await q(`select create_recovery_code() v`))[0].v;
+ok('code is 12 chars from the safe alphabet', /^[A-HJKMNP-Z2-9]{12}$/.test(code), code);
+await denied('hash still unreadable by owner', `select recovery_code_hash from profiles`);
+await root();
+await db.exec(`insert into auth.sessions (user_id) values ('${B}')`);
+const stored = (await q(`select recovery_code_hash h from profiles where id='${B}'`))[0].h;
+ok('only a hash is stored', stored && stored !== code && stored.startsWith('$2'));
+await as(null, 'anon');
+await denied('anon cannot create a code', `select create_recovery_code()`);
+const reset = async (u, c, p) => (await q(`select reset_password_with_recovery_code($1,$2,$3) v`, [u, c, p]))[0].v;
+ok('unknown username -> invalid', await reset('nobody_here', code, 'longenough1') === 'invalid');
+ok('wrong code -> invalid', await reset('bela', 'AAAAAAAAAAAA', 'longenough1') === 'invalid');
+ok('short password -> weak', await reset('bela', code, 'short') === 'weak');
+ok('right code, any formatting/case -> ok', await reset('BELA', code.toLowerCase().replace(/(.{4})/g, '$1-'), 'my new password') === 'ok');
+await root();
+const u = (await q(`select encrypted_password p, extensions.crypt('my new password', encrypted_password) = encrypted_password good from auth.users where id='${B}'`))[0];
+ok('password replaced with a bcrypt hash', u.good === true && u.p.startsWith('$2'));
+ok('old sessions signed out', (await q(`select count(*)::int n from auth.sessions where user_id='${B}'`))[0].n === 0);
+await as(null, 'anon');
+for (let i = 0; i < 5; i++) await reset('bela', 'WRONGWRONG22', 'longenough1');
+ok('locked after 5 wrong codes, even with the right one', await reset('bela', code, 'longenough1') === 'locked');
+await root();
+await db.exec(`update profiles set recovery_locked_until = now() - interval '1 minute' where id='${B}'`);
+await as(null, 'anon');
+ok('works again after the lock expires', await reset('bela', code, 'longenough1') === 'ok');
+await as(D);
+ok('account with no code set -> invalid', await reset('dev_x', '', 'longenough1') === 'invalid');
 
 console.log('\ndelete account');
 await root();

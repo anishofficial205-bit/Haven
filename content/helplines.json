@@ -1,0 +1,10 @@
+{
+  "_note": "Verify every number again just before testing with participants. Last checked against the spec on 2026-10-09.",
+  "helplines": [
+    { "id": "emergency", "number": "112", "nameKey": "emergency" },
+    { "id": "women", "number": "181", "nameKey": "women" },
+    { "id": "childline", "number": "1098", "nameKey": "childline" },
+    { "id": "telemanas", "number": "14416", "nameKey": "telemanas" },
+    { "id": "cybercrime", "number": "1930", "nameKey": "cybercrime" }
+  ]
+}

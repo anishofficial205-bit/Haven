@@ -1,23 +1,23 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { UserRound } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
+import { Avatar } from '@/components/Avatar';
 import { PanicButton } from '@/components/PanicButton';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { useAuth } from '@/lib/auth';
 import { minTapSize, radii, spacing } from '@/theme';
 
-type Props = {
-  /** Shown as "Hello, <username>". Only ever the signed-in user's own name. */
-  username?: string;
-};
-
-/** The header on every signed-in screen: greeting, panic shield, avatar. */
-export function AppHeader({ username }: Props) {
+/**
+ * The header on every signed-in screen: greeting, panic shield, avatar.
+ * The username shown is only ever the signed-in person's own.
+ */
+export function AppHeader() {
   const theme = useTheme();
+  const { profile } = useAuth();
   const insets = useSafeAreaInsets();
 
   return (
@@ -32,7 +32,7 @@ export function AppHeader({ username }: Props) {
         numberOfLines={1}
         accessibilityRole="header"
         style={styles.greeting}>
-        {username ? strings.header.hello(username) : strings.header.helloGuest}
+        {profile ? strings.header.hello(profile.username) : strings.header.helloGuest}
       </AppText>
 
       <View style={styles.actions}>
@@ -46,7 +46,7 @@ export function AppHeader({ username }: Props) {
             styles.avatar,
             { borderColor: theme.onGradientMuted, opacity: pressed ? 0.7 : 1 },
           ]}>
-          <UserRound size={24} color={theme.onGradient} />
+          <Avatar id={profile?.avatar_id ?? 1} size={minTapSize - 4} />
         </Pressable>
       </View>
     </LinearGradient>

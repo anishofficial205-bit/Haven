@@ -50,10 +50,15 @@ Expo imports that changed in SDK 57: `Tabs` from `expo-router/js-tabs`, `Stack` 
   other than its own.
 - After changing any SQL, run `npm run test:db` and add a test for the new rule.
 
+## Routing
+
+`src/lib/auth.tsx` computes a `stage` (onboarding, recovery, consent, app) and `src/app/_layout.tsx`
+guards each screen group with `Stack.Protected`. Add new signed-in screens inside the `app` guard.
+
 ## Progress
 
 - [x] Phase 1 Foundation
-- [ ] Phase 2 Onboarding and account
+- [x] Phase 2 Onboarding and account (password reset is a database function, not an Edge Function)
 - [ ] Phase 3 Safety layer
 - [ ] Phase 4 Confessions
 - [ ] Phase 5 Moderation
