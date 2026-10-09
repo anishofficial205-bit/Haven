@@ -78,6 +78,11 @@ export default function WelcomeScreen() {
           label={strings.onboarding.haveAccount}
           onPress={() => router.push('/sign-in')}
         />
+        <Button
+          variant="text"
+          label={strings.helplines.link}
+          onPress={() => router.push('/helplines')}
+        />
       </View>
     </View>
   );

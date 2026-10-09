@@ -14,3 +14,10 @@ export const USERNAME_MIN = 3;
 export const USERNAME_MAX = 20;
 export const PASSWORD_MIN = 8;
 export const AVATAR_COUNT = 12;
+
+/**
+ * Android can only hide the app in the recent-apps switcher by also blocking
+ * screenshots on every screen. That is on for testers, and off while developing
+ * so you can still take screenshots of your own work.
+ */
+export const ANDROID_HIDE_IN_RECENTS = !__DEV__;

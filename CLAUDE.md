@@ -54,12 +54,15 @@ Expo imports that changed in SDK 57: `Tabs` from `expo-router/js-tabs`, `Stack` 
 
 `src/lib/auth.tsx` computes a `stage` (onboarding, recovery, consent, app) and `src/app/_layout.tsx`
 guards each screen group with `Stack.Protected`. Add new signed-in screens inside the `app` guard.
+Signed-in screens outside the tabs use `ScreenHeader`, which carries the panic shield.
+`src/lib/panic.tsx` wraps everything: after a quick exit only the calculator is rendered.
+Call `useBlockScreenshots()` (src/lib/privacy.ts) on confession detail and help request screens.
 
 ## Progress
 
 - [x] Phase 1 Foundation
 - [x] Phase 2 Onboarding and account (password reset is a database function, not an Edge Function)
-- [ ] Phase 3 Safety layer
+- [x] Phase 3 Safety layer (screenshot blocking and app-switcher hiding are untested: need a real phone)
 - [ ] Phase 4 Confessions
 - [ ] Phase 5 Moderation
 - [ ] Phase 6 Scenarios

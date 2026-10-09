@@ -29,6 +29,7 @@ export const en = {
 
   common: {
     back: 'Back',
+    close: 'Close',
     comingSoon: 'This part is being built',
     genericError: "Something went wrong on our side. Check your internet and try again.",
     notConfigured: 'The app is not connected to its database yet. See the README to set it up.',
@@ -199,12 +200,14 @@ export const en = {
 
   helplines: {
     title: 'Need help right now?',
+    intro: 'Tap a number to call. These are free, and you don\'t have to give your name.',
+    link: 'Need help right now?',
     call: (name: string, number: string) => `Call ${name} on ${number}`,
     items: {
       emergency: { name: 'Emergency', description: "If you're in immediate danger" },
       women: { name: 'Women Helpline', description: 'Violence or harassment against women' },
       childline: { name: 'Childline', description: 'For anyone under 18' },
-      telemanas: { name: 'Tele-MANAS', description: 'Free mental health support, day and night' },
+      telemanas: { name: 'Tele-MANAS', description: 'Free mental health support, day and night. Also 1800-891-4416' },
       cybercrime: { name: 'Cyber Crime Helpline', description: 'Online harassment, leaked images, fraud' },
     },
   },
@@ -231,7 +234,8 @@ export const en = {
 
   help: {
     title: 'Help',
-    placeholder: 'Helplines and people you can talk to, without anyone knowing who you are.',
+    professionalsTitle: 'Talk to a professional',
+    professionalsBody: 'Therapists, intimacy coaches and legal advisors you can message without anyone knowing who you are.',
   },
 
   profile: {
@@ -239,6 +243,21 @@ export const en = {
     onlyYou: 'Only you can see this page.',
     placeholder: 'Your posts and settings will live here.',
     signOut: 'Sign out',
+  },
+
+  /** The quick-exit decoy. Nothing here may mention the app. */
+  calculator: {
+    keys: {
+      AC: 'Clear',
+      '±': 'Plus minus',
+      '%': 'Percent',
+      '÷': 'Divide',
+      '×': 'Multiply',
+      '-': 'Minus',
+      '+': 'Plus',
+      '=': 'Equals',
+      '.': 'Point',
+    },
   },
 
   /** Shown only while developing, never to testers. */

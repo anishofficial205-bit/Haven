@@ -14,16 +14,31 @@ import { useEffect } from 'react';
 
 import { useSchemeName, useTheme } from '@/hooks/useTheme';
 import { AuthProvider, useAuth } from '@/lib/auth';
+import { PanicProvider } from '@/lib/panic';
+import { hideFromAppSwitcher } from '@/lib/privacy';
 
 SplashScreen.preventAutoHideAsync();
+hideFromAppSwitcher();
 
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    Nunito_400Regular,
+    Nunito_600SemiBold,
+    Nunito_700Bold,
+    Nunito_800ExtraBold,
+  });
+  if (!fontsLoaded && fontError == null) return null;
+
+  // PanicProvider sits outside everything else: after a quick exit it renders
+  // only the calculator and none of the screens below exist at all.
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RootNavigator />
+        <PanicProvider>
+          <RootNavigator />
+        </PanicProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
@@ -33,13 +48,7 @@ function RootNavigator() {
   const scheme = useSchemeName();
   const theme = useTheme();
   const { stage } = useAuth();
-  const [fontsLoaded, fontError] = useFonts({
-    Nunito_400Regular,
-    Nunito_600SemiBold,
-    Nunito_700Bold,
-    Nunito_800ExtraBold,
-  });
-  const ready = (fontsLoaded || fontError != null) && stage !== 'loading';
+  const ready = stage !== 'loading';
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -79,6 +88,7 @@ function RootNavigator() {
           <Stack.Screen name="profile/index" />
         </Stack.Protected>
         <Stack.Screen name="policy" />
+        <Stack.Screen name="helplines" />
       </Stack>
       {/* Signed-in screens sit under the violet header, so their status bar icons stay light. */}
       <StatusBar style={stage === 'app' ? 'light' : 'auto'} />

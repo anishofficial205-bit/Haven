@@ -3,23 +3,20 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
+import { usePanic } from '@/lib/panic';
 import { minTapSize, radii } from '@/theme';
-
-type Props = {
-  onPress?: () => void;
-  onLongPress?: () => void;
-};
 
 /**
  * The shield in the header of every signed-in screen.
- * Tap = quick exit, long-press = helplines. Both are wired up in phase 3.
+ * Tap = quick exit to the calculator. Hold = helplines.
  */
-export function PanicButton({ onPress, onLongPress }: Props) {
+export function PanicButton() {
+  const { quickExit, openHelp } = usePanic();
   const theme = useTheme();
   return (
     <Pressable
-      onPress={onPress}
-      onLongPress={onLongPress}
+      onPress={quickExit}
+      onLongPress={openHelp}
       accessibilityRole="button"
       accessibilityLabel={strings.header.panicButton}
       accessibilityHint={strings.header.panicHint}
