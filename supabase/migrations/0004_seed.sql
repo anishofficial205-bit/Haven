@@ -15,7 +15,7 @@ insert into public.spaces (slug, name, description, rules, sort_order) values
    E'Talk about your own experience, not someone else''s business.\nNo names, no handles, no details that could identify anyone.\nNobody here owes anyone an explanation for their "no".\nDisagree kindly. No shaming, no "you should have".', 1),
   ('digital-boundaries', 'Digital Boundaries',
    'Chats, screenshots, tags, DMs and everything online',
-   E'Never post screenshots, usernames or links.\nDescribe what happened in your own words.\nNo tips on getting into someone else''s account or phone.\nDisagree kindly.', 2),
+   E'Never post screenshots, usernames or links.\nDescribe what happened in your own words.\nNo tips on accessing someone else''s account or phone.\nDisagree kindly.', 2),
   ('family-pressure', 'Family Pressure',
    'When "log kya kahenge" meets your boundaries',
    E'Families are complicated. No one here has to pick a side.\nNo names or details that could identify your family.\n"Just cut them off" is rarely useful advice. Offer what you would actually try.\nDisagree kindly.', 3),
@@ -67,7 +67,7 @@ from (values
    'A friend put a screenshot of my late-night rant on her close friends story. Only 12 people, she said. It was still mine to share, not hers.',
    '{digital,friendships}', 3),
   ('digital-boundaries', 'question',
-   'How do you ask someone to take down a photo of you without it turning into a whole drama? It''s not even a bad photo. I just didn''t want it up.',
+   'How do you ask someone to take down a photo of you without it becoming a whole drama? It''s not even a bad photo. I just didn''t want it up.',
    '{digital}', 20),
   ('digital-boundaries', 'rant',
    'Being added to a group chat with 60 strangers without anyone asking should count as a crime, honestly.',
@@ -157,7 +157,7 @@ select * from (values
 where not exists (select 1 from public.professionals where placeholder);
 
 -- ---------------------------------------------------------------------------
--- Automatic filter: starter list. Add to it from the mod tools as you see
+-- Automatic filter: starter list. Add to it with the mod tools as you see
 -- what testers actually write.
 -- ---------------------------------------------------------------------------
 insert into public.moderation_terms (pattern, category, reason, is_word) values
