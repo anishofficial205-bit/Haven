@@ -1,11 +1,12 @@
 import { usePathname } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Dots } from '@/components/Dots';
+import { RoundButton } from '@/components/RoundButton';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { goBack } from '@/lib/nav';
@@ -33,13 +34,7 @@ export function FormScreen({ title, subtitle, canGoBack = true, children, footer
       <Dots />
       <View style={styles.bar}>
         {canGoBack ? (
-          <Pressable
-            onPress={() => goBack(pathname)}
-            accessibilityRole="button"
-            accessibilityLabel={strings.common.back}
-            style={styles.back}>
-            <ArrowLeft size={24} color={theme.text} />
-          </Pressable>
+          <RoundButton icon={ArrowLeft} label={strings.common.back} onPress={() => goBack(pathname)} />
         ) : null}
       </View>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -64,14 +59,10 @@ const styles = StyleSheet.create({
   },
   bar: {
     minHeight: minTapSize,
-    paddingHorizontal: spacing.xs,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
     justifyContent: 'center',
-  },
-  back: {
-    width: minTapSize,
-    height: minTapSize,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   content: {
     paddingHorizontal: spacing.lg,

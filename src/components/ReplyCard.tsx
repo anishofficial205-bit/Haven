@@ -1,7 +1,6 @@
 import { Ellipsis } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { AnonymousAvatar } from '@/components/AnonymousAvatar';
 import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
 import { Chip } from '@/components/Chip';
@@ -10,68 +9,64 @@ import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import type { ReplyCard as Reply } from '@/lib/posts';
 import { timeAgo } from '@/lib/time';
-import { minTapSize, radii, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 type Props = {
   reply: Reply;
   onMenu: () => void;
 };
 
+/** One reply. Its kind (Advice or Solidarity) is a small label; a highlighted answer gets a yellow edge. */
 export function ReplyCard({ reply, onMenu }: Props) {
-  const theme = useTheme();
-  return (
-    <Card style={[styles.card, reply.highlighted && { backgroundColor: theme.blocks.lime }]}>
-      <ReplyBody reply={reply} onMenu={onMenu} />
-    </Card>
-  );
-}
-
-/** The inside of a reply. A separate component so it picks up the card's colours. */
-function ReplyBody({ reply, onMenu }: Props) {
   const theme = useTheme();
   const waiting = reply.status === 'pending';
   const removed = reply.status === 'rejected' || reply.status === 'hidden';
+  const meta = [strings.replies.kinds[reply.kind], timeAgo(reply.created_at)].join(' · ');
   return (
-    <>
+    <Card
+      style={[
+        styles.card,
+        (waiting || removed) && { backgroundColor: 'transparent' },
+        reply.highlighted && { borderColor: theme.primary, borderWidth: 1.5 },
+      ]}>
       <View style={styles.top}>
-        <AnonymousAvatar size={28} />
         <View style={styles.flex}>
-          <AppText variant="label">{strings.post.anonymous}</AppText>
-          <AppText variant="caption" color={theme.textSecondary}>
-            {timeAgo(reply.created_at)}
+          <AppText variant="label" numberOfLines={1}>
+            {reply.is_mine ? strings.help.you : strings.post.anonymous}
+            <AppText variant="caption" color={theme.textSecondary}>
+              {'  '}
+              {meta}
+            </AppText>
           </AppText>
         </View>
-        {reply.highlighted ? <Chip label={strings.replies.highlighted} /> : null}
-        <Chip label={strings.replies.kinds[reply.kind]} />
+        {reply.highlighted ? <Chip tone="warning" label={strings.replies.highlighted} /> : null}
+        {waiting ? <Chip label={strings.replies.waiting} /> : null}
         <Pressable
           onPress={onMenu}
           accessibilityRole="button"
           accessibilityLabel={strings.post.moreOptions}
+          hitSlop={10}
           style={styles.menu}>
-          <Ellipsis size={20} color={theme.textSecondary} />
+          <Ellipsis size={18} color={theme.textSecondary} />
         </Pressable>
       </View>
 
-      <AppText>{reply.body}</AppText>
+      <AppText color={waiting || removed ? '#C9C9D6' : '#F2F2F6'}>{reply.body}</AppText>
 
-      {waiting || removed ? (
-        <View style={[styles.status, { backgroundColor: theme.surfaceAlt }]}>
-          <AppText variant="label" color={theme.textSecondary}>
-            {waiting ? strings.replies.waiting : strings.replies.rejected}
-          </AppText>
-        </View>
-      ) : (
+      {removed ? (
+        <AppText variant="label" color={theme.textSecondary}>
+          {strings.replies.rejected}
+        </AppText>
+      ) : waiting ? null : (
         <ReactionBar targetType="reply" id={reply.id} counts={reply.reaction_counts} mine={reply.my_reaction} />
       )}
-    </>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    padding: spacing.md,
-    borderBottomRightRadius: radii.card,
-    borderTopLeftRadius: radii.sharp,
+    gap: spacing.sm,
   },
   top: {
     flexDirection: 'row',
@@ -82,16 +77,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menu: {
-    width: minTapSize,
-    height: minTapSize,
+    width: 26,
+    height: 26,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: -spacing.sm,
-  },
-  status: {
-    borderRadius: radii.chip,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    alignSelf: 'flex-start',
   },
 });

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
-import { minTapSize, radii, spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 
 type Props = {
   icon: LucideIcon;
@@ -25,7 +25,7 @@ export function MenuRow({ icon: Icon, label, onPress, danger }: Props) {
         styles.row,
         { backgroundColor: pressed ? theme.surfaceAlt : theme.surface, borderColor: theme.border },
       ]}>
-      <Icon size={22} color={danger ? theme.danger : theme.primary} />
+      <Icon size={19} color={danger ? theme.danger : theme.text} />
       <AppText variant="bodyStrong" color={color} style={styles.flex}>
         {label}
       </AppText>
@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   row: {
-    minHeight: minTapSize + 12,
+    minHeight: 54,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
     paddingHorizontal: spacing.lg,
-    borderRadius: radii.card,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radii.pill,
+    borderWidth: 1,
   },
   flex: {
     flex: 1,

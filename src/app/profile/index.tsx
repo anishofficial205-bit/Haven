@@ -8,10 +8,10 @@ import { Avatar } from '@/components/Avatar';
 import { BottomSheet } from '@/components/BottomSheet';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
+import { Glow } from '@/components/Glow';
 import { MenuGroup, MenuRow } from '@/components/MenuRow';
 import { PostCard } from '@/components/PostCard';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
-import { ProfileCard } from '@/components/ProfileCard';
 import { Screen } from '@/components/Screen';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { AVATAR_COUNT } from '@/config';
@@ -20,7 +20,7 @@ import { strings } from '@/i18n/en';
 import { useAuth } from '@/lib/auth';
 import { useMyPosts, useSavedPosts } from '@/lib/posts';
 import { useScenarioProgress } from '@/lib/scenarios';
-import { radii, spacing } from '@/theme';
+import { FEATURE_TONE, radii, spacing } from '@/theme';
 
 const copy = strings.profile;
 const AVATAR_IDS = Array.from({ length: AVATAR_COUNT }, (_, i) => i + 1);
@@ -36,23 +36,38 @@ export default function ProfileScreen() {
   const saved = useSavedPosts();
   const list = tab === 'mine' ? mine : saved;
   const progress = useScenarioProgress();
-  const scenariosDone = Object.values(progress.data ?? {}).filter((item) => item.completed_at).length;
+  const played = Object.values(progress.data ?? {}).filter((item) => item.completed_at).length;
+
+  const stats = [
+    { value: mine.data?.length ?? 0, label: copy.statPosts },
+    { value: saved.data?.length ?? 0, label: copy.statSaved },
+    { value: played, label: copy.statScenarios },
+  ];
 
   return (
-    <View style={[styles.page, { backgroundColor: theme.background }]}>
+    <View style={styles.page}>
       <ScreenHeader title={copy.title} />
-      <Screen>
-        <ProfileCard
-          username={profile?.username ?? ''}
-          avatarId={profile?.avatar_id ?? 1}
-          starred={profile?.role === 'moderator'}
-          stats={[
-            { label: copy.statPosts, value: String(mine.data?.length ?? 0).padStart(2, '0') },
-            { label: copy.statSaved, value: String(saved.data?.length ?? 0).padStart(2, '0') },
-            { label: copy.statScenarios, value: String(scenariosDone).padStart(2, '0') },
-          ]}
-          footnote={copy.onlyYou}
-        />
+      <Screen contentContainerStyle={styles.content}>
+        <Glow tone={FEATURE_TONE.profile} style={styles.hero}>
+          <Avatar id={profile?.avatar_id ?? 1} size={112} />
+          <View style={styles.name}>
+            <AppText variant="title" numberOfLines={1}>
+              {profile?.username}
+            </AppText>
+            <AppText variant="caption">{copy.onlyYou}</AppText>
+          </View>
+          <View style={styles.stats}>
+            {stats.map((stat) => (
+              <View key={stat.label} style={[styles.stat, { backgroundColor: theme.wash }]}>
+                <AppText variant="numeral" style={styles.statValue}>
+                  {String(stat.value).padStart(2, '0')}
+                </AppText>
+                <AppText variant="caption">{stat.label}</AppText>
+              </View>
+            ))}
+          </View>
+        </Glow>
+
         <Button variant="secondary" label={copy.changeAvatar} onPress={() => setAvatarOpen(true)} />
 
         <MenuGroup>
@@ -78,9 +93,7 @@ export default function ProfileScreen() {
             key={post.id}
             post={post}
             onOpen={() => router.push({ pathname: '/post/[id]', params: { id: post.id } })}
-            onMenu={() =>
-              setMenu({ targetType: 'post', id: post.id, isMine: post.is_mine, isSaved: post.is_saved })
-            }
+            onMenu={() => setMenu({ targetType: 'post', id: post.id, isMine: post.is_mine, isSaved: post.is_saved })}
           />
         ))}
 
@@ -122,12 +135,45 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
+  content: {
+    paddingTop: spacing.sm,
+    gap: spacing.md,
+  },
+  hero: {
+    alignItems: 'center',
+    paddingTop: spacing.xl,
+    gap: spacing.md,
+  },
+  name: {
+    alignItems: 'center',
+  },
+  stats: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignSelf: 'stretch',
+  },
+  stat: {
+    flex: 1,
+    alignItems: 'center',
+    borderRadius: radii.chip + 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.28)',
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    gap: 2,
+  },
+  statValue: {
+    fontSize: 30,
+    lineHeight: 28,
+  },
   center: {
     textAlign: 'center',
+    paddingVertical: spacing.lg,
   },
   tabs: {
     flexDirection: 'row',
     gap: spacing.sm,
+    marginTop: spacing.sm,
   },
   avatars: {
     flexDirection: 'row',
@@ -137,7 +183,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     padding: 3,
-    borderWidth: 3,
+    borderWidth: 2.5,
     borderRadius: radii.pill,
   },
 });

@@ -1,12 +1,11 @@
+import { Doto_900Black } from '@expo-google-fonts/doto';
 import {
-  BricolageGrotesque_400Regular,
-  BricolageGrotesque_600SemiBold,
-  BricolageGrotesque_700Bold,
-  BricolageGrotesque_800ExtraBold,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
   useFonts,
-} from '@expo-google-fonts/bricolage-grotesque';
-import { DMMono_400Regular, DMMono_500Medium } from '@expo-google-fonts/dm-mono';
-import { Knewave_400Regular } from '@expo-google-fonts/knewave';
+} from '@expo-google-fonts/poppins';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { Stack } from 'expo-router/stack';
@@ -27,13 +26,11 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    BricolageGrotesque_400Regular,
-    BricolageGrotesque_600SemiBold,
-    BricolageGrotesque_700Bold,
-    BricolageGrotesque_800ExtraBold,
-    DMMono_400Regular,
-    DMMono_500Medium,
-    Knewave_400Regular,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    Doto_900Black,
   });
   if (!fontsLoaded && fontError == null) return null;
 
@@ -114,7 +111,7 @@ function RootNavigator() {
         <Stack.Screen name="policy" />
         <Stack.Screen name="helplines" />
       </Stack>
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style="light" />
     </ThemeProvider>
   );
 }

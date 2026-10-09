@@ -1,9 +1,9 @@
+import { ArrowUp } from 'lucide-react-native';
 import { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
-import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
@@ -32,6 +32,7 @@ export function ReplyComposer({ onSend, sending, placeholder }: Props) {
   const [body, setBody] = useState('');
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
   const hint = placeholder ?? strings.replies.placeholder[kind];
+  const canSend = body.trim().length > 0 && !sending;
 
   const send = async () => {
     setNotice(null);
@@ -48,15 +49,7 @@ export function ReplyComposer({ onSend, sending, placeholder }: Props) {
   };
 
   return (
-    <View
-      style={[
-        styles.composer,
-        {
-          backgroundColor: theme.surface,
-          borderTopColor: theme.border,
-          paddingBottom: insets.bottom + spacing.md,
-        },
-      ]}>
+    <View style={[styles.composer, { backgroundColor: theme.background, paddingBottom: insets.bottom + spacing.md }]}>
       <View style={styles.kindRow} accessibilityRole="radiogroup" accessibilityLabel={strings.replies.kindLabel}>
         {KINDS.map((option) => (
           <Chip
@@ -71,36 +64,40 @@ export function ReplyComposer({ onSend, sending, placeholder }: Props) {
           {strings.replies.replyingAs}
         </AppText>
       </View>
-      <TextInput
-        value={body}
-        onChangeText={setBody}
-        multiline
-        maxLength={REPLY_MAX}
-        placeholder={hint}
-        placeholderTextColor={theme.textSecondary}
-        accessibilityLabel={hint}
-        style={[
-          styles.input,
-          typography.body,
-          { color: theme.text, backgroundColor: theme.background, borderColor: theme.border },
-        ]}
-      />
+      <View style={[styles.field, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+        <TextInput
+          value={body}
+          onChangeText={setBody}
+          multiline
+          maxLength={REPLY_MAX}
+          placeholder={hint}
+          placeholderTextColor={theme.textSecondary}
+          accessibilityLabel={hint}
+          style={[styles.input, typography.body, { color: theme.text }]}
+        />
+        <Pressable
+          onPress={send}
+          disabled={!canSend}
+          accessibilityRole="button"
+          accessibilityLabel={strings.replies.send}
+          style={[styles.send, { backgroundColor: theme.primary, opacity: canSend ? 1 : 0.4 }]}>
+          {sending ? <ActivityIndicator color={theme.onPrimary} /> : <ArrowUp size={20} color={theme.onPrimary} />}
+        </Pressable>
+      </View>
       <AppText
         variant="caption"
         color={notice?.isError ? theme.danger : theme.textSecondary}
         accessibilityLiveRegion="polite">
         {notice?.text ?? strings.replies.reviewNote}
       </AppText>
-      <Button label={strings.replies.send} disabled={body.trim().length === 0} loading={sending} onPress={send} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   composer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
+    paddingTop: spacing.sm + 2,
     gap: spacing.sm,
   },
   kindRow: {
@@ -112,14 +109,29 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'right',
   },
+  field: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    borderWidth: 1,
+    borderRadius: radii.card + 2,
+    paddingLeft: spacing.lg,
+    paddingRight: 6,
+    paddingVertical: 6,
+    gap: spacing.sm,
+  },
   input: {
-    minHeight: 64,
-    maxHeight: 140,
-    borderWidth: 1.5,
-    borderRadius: radii.chip + 4,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    textAlignVertical: 'top',
+    flex: 1,
+    minHeight: 38,
+    maxHeight: 120,
+    paddingVertical: 7,
+    textAlignVertical: 'center',
     outlineStyle: 'none',
   } as object,
+  send: {
+    width: 38,
+    height: 38,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

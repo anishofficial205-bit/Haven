@@ -1,16 +1,17 @@
 import { router } from 'expo-router';
 import { ChevronRight, Inbox } from 'lucide-react-native';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { Card } from '@/components/Card';
+import { Glow } from '@/components/Glow';
 import { HelplineList } from '@/components/HelplineList';
+import { MenuRow } from '@/components/MenuRow';
 import { Screen } from '@/components/Screen';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { PROFESSIONAL_TYPES } from '@/lib/help';
 import { TYPE_ICONS } from '@/lib/icons';
-import { radii, spacing } from '@/theme';
+import { FEATURE_TONE, radii, spacing } from '@/theme';
 
 const copy = strings.help;
 
@@ -34,38 +35,27 @@ export default function HelpScreen() {
         {PROFESSIONAL_TYPES.map((type) => {
           const Icon = TYPE_ICONS[type];
           return (
-            <Pressable
+            <Glow
               key={type}
-              accessibilityRole="button"
+              tone={FEATURE_TONE.help}
+              light={PROFESSIONAL_TYPES.indexOf(type) % 2 === 0 ? 'left' : 'right'}
+              style={styles.type}
+              accessibilityLabel={`${copy.types[type].name}. ${copy.types[type].when}`}
               onPress={() => router.push({ pathname: '/help/[type]', params: { type } })}>
-              <Card>
-                <View style={styles.row}>
-                  <View style={[styles.icon, { backgroundColor: theme.surfaceAlt }]}>
-                    <Icon size={24} color={theme.primary} />
-                  </View>
-                  <View style={styles.flex}>
-                    <AppText variant="bodyStrong">{copy.types[type].name}</AppText>
-                    <AppText color={theme.textSecondary}>{copy.types[type].when}</AppText>
-                  </View>
-                  <ChevronRight size={20} color={theme.textSecondary} />
-                </View>
-              </Card>
-            </Pressable>
+              <View style={[styles.icon, { backgroundColor: theme.wash }]}>
+                <Icon size={22} color={theme.text} />
+              </View>
+              <View style={styles.flex}>
+                <AppText variant="bodyStrong">{copy.types[type].name}</AppText>
+                <AppText variant="caption">{copy.types[type].when}</AppText>
+              </View>
+              <ChevronRight size={18} color={theme.text} />
+            </Glow>
           );
         })}
       </View>
 
-      <Pressable accessibilityRole="button" onPress={() => router.push('/help/requests')}>
-        <Card>
-          <View style={styles.row}>
-            <Inbox size={24} color={theme.primary} />
-            <AppText variant="bodyStrong" style={styles.flex}>
-              {copy.myRequests}
-            </AppText>
-            <ChevronRight size={20} color={theme.textSecondary} />
-          </View>
-        </Card>
-      </Pressable>
+      <MenuRow icon={Inbox} label={copy.myRequests} onPress={() => router.push('/help/requests')} />
     </Screen>
   );
 }
@@ -82,10 +72,15 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
   },
+  type: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
   icon: {
-    width: 48,
-    height: 48,
-    borderRadius: radii.chip + 4,
+    width: 44,
+    height: 44,
+    borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
   },

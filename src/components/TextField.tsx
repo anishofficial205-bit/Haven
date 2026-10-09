@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   field: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 2,
-    borderRadius: radii.chip + 4,
+    borderWidth: 1.3,
+    borderRadius: radii.card - 4,
     minHeight: minTapSize + 8,
   },
   input: {

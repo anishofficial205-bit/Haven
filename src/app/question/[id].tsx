@@ -3,15 +3,15 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Glow } from '@/components/Glow';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
 import { ReplyCard } from '@/components/ReplyCard';
 import { ReplyComposer } from '@/components/ReplyComposer';
 import { ScreenHeader } from '@/components/ScreenHeader';
-import { Tile } from '@/components/Tile';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useCreateQuestionReply, useQuestionReplies, useSpaces, useWeeklyQuestions } from '@/lib/spaces';
-import { spacing } from '@/theme';
+import { FEATURE_TONE, spacing } from '@/theme';
 
 const copy = strings.spaces;
 
@@ -31,20 +31,18 @@ export default function QuestionScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={[styles.page, { backgroundColor: theme.background }]}>
+      style={styles.page}>
       <ScreenHeader title={copy.questionScreen} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {question ? (
-          <Tile tone="rose">
-            {space ? (
-              <AppText variant="label" color={theme.ink}>
-                {space.name}
-              </AppText>
-            ) : null}
-            <AppText variant="display" color={theme.ink} accessibilityRole="header">
+          <Glow tone={FEATURE_TONE.spaces}>
+            <AppText variant="strip" style={{ opacity: 0.88 }}>
+              {[copy.thisWeek, space?.name].filter(Boolean).join(' · ').toUpperCase()}
+            </AppText>
+            <AppText variant="title" accessibilityRole="header">
               {question.question}
             </AppText>
-          </Tile>
+          </Glow>
         ) : questions.isPending ? null : (
           <AppText color={theme.textSecondary}>{strings.post.notFound}</AppText>
         )}

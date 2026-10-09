@@ -1,50 +1,90 @@
 import { router } from 'expo-router';
-import { ArrowUpRight } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { Strip } from '@/components/Collector';
-import { Tile } from '@/components/Tile';
+import { Glow } from '@/components/Glow';
+import { Orb } from '@/components/Objects';
+import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useQuestionReplies, type WeeklyQuestion } from '@/lib/spaces';
-import { paperPalette, spacing } from '@/theme';
+import { FEATURE_TONE, radii, spacing } from '@/theme';
 
 type Props = {
   question: WeeklyQuestion;
-  /** The space it belongs to, shown on the right of the strip */
+  /** The space it belongs to */
   spaceName?: string;
+  /** Fill the height of a grid cell (used on Home) */
+  tall?: boolean;
 };
 
-/** The pinned weekly question. Shown at the top of its space and on Home. */
-export function QuestionCard({ question, spaceName }: Props) {
+/** The pinned weekly question, in the Spaces colour. Shown at the top of its space and on Home. */
+export function QuestionCard({ question, spaceName, tall }: Props) {
+  const theme = useTheme();
   const answers = useQuestionReplies(question.id).data?.filter((reply) => reply.status === 'approved').length ?? 0;
   return (
-    <Tile
-      tone="lime"
+    <Glow
+      tone={FEATURE_TONE.spaces}
+      style={tall ? styles.tall : undefined}
       accessibilityLabel={`${question.question}. ${strings.spaces.answerThis}`}
       onPress={() => router.push({ pathname: '/question/[id]', params: { id: question.id } })}>
-      <Strip left={strings.spaces.weekly} right={spaceName} />
-      <AppText variant="heading">{question.question}</AppText>
-      <View style={styles.row}>
+      <View style={styles.orb}>
+        <Orb size={tall ? 58 : 70} />
+      </View>
+      <AppText variant="strip" style={styles.eyebrow}>
+        {[strings.spaces.thisWeek, spaceName].filter(Boolean).join(' · ').toUpperCase()}
+      </AppText>
+      <AppText variant="heading" style={styles.question}>
+        {question.question}
+      </AppText>
+      <View style={styles.footer}>
         <View style={styles.count}>
           <AppText variant="numeral">{String(answers).padStart(2, '0')}</AppText>
-          <AppText variant="caption">{strings.spaces.answersLabel(answers)}</AppText>
+          <AppText variant="label">{strings.spaces.answersLabel(answers)}</AppText>
         </View>
-        <ArrowUpRight size={20} color={paperPalette.ink} />
+        {tall ? null : (
+          <View style={[styles.cta, { backgroundColor: theme.primary }]}>
+            <AppText variant="label" color={theme.onPrimary}>
+              {strings.spaces.answer}
+            </AppText>
+          </View>
+        )}
       </View>
-    </Tile>
+    </Glow>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
+  tall: {
+    flex: 1,
+  },
+  orb: {
+    position: 'absolute',
+    right: -14,
+    top: -16,
+  },
+  eyebrow: {
+    paddingRight: 56,
+    opacity: 0.9,
+  },
+  question: {
+    paddingRight: 30,
+  },
+  footer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
+    marginTop: 'auto',
+    paddingTop: spacing.md,
   },
   count: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: spacing.xs + 2,
+    gap: 6,
+  },
+  cta: {
+    height: 32,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radii.pill,
+    justifyContent: 'center',
   },
 });

@@ -8,11 +8,10 @@ import { Screen } from '@/components/Screen';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
-import { useSettings, type TextSize, type ThemeChoice } from '@/lib/settings';
+import { useSettings, type TextSize } from '@/lib/settings';
 import { spacing } from '@/theme';
 
 const copy = strings.settings;
-const THEMES: ThemeChoice[] = ['system', 'light', 'dark'];
 const SIZES: TextSize[] = ['medium', 'large', 'xlarge'];
 
 /** Remembered on this phone only. Nothing here is sent anywhere. */
@@ -24,23 +23,6 @@ export default function AppearanceSettingsScreen() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
       <ScreenHeader title={copy.appearance} />
       <Screen>
-        <View style={styles.section}>
-          <AppText variant="heading" accessibilityRole="header">
-            {copy.theme}
-          </AppText>
-          <View style={styles.chips} accessibilityRole="radiogroup" accessibilityLabel={copy.theme}>
-            {THEMES.map((option) => (
-              <Chip
-                key={option}
-                role="radio"
-                label={copy.themes[option]}
-                selected={settings.theme === option}
-                onPress={() => settings.update({ theme: option })}
-              />
-            ))}
-          </View>
-        </View>
-
         <View style={styles.section}>
           <AppText variant="heading" accessibilityRole="header">
             {copy.textSize}

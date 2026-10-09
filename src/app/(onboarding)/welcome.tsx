@@ -4,15 +4,21 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
+import { Avatar } from '@/components/Avatar';
 import { Button } from '@/components/Button';
 import { Dots } from '@/components/Dots';
-import { Starburst } from '@/components/Starburst';
+import { Glow } from '@/components/Glow';
+import { Asterisk, Orb } from '@/components/Objects';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
-import { minTapSize, radii, spacing, type BlockTone } from '@/theme';
+import { minTapSize, radii, spacing, type GlowTone } from '@/theme';
 
-/** Each slide has its own colour for the big star. */
-const TONES: BlockTone[] = ['rose', 'lime', 'mint'];
+/** Each slide has its own glow colour and character. */
+const SLIDES: { tone: GlowTone; avatar: number }[] = [
+  { tone: 'lilac', avatar: 1 },
+  { tone: 'mint', avatar: 4 },
+  { tone: 'pink', avatar: 7 },
+];
 
 export default function WelcomeScreen() {
   const theme = useTheme();
@@ -20,10 +26,11 @@ export default function WelcomeScreen() {
   const [index, setIndex] = useState(0);
   const slides = strings.onboarding.slides;
   const slide = slides[index];
+  const look = SLIDES[index];
   const isLast = index === slides.length - 1;
 
   return (
-    <View style={[styles.page, { backgroundColor: theme.background, paddingTop: insets.top }]}>
+    <View style={[styles.page, { paddingTop: insets.top + spacing.sm }]}>
       <Dots />
       <View style={styles.skipRow}>
         {isLast ? null : (
@@ -33,16 +40,17 @@ export default function WelcomeScreen() {
         )}
       </View>
 
-      {/* Decoration only: a cluster of stars, one filled with this slide's colour. */}
-      <View style={styles.art}>
-        <View style={styles.outlineOne}>
-          <Starburst size={170} stroke={theme.text} points={12} inner={0.12} />
+      <Glow tone={look.tone} style={styles.hero}>
+        <View style={styles.asterisk}>
+          <Asterisk size={150} />
         </View>
-        <View style={styles.outlineTwo}>
-          <Starburst size={120} stroke={theme.text} points={9} inner={0.14} />
+        <View style={styles.orb}>
+          <Orb size={74} />
         </View>
-        <Starburst size={230} fill={theme.blocks[TONES[index]]} points={8} inner={0.14} />
-      </View>
+        <View style={styles.character}>
+          <Avatar id={look.avatar} size={156} />
+        </View>
+      </Glow>
 
       <View style={styles.body}>
         <View
@@ -54,7 +62,7 @@ export default function WelcomeScreen() {
               key={item.title}
               style={[
                 styles.dot,
-                { backgroundColor: i === index ? theme.primary : theme.border },
+                { backgroundColor: i === index ? theme.primary : theme.surfaceAlt },
                 i === index && styles.dotActive,
               ]}
             />
@@ -66,21 +74,13 @@ export default function WelcomeScreen() {
         <AppText color={theme.textSecondary}>{slide.body}</AppText>
       </View>
 
-      <View style={[styles.footer, { paddingBottom: insets.bottom + spacing.lg }]}>
+      <View style={[styles.footer, { paddingBottom: insets.bottom + spacing.md }]}>
         <Button
           label={isLast ? strings.onboarding.getStarted : strings.onboarding.next}
           onPress={() => (isLast ? router.push('/age') : setIndex(index + 1))}
         />
-        <Button
-          variant="text"
-          label={strings.onboarding.haveAccount}
-          onPress={() => router.push('/sign-in')}
-        />
-        <Button
-          variant="text"
-          label={strings.helplines.link}
-          onPress={() => router.push('/helplines')}
-        />
+        <Button variant="text" label={strings.onboarding.haveAccount} onPress={() => router.push('/sign-in')} />
+        <Button variant="text" label={strings.helplines.link} onPress={() => router.push('/helplines')} />
       </View>
     </View>
   );
@@ -89,11 +89,11 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
+    paddingHorizontal: spacing.lg,
   },
   skipRow: {
     minHeight: minTapSize,
     alignItems: 'flex-end',
-    paddingHorizontal: spacing.lg,
   },
   skip: {
     minHeight: minTapSize,
@@ -102,32 +102,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  art: {
+  hero: {
     flex: 1,
-    minHeight: 180,
+    minHeight: 200,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
   },
-  outlineOne: {
+  asterisk: {
     position: 'absolute',
-    top: 0,
-    left: -30,
+    right: -26,
+    top: -22,
   },
-  outlineTwo: {
+  orb: {
     position: 'absolute',
-    bottom: 0,
-    right: -10,
+    left: -16,
+    bottom: -14,
+  },
+  character: {
+    transform: [{ rotate: '-4deg' }],
   },
   body: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
+    paddingTop: spacing.xl,
     gap: spacing.md,
   },
   dots: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginBottom: spacing.xs,
   },
   dot: {
     width: 8,
@@ -138,8 +138,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   footer: {
-    paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-    gap: spacing.xs,
+    gap: 2,
   },
 });

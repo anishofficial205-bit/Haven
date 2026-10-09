@@ -9,12 +9,16 @@ type Props = {
   /** Leave out onPress for a chip that is only a label */
   onPress?: () => void;
   selected?: boolean;
-  /** 'warning' is for trigger warnings */
+  /** 'warning' is for trigger warnings and things that need attention */
   tone?: 'default' | 'warning';
   /** How a selectable chip is announced: one of several, or on/off */
   role?: 'radio' | 'checkbox';
 };
 
+/**
+ * With onPress: a pill you can select, which turns yellow when chosen.
+ * Without: a small quiet label (yellow if it is a warning).
+ */
 export function Chip({ label, onPress, selected = false, tone = 'default', role = 'checkbox' }: Props) {
   const theme = useTheme();
   const warning = tone === 'warning';
@@ -22,16 +26,13 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
   if (!onPress) {
     return (
       <View style={[styles.label, { backgroundColor: warning ? theme.primary : theme.surfaceAlt }]}>
-        <AppText variant="caption" color={warning ? theme.onPrimary : theme.textSecondary}>
+        <AppText variant="caption" color={warning ? theme.onPrimary : '#D5D5DF'} style={styles.labelText}>
           {label}
         </AppText>
       </View>
     );
   }
 
-  // Selected: a filled pill.
-  const fill = theme.primary;
-  const onFill = theme.onPrimary;
   return (
     <Pressable
       onPress={onPress}
@@ -39,10 +40,13 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
       accessibilityState={role === 'radio' ? { selected } : { checked: selected }}
       hitSlop={{ top: 5, bottom: 5 }}
       style={[
-        styles.button,
-        { backgroundColor: selected ? fill : 'transparent', borderColor: selected ? fill : theme.border },
+        styles.pill,
+        {
+          backgroundColor: selected ? theme.primary : 'transparent',
+          borderColor: selected ? theme.primary : 'rgba(255, 255, 255, 0.55)',
+        },
       ]}>
-      <AppText variant="label" color={selected ? onFill : theme.text}>
+      <AppText variant="label" color={selected ? theme.onPrimary : theme.text}>
         {label}
       </AppText>
     </Pressable>
@@ -51,15 +55,19 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
 
 const styles = StyleSheet.create({
   label: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 3,
+    height: 24,
+    paddingHorizontal: spacing.sm + 2,
     borderRadius: radii.pill,
+    justifyContent: 'center',
   },
-  button: {
-    minHeight: 34,
-    paddingHorizontal: spacing.md + 2,
+  labelText: {
+    fontFamily: 'Poppins_500Medium',
+  },
+  pill: {
+    height: 36,
+    paddingHorizontal: spacing.lg - 1,
     borderRadius: radii.pill,
-    borderWidth: 1.25,
+    borderWidth: 1.3,
     alignItems: 'center',
     justifyContent: 'center',
   },

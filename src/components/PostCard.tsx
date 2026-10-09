@@ -7,13 +7,13 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Chip } from '@/components/Chip';
-import { Strip } from '@/components/Collector';
+import { Glow } from '@/components/Glow';
 import { ReactionBar } from '@/components/ReactionBar';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import type { PostCard as Post } from '@/lib/posts';
 import { timeAgo } from '@/lib/time';
-import { radii, spacing } from '@/theme';
+import { FEATURE_TONE, radii, spacing } from '@/theme';
 
 type Props = {
   post: Post;
@@ -27,20 +27,13 @@ type Props = {
 };
 
 /**
- * One post, for confessions and space posts alike, as a paper card. It never
- * shows who wrote it: everyone is "Anonymous" with the same avatar.
+ * One post, for confessions and space posts alike, on a plain dark panel so
+ * it is easy to read. It never shows who wrote it: everyone is "Anonymous"
+ * with the same avatar.
  */
-export function PostCard(props: Props) {
-  return (
-    <Card>
-      <PostBody {...props} />
-    </Card>
-  );
-}
-
-/** The inside of the card. A separate component so it picks up the card's colours. */
-function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
+export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
   const theme = useTheme();
+  const tone = post.kind === 'space_post' ? FEATURE_TONE.spaces : FEATURE_TONE.confess;
   // Content with trigger warnings stays out of sight until the reader chooses.
   // Authors already know what they wrote.
   const gated = post.trigger_warnings.length > 0 && !post.is_mine;
@@ -56,24 +49,33 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
     : post.status === 'hidden' ? strings.post.hidden
     : null;
 
-  const kind = post.post_type ? strings.spaces.postTypes[post.post_type] : strings.tabs.confess;
-  const flag = post.is_mine ? strings.post.yours : post.is_seed ? strings.post.sample : undefined;
+  const meta = [
+    timeAgo(post.created_at),
+    post.post_type ? strings.spaces.postTypes[post.post_type] : null,
+    post.is_mine ? strings.post.yours : post.is_seed ? strings.post.sample : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
-    <>
-      <Strip left={`${kind} · ${timeAgo(post.created_at)}`} right={flag} />
-
+    <Card>
       <View style={styles.top}>
-        <AnonymousAvatar size={26} />
-        <AppText variant="label" style={styles.flex}>
-          {strings.post.anonymous}
-        </AppText>
+        <AnonymousAvatar tone={tone} />
+        <View style={styles.flex}>
+          <AppText variant="label" numberOfLines={1}>
+            {strings.post.anonymous}
+            <AppText variant="caption" color={theme.textSecondary}>
+              {'  '}
+              {meta}
+            </AppText>
+          </AppText>
+        </View>
         {onMenu && !preview ? (
           <Pressable
             onPress={onMenu}
             accessibilityRole="button"
             accessibilityLabel={strings.post.moreOptions}
-            hitSlop={8}
+            hitSlop={10}
             style={styles.menu}>
             <Ellipsis size={20} color={theme.textSecondary} />
           </Pressable>
@@ -89,24 +91,18 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
       ) : null}
 
       {hidden ? (
-        <View style={[styles.gate, { backgroundColor: theme.blocks.rose }]}>
+        // The real words are not rendered at all until "Show anyway" is tapped.
+        <Glow tone={tone} style={styles.gate}>
           <AppText variant="label">{strings.post.warningTitle}</AppText>
           <View style={styles.chips}>
             {post.trigger_warnings.map((warning) => (
               <Chip key={warning} tone="warning" label={strings.triggerWarnings[warning]} />
             ))}
           </View>
-          {/* Stand-in lines, not the real words: nothing can be read through them. */}
-          <View style={styles.blurLines} importantForAccessibility="no-hide-descendants" aria-hidden>
-            {[1, 0.92, 0.6].map((width) => (
-              <View
-                key={width}
-                style={[styles.blurLine, { width: `${width * 100}%`, backgroundColor: theme.ink }]}
-              />
-            ))}
+          <View style={styles.showRow}>
+            <Button variant="secondary" label={strings.post.showAnyway} onPress={() => setRevealed(true)} />
           </View>
-          <Button variant="secondary" label={strings.post.showAnyway} onPress={() => setRevealed(true)} />
-        </View>
+        </Glow>
       ) : (
         <>
           {post.trigger_warnings.length > 0 ? (
@@ -121,7 +117,9 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
             disabled={!onOpen || preview}
             accessibilityRole={onOpen ? 'button' : undefined}
             accessibilityHint={onOpen ? strings.post.openPost : undefined}>
-            <AppText numberOfLines={onOpen ? 6 : undefined}>{post.body}</AppText>
+            <AppText color="#F2F2F6" numberOfLines={onOpen ? 6 : undefined}>
+              {post.body}
+            </AppText>
           </Pressable>
         </>
       )}
@@ -135,7 +133,7 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
       ) : null}
 
       {post.status === 'published' || preview ? (
-        <View style={[styles.footer, { borderTopColor: theme.surfaceAlt }]}>
+        <View style={[styles.footer, { borderTopColor: theme.border }]}>
           <ReactionBar
             targetType="post"
             id={post.id}
@@ -149,17 +147,18 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
               onPress={onOpen}
               disabled={preview}
               accessibilityRole="button"
-              hitSlop={8}
+              accessibilityLabel={strings.post.replies(post.reply_count)}
+              hitSlop={10}
               style={styles.replies}>
-              <MessageCircle size={15} color={theme.textSecondary} />
+              <MessageCircle size={16} color={theme.textSecondary} />
               <AppText variant="label" color={theme.textSecondary}>
-                {strings.post.replies(post.reply_count)}
+                {post.reply_count}
               </AppText>
             </Pressable>
           ) : null}
         </View>
       ) : null}
-    </>
+    </Card>
   );
 }
 
@@ -178,39 +177,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  footer: {
-    borderTopWidth: 1,
-    paddingTop: spacing.sm + 2,
-    marginTop: 2,
-    gap: spacing.sm,
-  },
   status: {
-    borderRadius: radii.chip,
+    borderRadius: radii.chip + 2,
     padding: spacing.md,
   },
   gate: {
-    borderRadius: radii.chip + 6,
-    borderTopRightRadius: radii.sharp,
-    padding: spacing.md,
-    gap: spacing.md,
+    borderRadius: radii.card - 6,
+    gap: spacing.sm + 2,
+  },
+  showRow: {
+    alignSelf: 'flex-start',
   },
   chips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.xs,
+    gap: 5,
   },
-  blurLines: {
-    gap: spacing.sm,
-    opacity: 0.18,
-  },
-  blurLine: {
-    height: 12,
-    borderRadius: radii.pill,
-  },
-  replies: {
+  footer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.xs,
-    alignSelf: 'flex-start',
+    gap: spacing.sm,
+    borderTopWidth: 1,
+    paddingTop: spacing.sm + 2,
+  },
+  replies: {
+    marginLeft: 'auto',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });

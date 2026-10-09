@@ -1,37 +1,33 @@
 import { View } from 'react-native';
 import Svg, { Path, Rect } from 'react-native-svg';
 
-import { useTheme } from '@/hooks/useTheme';
+import { glows, type GlowTone } from '@/theme';
+
+type Props = {
+  size?: number;
+  /** The colour of the area it appears in */
+  tone?: GlowTone;
+};
 
 /**
  * The one avatar shown on all public content, whoever wrote it:
- * a little ghost in dark glasses.
+ * a small white ghost on the area's colour.
  */
-export function AnonymousAvatar({ size = 36 }: { size?: number }) {
-  const theme = useTheme();
+export function AnonymousAvatar({ size = 28, tone = 'pink' }: Props) {
   return (
     <View
       style={{
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: theme.blocks.sky,
-        borderWidth: 1.5,
-        borderColor: theme.ink,
+        backgroundColor: glows[tone][1],
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <Svg width={size * 0.74} height={size * 0.74} viewBox="0 0 100 100">
-        <Path
-          d="M18 88 V46 A32 32 0 0 1 82 46 V88 L69 77 L56 88 L44 77 L31 88 Z"
-          fill={theme.ink}
-          stroke={theme.ink}
-          strokeWidth={4}
-          strokeLinejoin="round"
-        />
-        <Rect x={26} y={40} width={21} height={14} rx={6} fill={theme.paper} />
-        <Rect x={53} y={40} width={21} height={14} rx={6} fill={theme.paper} />
-        <Rect x={44} y={44} width={12} height={4} fill={theme.paper} />
+      <Svg width={size * 0.6} height={size * 0.6} viewBox="0 0 100 100">
+        <Path d="M14 94 V46 A36 36 0 0 1 86 46 V94 L72 82 L58 94 L44 82 L30 94 Z" fill="#FFFFFF" />
+        <Rect x={30} y={40} width={14} height={16} rx={7} fill={glows[tone][2]} />
+        <Rect x={56} y={40} width={14} height={16} rx={7} fill={glows[tone][2]} />
       </Svg>
     </View>
   );

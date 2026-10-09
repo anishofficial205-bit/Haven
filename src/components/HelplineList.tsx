@@ -5,7 +5,7 @@ import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { helplines } from '@/lib/helplines';
-import { minTapSize, radii, spacing } from '@/theme';
+import { glows, minTapSize, radii, spacing } from '@/theme';
 
 /** Tap-to-call helplines. Used wherever someone might need help right now. */
 export function HelplineList() {
@@ -23,8 +23,8 @@ export function HelplineList() {
             styles.row,
             { backgroundColor: theme.surface, borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
           ]}>
-          <View style={[styles.icon, { backgroundColor: theme.blocks.lime }]}>
-            <Phone size={20} color={theme.ink} />
+          <View style={[styles.icon, { backgroundColor: glows.mint[1] }]}>
+            <Phone size={18} color="#FFFFFF" />
           </View>
           <View style={styles.text}>
             <AppText variant="bodyStrong">{line.name}</AppText>
@@ -51,8 +51,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     padding: spacing.md,
     borderRadius: radii.card,
-    borderTopLeftRadius: radii.sharp,
-    borderWidth: 1.5,
+    borderWidth: 1,
     minHeight: minTapSize + 16,
   },
   icon: {
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   number: {
-    fontSize: 22,
-    lineHeight: 26,
+    fontSize: 24,
+    lineHeight: 24,
   },
 });

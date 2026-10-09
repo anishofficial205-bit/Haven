@@ -7,15 +7,17 @@ Full spec: `docs/SPEC.md`. Read it before changing anything. Expo-specific rules
 
 - Expo SDK 57 (React Native 0.86) + TypeScript, Expo Router. Routes live in `src/app/`.
 - Styling: `StyleSheet` + tokens in `src/theme.ts`, read through `useTheme()`.
-- Look: "Collector" (chosen by the designer, Oct 2026; replaces the spec's purple gradients).
-  Black dotted page (`Dots`), pastel puzzle tiles with one sharp corner (`Tile`, tones
-  lime/mint/rose/sky), paper cards (`Card`), and collectible-card parts in `Collector.tsx`
-  (`Strip`, `Frame`, `Stats`, `Badge`). `Card` and `Tile` set `SurfaceContext`, so `useTheme()`
-  inside them returns dark-on-light colours automatically; use `usePageTheme()` for the page itself.
-  Mockups the designer approved: https://claude.ai/artifact/4TciLai121jRAy66WMKGqg (variation 4).
+- Look: "Glow Blocks" (chosen by the designer, Oct 2026; replaces the spec's purple gradients).
+  Dark only. Black dotted page (`Dots`); `Glow` blocks lit from inside for special things; plain dark
+  `Card` panels for anything read at length; `Button`/`Chip` pills; dot-matrix numbers
+  (`variant="numeral"`); electric yellow (`theme.primary`) means selected or the main action only.
+  One colour per area via `FEATURE_TONE` in `src/theme.ts`: scenarios lilac, confess pink, spaces
+  periwinkle, help mint, profile orange. Home uses all five. Use the area's tone for any new Glow.
+  Approved mockups: https://claude.ai/artifact/MmkAevChtn62VdSL1h4pxq and
+  https://claude.ai/artifact/5PxDfxQRBMPEr4FfrNSdt4 (variation 1).
 - Backend: Supabase (Postgres, Auth, RLS). SQL in `supabase/migrations/`.
 - Data: TanStack Query + `src/lib/supabase.ts`.
-- Icons: `lucide-react-native`. Fonts: Bricolage Grotesque (text), Knewave brush (`display`), DM Mono (`strip`, `numeral`).
+- Icons: `lucide-react-native`. Fonts: Poppins (text), Doto (dot-matrix numbers).
 
 ## Commands
 

@@ -1,28 +1,24 @@
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
-import { SurfaceContext } from '@/hooks/useTheme';
-import { paperPalette, radii, spacing } from '@/theme';
+import { useTheme } from '@/hooks/useTheme';
+import { radii, spacing } from '@/theme';
 
 /**
- * A paper card: plain off-white, evenly rounded.
- * Everything inside it automatically uses dark-on-light colours.
- * For a block of pastel colour, use Tile instead.
+ * A plain dark panel with a hairline edge. Anything read at length (posts,
+ * replies, forms) sits on one of these. For colour, use Glow.
  */
 export function Card({ style, ...rest }: ViewProps) {
+  const theme = useTheme();
   return (
-    <SurfaceContext value={paperPalette}>
-      <View
-        {...rest}
-        style={[styles.card, { backgroundColor: paperPalette.surface }, style]}
-      />
-    </SurfaceContext>
+    <View {...rest} style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }, style]} />
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     borderRadius: radii.card,
-    padding: spacing.md + 2,
+    borderWidth: 1,
+    padding: spacing.lg - 2,
     gap: spacing.sm + 2,
   },
 });
