@@ -1,4 +1,5 @@
 import * as ScreenCapture from 'expo-screen-capture';
+import { useEffect } from 'react';
 import { Platform } from 'react-native';
 
 import { ANDROID_HIDE_IN_RECENTS } from '@/config';
@@ -15,5 +16,15 @@ export function hideFromAppSwitcher() {
 /**
  * Blocks screenshots while a sensitive screen is open (confession detail,
  * help requests). Android blocks them outright; iOS blanks the capture.
+ * Browsers have no such feature, so the preview skips it.
  */
-export const useBlockScreenshots = ScreenCapture.usePreventScreenCapture;
+export function useBlockScreenshots() {
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    const key = 'sensitive-screen';
+    ScreenCapture.preventScreenCaptureAsync(key).catch(() => {});
+    return () => {
+      ScreenCapture.allowScreenCaptureAsync(key).catch(() => {});
+    };
+  }, []);
+}

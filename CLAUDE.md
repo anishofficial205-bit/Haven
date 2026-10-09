@@ -58,12 +58,19 @@ Signed-in screens outside the tabs use `ScreenHeader`, which carries the panic s
 `src/lib/panic.tsx` wraps everything: after a quick exit only the calculator is rendered.
 Call `useBlockScreenshots()` (src/lib/privacy.ts) on confession detail and help request screens.
 
+## Posts
+
+`src/lib/posts.ts` holds every query and mutation for posts, replies, reactions, reports, blocks
+and saves. `PostCard`, `ReplyCard`, `ReactionBar` and `PostMenu` are shared by confessions and
+(phase 7) spaces. Posts with trigger warnings render placeholder lines, never the real text, until
+"Show anyway" is tapped.
+
 ## Progress
 
 - [x] Phase 1 Foundation
 - [x] Phase 2 Onboarding and account (password reset is a database function, not an Edge Function)
 - [x] Phase 3 Safety layer (screenshot blocking and app-switcher hiding are untested: need a real phone)
-- [ ] Phase 4 Confessions
+- [x] Phase 4 Confessions (seeing another person's post, report, block and auto-hide need a second account to test)
 - [ ] Phase 5 Moderation
 - [ ] Phase 6 Scenarios
 - [ ] Phase 7 Spaces

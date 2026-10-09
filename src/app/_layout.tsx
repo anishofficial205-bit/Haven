@@ -86,6 +86,8 @@ function RootNavigator() {
         <Stack.Protected guard={stage === 'app'}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="profile/index" />
+          <Stack.Screen name="post/[id]" />
+          <Stack.Screen name="compose" />
         </Stack.Protected>
         <Stack.Screen name="policy" />
         <Stack.Screen name="helplines" />
