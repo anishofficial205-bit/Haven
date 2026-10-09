@@ -56,14 +56,14 @@ export default function RequestThreadScreen() {
           style={[
             styles.bubble,
             mine
-              ? { backgroundColor: theme.primary, borderBottomRightRadius: 4 }
+              ? { backgroundColor: theme.blocks.blue, borderBottomRightRadius: 4 }
               : { backgroundColor: theme.surfaceAlt, borderBottomLeftRadius: 4 },
           ]}>
-          <AppText variant="caption" color={mine ? theme.onPrimary : theme.primary}>
+          <AppText variant="caption" color={mine ? theme.ink : theme.textSecondary}>
             {sender === 'user' ? (isOwner ? copy.you : (fromUsername ?? strings.post.anonymous)) : copy.staff} ·{' '}
             {timeAgo(when)}
           </AppText>
-          <AppText color={mine ? theme.onPrimary : theme.text}>{text}</AppText>
+          <AppText color={mine ? theme.ink : theme.text}>{text}</AppText>
         </View>
       </View>
     );

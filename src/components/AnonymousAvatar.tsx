@@ -1,23 +1,36 @@
-import { VenetianMask } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
 
 import { useTheme } from '@/hooks/useTheme';
-import { radii } from '@/theme';
 
-/** The one avatar shown on all public content, whoever wrote it. */
+/**
+ * The one avatar shown on all public content, whoever wrote it:
+ * a little ghost in dark glasses.
+ */
 export function AnonymousAvatar({ size = 36 }: { size?: number }) {
   const theme = useTheme();
   return (
-    <View style={[styles.circle, { width: size, height: size, backgroundColor: theme.surfaceAlt }]}>
-      <VenetianMask size={size * 0.58} color={theme.primary} />
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: theme.surfaceAlt,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <Svg width={size * 0.74} height={size * 0.74} viewBox="0 0 100 100">
+        <Path
+          d="M18 88 V46 A32 32 0 0 1 82 46 V88 L69 77 L56 88 L44 77 L31 88 Z"
+          fill={theme.text}
+          stroke={theme.text}
+          strokeWidth={4}
+          strokeLinejoin="round"
+        />
+        <Rect x={26} y={40} width={21} height={14} rx={6} fill={theme.background} />
+        <Rect x={53} y={40} width={21} height={14} rx={6} fill={theme.background} />
+        <Rect x={44} y={44} width={12} height={4} fill={theme.background} />
+      </Svg>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  circle: {
-    borderRadius: radii.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

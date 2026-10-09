@@ -1,17 +1,17 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { EyeOff, MessagesSquare, ShieldCheck, type LucideIcon } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { Starburst } from '@/components/Starburst';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
-import { minTapSize, radii, spacing } from '@/theme';
+import { minTapSize, radii, spacing, type BlockTone } from '@/theme';
 
-const ICONS: LucideIcon[] = [MessagesSquare, ShieldCheck, EyeOff];
+/** Each slide has its own colour for the big star. */
+const TONES: BlockTone[] = ['pink', 'yellow', 'green'];
 
 export default function WelcomeScreen() {
   const theme = useTheme();
@@ -19,32 +19,28 @@ export default function WelcomeScreen() {
   const [index, setIndex] = useState(0);
   const slides = strings.onboarding.slides;
   const slide = slides[index];
-  const Icon = ICONS[index];
   const isLast = index === slides.length - 1;
 
   return (
-    <View style={[styles.page, { backgroundColor: theme.background }]}>
-      <LinearGradient
-        colors={theme.gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={[styles.hero, { paddingTop: insets.top + spacing.sm }]}>
-        <View style={styles.skipRow}>
-          {isLast ? null : (
-            <Pressable
-              onPress={() => router.push('/age')}
-              accessibilityRole="button"
-              style={styles.skip}>
-              <AppText variant="bodyStrong" color={theme.onGradient}>
-                {strings.onboarding.skip}
-              </AppText>
-            </Pressable>
-          )}
+    <View style={[styles.page, { backgroundColor: theme.background, paddingTop: insets.top }]}>
+      <View style={styles.skipRow}>
+        {isLast ? null : (
+          <Pressable onPress={() => router.push('/age')} accessibilityRole="button" style={styles.skip}>
+            <AppText variant="bodyStrong">{strings.onboarding.skip}</AppText>
+          </Pressable>
+        )}
+      </View>
+
+      {/* Decoration only: a cluster of stars, one filled with this slide's colour. */}
+      <View style={styles.art}>
+        <View style={styles.outlineOne}>
+          <Starburst size={170} stroke={theme.text} points={12} inner={0.12} />
         </View>
-        <View style={styles.heroIcon}>
-          <Icon size={72} color={theme.onGradient} strokeWidth={1.5} />
+        <View style={styles.outlineTwo}>
+          <Starburst size={120} stroke={theme.text} points={9} inner={0.14} />
         </View>
-      </LinearGradient>
+        <Starburst size={230} fill={theme.blocks[TONES[index]]} points={8} inner={0.14} />
+      </View>
 
       <View style={styles.body}>
         <View
@@ -62,7 +58,7 @@ export default function WelcomeScreen() {
             />
           ))}
         </View>
-        <AppText variant="title" accessibilityRole="header">
+        <AppText variant="display" accessibilityRole="header">
           {slide.title}
         </AppText>
         <AppText color={theme.textSecondary}>{slide.body}</AppText>
@@ -92,15 +88,10 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  hero: {
-    height: '38%',
-    borderBottomLeftRadius: radii.sheet * 1.5,
-    borderBottomRightRadius: radii.sheet * 1.5,
-    paddingHorizontal: spacing.lg,
-  },
   skipRow: {
     minHeight: minTapSize,
     alignItems: 'flex-end',
+    paddingHorizontal: spacing.lg,
   },
   skip: {
     minHeight: minTapSize,
@@ -109,22 +100,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  heroIcon: {
+  art: {
     flex: 1,
+    minHeight: 180,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: spacing.xl,
+    overflow: 'hidden',
+  },
+  outlineOne: {
+    position: 'absolute',
+    top: 0,
+    left: -30,
+  },
+  outlineTwo: {
+    position: 'absolute',
+    bottom: 0,
+    right: -10,
   },
   body: {
-    flex: 1,
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.lg,
     gap: spacing.md,
   },
   dots: {
     flexDirection: 'row',
     gap: spacing.sm,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.xs,
   },
   dot: {
     width: 8,
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
     gap: spacing.xs,
   },
 });

@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -8,10 +7,11 @@ import { PostMenu, type MenuTarget } from '@/components/PostMenu';
 import { ReplyCard } from '@/components/ReplyCard';
 import { ReplyComposer } from '@/components/ReplyComposer';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { Tile } from '@/components/Tile';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useCreateQuestionReply, useQuestionReplies, useSpaces, useWeeklyQuestions } from '@/lib/spaces';
-import { radii, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 const copy = strings.spaces;
 
@@ -35,20 +35,16 @@ export default function QuestionScreen() {
       <ScreenHeader title={copy.questionScreen} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {question ? (
-          <LinearGradient
-            colors={theme.gradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.question}>
+          <Tile tone="pink">
             {space ? (
-              <AppText variant="label" color={theme.onGradientMuted}>
+              <AppText variant="label" color={theme.ink}>
                 {space.name}
               </AppText>
             ) : null}
-            <AppText variant="heading" color={theme.onGradient} accessibilityRole="header">
+            <AppText variant="display" color={theme.ink} accessibilityRole="header">
               {question.question}
             </AppText>
-          </LinearGradient>
+          </Tile>
         ) : questions.isPending ? null : (
           <AppText color={theme.textSecondary}>{strings.post.notFound}</AppText>
         )}
@@ -96,11 +92,6 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.lg,
     gap: spacing.xl,
-  },
-  question: {
-    borderRadius: radii.card,
-    padding: spacing.xl,
-    gap: spacing.sm,
   },
   section: {
     gap: spacing.md,

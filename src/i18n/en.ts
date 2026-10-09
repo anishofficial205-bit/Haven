@@ -22,6 +22,7 @@ export const en = {
   header: {
     hello: (username: string) => `Hello, ${username}`,
     helloGuest: 'Hello',
+    greeting: 'hello,',
     openProfile: 'Open your profile',
     panicButton: 'Quick exit',
     panicHint: 'Leaves the app instantly. Hold for helplines.',
@@ -361,6 +362,8 @@ export const en = {
   home: {
     anonymousTitle: "You're anonymous here",
     anonymousBody: 'No real names, no photos, no contacts. No one can see your username on anything you share.',
+    anonymousShort: 'No names. No photos. No contacts.',
+    helpShort: 'Helplines and people who listen.',
     continueTitle: 'Pick up where you left off',
     startTitle: 'Try a scenario',
     startBody: 'A short story from a real grey area. You choose what happens next.',
@@ -519,6 +522,9 @@ export const en = {
   profile: {
     title: 'Profile',
     onlyYou: 'Only you can see this page.',
+    statPosts: 'Posts',
+    statSaved: 'Saved',
+    statScenarios: 'Scenarios',
     changeAvatar: 'Change avatar',
     avatarTitle: 'Pick an avatar',
     myPosts: 'My posts',

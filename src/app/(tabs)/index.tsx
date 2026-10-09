@@ -1,23 +1,22 @@
 import { router } from 'expo-router';
 import { EyeOff, LifeBuoy } from 'lucide-react-native';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { PostCard } from '@/components/PostCard';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
 import { QuestionCard } from '@/components/QuestionCard';
 import { Screen } from '@/components/Screen';
 import { SetupCheck } from '@/components/SetupCheck';
+import { Starburst } from '@/components/Starburst';
+import { Tile } from '@/components/Tile';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
-import { DOMAIN_ICONS } from '@/lib/icons';
 import { useConfessionOfTheDay } from '@/lib/posts';
 import { scenarios, statusOf, useScenarioProgress } from '@/lib/scenarios';
 import { useSpaces, useWeeklyQuestions } from '@/lib/spaces';
-import { radii, spacing } from '@/theme';
+import { spacing, tileGap } from '@/theme';
 
 const copy = strings.home;
 
@@ -32,7 +31,6 @@ export default function HomeScreen() {
   // The scenario to offer: one you're in the middle of, else the first you haven't tried.
   const inProgress = scenarios.find((item) => statusOf(progress.data?.[item.id]) === 'in_progress');
   const scenario = inProgress ?? scenarios.find((item) => statusOf(progress.data?.[item.id]) === 'new');
-  const ScenarioIcon = scenario ? DOMAIN_ICONS[scenario.domain] : null;
 
   // The pinned question of a space you joined, else of the first space.
   const space = spaces.data?.find((item) => questions.data?.[item.id]);
@@ -40,28 +38,62 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      {scenario && ScenarioIcon ? (
-        <Card>
-          <AppText variant="label" color={theme.textSecondary}>
-            {inProgress ? copy.continueTitle : copy.startTitle}
-          </AppText>
-          <View style={styles.row}>
-            <View style={[styles.icon, { backgroundColor: theme.surfaceAlt }]}>
-              <ScenarioIcon size={24} color={theme.primary} />
+      {/* The tiles sit close together so they read as one interlocking shape. */}
+      <View style={styles.puzzle}>
+        {scenario ? (
+          <Tile
+            tone="yellow"
+            arrow
+            accessibilityLabel={`${inProgress ? copy.continueTitle : copy.startTitle}: ${scenario.title}`}
+            onPress={() => router.push({ pathname: '/scenario/[id]', params: { id: scenario.id } })}>
+            <View style={styles.star}>
+              <Starburst size={64} fill={theme.ink} points={8} inner={0.16} />
             </View>
-            <View style={styles.flex}>
-              <AppText variant="bodyStrong">{scenario.title}</AppText>
-              <AppText color={theme.textSecondary}>{scenario.hook}</AppText>
-            </View>
-          </View>
-          <Button
-            label={inProgress ? copy.continue : copy.start}
-            onPress={() => router.push({ pathname: '/scenario/[id]', params: { id: scenario.id } })}
-          />
-        </Card>
-      ) : null}
+            <AppText variant="script" color={theme.ink}>
+              {inProgress ? copy.continueTitle : copy.startTitle}
+            </AppText>
+            <AppText variant="display" color={theme.ink} style={styles.scenarioTitle}>
+              {scenario.title}
+            </AppText>
+            <AppText color={theme.ink} style={styles.scenarioHook}>
+              {scenario.hook}
+            </AppText>
+          </Tile>
+        ) : null}
 
-      {question && space ? <QuestionCard question={question} label={`${copy.questionTitle} · ${space.name}`} /> : null}
+        {question && space ? (
+          <QuestionCard question={question} label={`${copy.questionTitle} · ${space.name}`} />
+        ) : null}
+
+        <View style={styles.pair}>
+          <View style={styles.half}>
+            <Tile tone="green" style={styles.fill}>
+              <EyeOff size={24} color={theme.ink} />
+              <AppText variant="bodyStrong" color={theme.ink}>
+                {copy.anonymousTitle}
+              </AppText>
+              <AppText variant="label" color={theme.ink}>
+                {copy.anonymousShort}
+              </AppText>
+            </Tile>
+          </View>
+          <View style={styles.half}>
+            <Tile
+              tone="blue"
+              style={styles.fill}
+              accessibilityLabel={copy.helpTitle}
+              onPress={() => router.navigate('/help')}>
+              <LifeBuoy size={24} color={theme.ink} />
+              <AppText variant="bodyStrong" color={theme.ink}>
+                {copy.helpTitle}
+              </AppText>
+              <AppText variant="label" color={theme.ink}>
+                {copy.helpShort}
+              </AppText>
+            </Tile>
+          </View>
+        </View>
+      </View>
 
       {featured.data ? (
         <View style={styles.section}>
@@ -83,28 +115,6 @@ export default function HomeScreen() {
         </View>
       ) : null}
 
-      <Card style={{ backgroundColor: theme.surfaceAlt }}>
-        <View style={styles.row}>
-          <EyeOff size={24} color={theme.primary} />
-          <AppText variant="bodyStrong" style={styles.flex}>
-            {copy.anonymousTitle}
-          </AppText>
-        </View>
-        <AppText color={theme.textSecondary}>{copy.anonymousBody}</AppText>
-      </Card>
-
-      <Pressable accessibilityRole="button" onPress={() => router.navigate('/help')}>
-        <Card>
-          <View style={styles.row}>
-            <LifeBuoy size={24} color={theme.primary} />
-            <View style={styles.flex}>
-              <AppText variant="bodyStrong">{copy.helpTitle}</AppText>
-              <AppText color={theme.textSecondary}>{copy.helpBody}</AppText>
-            </View>
-          </View>
-        </Card>
-      </Pressable>
-
       {__DEV__ ? <SetupCheck /> : null}
       <PostMenu target={menu} onClose={() => setMenu(null)} />
     </Screen>
@@ -112,22 +122,32 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  section: {
-    gap: spacing.md,
+  puzzle: {
+    gap: tileGap,
   },
-  row: {
+  star: {
+    position: 'absolute',
+    top: spacing.md,
+    right: spacing.md,
+  },
+  scenarioTitle: {
+    paddingRight: 64,
+  },
+  scenarioHook: {
+    paddingRight: spacing.xxl,
+  },
+  pair: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
+    gap: tileGap,
   },
-  flex: {
+  half: {
     flex: 1,
   },
-  icon: {
-    width: 48,
-    height: 48,
-    borderRadius: radii.chip + 4,
-    alignItems: 'center',
-    justifyContent: 'center',
+  fill: {
+    flexGrow: 1,
+    minHeight: 150,
+  },
+  section: {
+    gap: spacing.md,
   },
 });

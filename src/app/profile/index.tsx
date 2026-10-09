@@ -11,6 +11,7 @@ import { Chip } from '@/components/Chip';
 import { MenuGroup, MenuRow } from '@/components/MenuRow';
 import { PostCard } from '@/components/PostCard';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
+import { ProfileCard } from '@/components/ProfileCard';
 import { Screen } from '@/components/Screen';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { AVATAR_COUNT } from '@/config';
@@ -18,6 +19,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useAuth } from '@/lib/auth';
 import { useMyPosts, useSavedPosts } from '@/lib/posts';
+import { useScenarioProgress } from '@/lib/scenarios';
 import { radii, spacing } from '@/theme';
 
 const copy = strings.profile;
@@ -33,19 +35,25 @@ export default function ProfileScreen() {
   const mine = useMyPosts();
   const saved = useSavedPosts();
   const list = tab === 'mine' ? mine : saved;
+  const progress = useScenarioProgress();
+  const scenariosDone = Object.values(progress.data ?? {}).filter((item) => item.completed_at).length;
 
   return (
     <View style={[styles.page, { backgroundColor: theme.background }]}>
       <ScreenHeader title={copy.title} />
       <Screen>
-        <View style={styles.identity}>
-          <Avatar id={profile?.avatar_id ?? 1} size={96} />
-          <AppText variant="title">{profile?.username}</AppText>
-          <AppText color={theme.textSecondary} style={styles.center}>
-            {copy.onlyYou}
-          </AppText>
-          <Button variant="text" label={copy.changeAvatar} onPress={() => setAvatarOpen(true)} />
-        </View>
+        <ProfileCard
+          username={profile?.username ?? ''}
+          avatarId={profile?.avatar_id ?? 1}
+          starred={profile?.role === 'moderator'}
+          stats={[
+            { label: copy.statPosts, value: mine.data?.length ?? 0 },
+            { label: copy.statSaved, value: saved.data?.length ?? 0 },
+            { label: copy.statScenarios, value: scenariosDone },
+          ]}
+          footnote={copy.onlyYou}
+        />
+        <Button variant="secondary" label={copy.changeAvatar} onPress={() => setAvatarOpen(true)} />
 
         <MenuGroup>
           <MenuRow icon={Settings} label={copy.settings} onPress={() => router.push('/settings')} />
@@ -113,10 +121,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-  },
-  identity: {
-    alignItems: 'center',
-    gap: spacing.xs,
   },
   center: {
     textAlign: 'center',

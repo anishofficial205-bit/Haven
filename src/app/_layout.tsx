@@ -1,10 +1,12 @@
+import { BagelFatOne_400Regular } from '@expo-google-fonts/bagel-fat-one';
+import { GochiHand_400Regular } from '@expo-google-fonts/gochi-hand';
 import {
-  Nunito_400Regular,
-  Nunito_600SemiBold,
-  Nunito_700Bold,
-  Nunito_800ExtraBold,
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
   useFonts,
-} from '@expo-google-fonts/nunito';
+} from '@expo-google-fonts/outfit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { Stack } from 'expo-router/stack';
@@ -25,10 +27,12 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Nunito_400Regular,
-    Nunito_600SemiBold,
-    Nunito_700Bold,
-    Nunito_800ExtraBold,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    BagelFatOne_400Regular,
+    GochiHand_400Regular,
   });
   if (!fontsLoaded && fontError == null) return null;
 
@@ -109,8 +113,7 @@ function RootNavigator() {
         <Stack.Screen name="policy" />
         <Stack.Screen name="helplines" />
       </Stack>
-      {/* Signed-in screens sit under the violet header, so their status bar icons stay light. */}
-      <StatusBar style={stage === 'app' ? 'light' : 'auto'} />
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
     </ThemeProvider>
   );
 }

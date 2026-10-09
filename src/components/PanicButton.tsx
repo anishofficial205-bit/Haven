@@ -1,6 +1,7 @@
 import { ShieldCheck } from 'lucide-react-native';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { PressableScale } from '@/components/PressableScale';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { usePanic } from '@/lib/panic';
@@ -14,19 +15,16 @@ export function PanicButton() {
   const { quickExit, openHelp } = usePanic();
   const theme = useTheme();
   return (
-    <Pressable
+    <PressableScale
       onPress={quickExit}
       onLongPress={openHelp}
       accessibilityRole="button"
       accessibilityLabel={strings.header.panicButton}
       accessibilityHint={strings.header.panicHint}
       hitSlop={4}
-      style={({ pressed }) => [
-        styles.button,
-        { backgroundColor: theme.panic, opacity: pressed ? 0.7 : 1 },
-      ]}>
+      style={[styles.button, { backgroundColor: theme.panic }]}>
       <ShieldCheck size={24} color={theme.onPanic} />
-    </Pressable>
+    </PressableScale>
   );
 }
 

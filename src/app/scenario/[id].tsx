@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Lightbulb } from 'lucide-react-native';
 import { useRef, useState } from 'react';
@@ -7,9 +6,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { StoryText } from '@/components/StoryText';
+import { Tile } from '@/components/Tile';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import {
@@ -116,18 +115,14 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
           </AppText>
           {node.text ? <StoryText text={node.text} /> : null}
 
-          <LinearGradient
-            colors={theme.gradient}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.takeaway}>
-            <AppText variant="label" color={theme.onGradientMuted}>
+          <Tile tone="pink">
+            <AppText variant="script" color={theme.ink}>
               {copy.takeaway}
             </AppText>
-            <AppText variant="heading" color={theme.onGradient}>
+            <AppText variant="display" color={theme.ink}>
               {node.takeaway}
             </AppText>
-          </LinearGradient>
+          </Tile>
         </ScrollView>
         <View style={[styles.footer, { paddingBottom: insets.bottom + spacing.lg }]}>
           <Button label={copy.tryAgain} onPress={restart} />
@@ -151,11 +146,11 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
         {chosen ? (
           <>
             <View style={styles.youRow}>
-              <View style={[styles.youBubble, { backgroundColor: theme.primary }]}>
-                <AppText variant="caption" color={theme.onPrimary}>
+              <View style={[styles.youBubble, { backgroundColor: theme.blocks.blue }]}>
+                <AppText variant="caption" color={theme.ink}>
                   {copy.you}
                 </AppText>
-                <AppText color={theme.onPrimary}>{chosen.label}</AppText>
+                <AppText color={theme.ink}>{chosen.label}</AppText>
               </View>
             </View>
 
@@ -166,13 +161,15 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
               <StoryText text={chosen.consequence} />
             </View>
 
-            <Card style={{ backgroundColor: theme.surfaceAlt }}>
+            <Tile tone="green">
               <View style={styles.noteTitle}>
-                <Lightbulb size={20} color={theme.primary} />
-                <AppText variant="bodyStrong">{copy.whyItMatters}</AppText>
+                <Lightbulb size={20} color={theme.ink} />
+                <AppText variant="bodyStrong" color={theme.ink}>
+                  {copy.whyItMatters}
+                </AppText>
               </View>
-              <AppText>{chosen.expert_note}</AppText>
-            </Card>
+              <AppText color={theme.ink}>{chosen.expert_note}</AppText>
+            </Tile>
           </>
         ) : (
           <View style={styles.block}>
@@ -188,7 +185,7 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
                   styles.choice,
                   {
                     backgroundColor: pressed ? theme.surfaceAlt : theme.surface,
-                    borderColor: theme.primary,
+                    borderColor: theme.text,
                   },
                 ]}>
                 <AppText variant="bodyStrong">{choice.label}</AppText>
@@ -245,11 +242,6 @@ const styles = StyleSheet.create({
   noteTitle: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
-  },
-  takeaway: {
-    borderRadius: radii.card,
-    padding: spacing.xl,
     gap: spacing.sm,
   },
   footer: {

@@ -1,12 +1,13 @@
-import { ActivityIndicator, Pressable, StyleSheet, type PressableProps } from 'react-native';
+import { ActivityIndicator, StyleSheet, type PressableProps } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { PressableScale } from '@/components/PressableScale';
 import { useTheme } from '@/hooks/useTheme';
 import { minTapSize, radii, spacing } from '@/theme';
 
 type Props = Omit<PressableProps, 'style' | 'children'> & {
   label: string;
-  /** primary = filled, secondary = outlined, text = no frame */
+  /** primary = filled pill, secondary = outlined pill, text = no frame */
   variant?: 'primary' | 'secondary' | 'text';
   loading?: boolean;
 };
@@ -14,30 +15,33 @@ type Props = Omit<PressableProps, 'style' | 'children'> & {
 export function Button({ label, variant = 'primary', loading, disabled, ...rest }: Props) {
   const theme = useTheme();
   const inactive = disabled || loading;
-  const textColor = variant === 'primary' ? theme.onPrimary : theme.primary;
+  const textColor = variant === 'primary' ? theme.onPrimary : theme.text;
   return (
-    <Pressable
+    <PressableScale
       {...rest}
       disabled={inactive}
       accessibilityRole="button"
       accessibilityState={{ disabled: Boolean(inactive), busy: Boolean(loading) }}
-      style={({ pressed }) => [
+      style={[
         styles.button,
         variant === 'primary' && { backgroundColor: theme.primary },
-        variant === 'secondary' && { borderWidth: 2, borderColor: theme.primary },
-        { opacity: inactive ? 0.5 : pressed ? 0.8 : 1 },
+        variant === 'secondary' && { borderWidth: 1.5, borderColor: theme.text },
+        { opacity: inactive ? 0.45 : 1 },
       ]}>
       {loading ? <ActivityIndicator color={textColor} /> : null}
-      <AppText variant="bodyStrong" color={textColor} style={styles.label}>
+      <AppText
+        variant="bodyStrong"
+        color={textColor}
+        style={[styles.label, variant === 'text' && styles.underlined]}>
         {label}
       </AppText>
-    </Pressable>
+    </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: minTapSize + 4,
+    minHeight: minTapSize + 6,
     borderRadius: radii.pill,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
@@ -48,5 +52,8 @@ const styles = StyleSheet.create({
   },
   label: {
     textAlign: 'center',
+  },
+  underlined: {
+    textDecorationLine: 'underline',
   },
 });

@@ -1,13 +1,13 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Pin } from 'lucide-react-native';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Tile } from '@/components/Tile';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import type { WeeklyQuestion } from '@/lib/spaces';
-import { radii, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 type Props = {
   question: WeeklyQuestion;
@@ -19,34 +19,28 @@ type Props = {
 export function QuestionCard({ question, label }: Props) {
   const theme = useTheme();
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityHint={strings.spaces.answerThis}
+    <Tile
+      tone="pink"
+      arrow
+      accessibilityLabel={`${question.question}. ${strings.spaces.answerThis}`}
       onPress={() => router.push({ pathname: '/question/[id]', params: { id: question.id } })}>
-      <LinearGradient colors={theme.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
-        <View style={styles.row}>
-          <Pin size={16} color={theme.onGradientMuted} />
-          <AppText variant="label" color={theme.onGradientMuted} style={styles.flex}>
-            {label ?? strings.spaces.weekly}
-          </AppText>
-        </View>
-        <AppText variant="heading" color={theme.onGradient}>
-          {question.question}
+      <View style={styles.row}>
+        <Pin size={16} color={theme.ink} />
+        <AppText variant="label" color={theme.ink} style={styles.flex}>
+          {label ?? strings.spaces.weekly}
         </AppText>
-        <AppText variant="label" color={theme.onGradient}>
-          {strings.spaces.answerThis} →
-        </AppText>
-      </LinearGradient>
-    </Pressable>
+      </View>
+      <AppText variant="heading" color={theme.ink} style={styles.question}>
+        {question.question}
+      </AppText>
+      <AppText variant="script" color={theme.ink}>
+        {strings.spaces.answerThis}
+      </AppText>
+    </Tile>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    gap: spacing.sm,
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -54,5 +48,9 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  question: {
+    // Leaves room for the arrow button in the corner
+    paddingRight: spacing.lg,
   },
 });

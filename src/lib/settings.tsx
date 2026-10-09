@@ -11,7 +11,8 @@ export type Appearance = {
   highContrast: boolean;
 };
 
-const DEFAULTS: Appearance = { theme: 'system', textSize: 'medium', highContrast: false };
+// The look is designed dark-first; people can switch in Settings > Appearance.
+const DEFAULTS: Appearance = { theme: 'dark', textSize: 'medium', highContrast: false };
 const STORAGE_KEY = 'appearance';
 
 /** Body text starts at 16 and only ever gets bigger. */

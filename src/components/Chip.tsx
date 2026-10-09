@@ -17,18 +17,21 @@ type Props = {
 
 export function Chip({ label, onPress, selected = false, tone = 'default', role = 'checkbox' }: Props) {
   const theme = useTheme();
-  const accent = tone === 'warning' ? theme.warning : theme.primary;
+  const warning = tone === 'warning';
 
   if (!onPress) {
     return (
-      <View style={[styles.label, { backgroundColor: theme.surfaceAlt }]}>
-        <AppText variant="caption" color={tone === 'warning' ? theme.warning : theme.textSecondary}>
+      <View style={[styles.label, { backgroundColor: warning ? theme.blocks.yellow : theme.surfaceAlt }]}>
+        <AppText variant="caption" color={warning ? theme.ink : theme.textSecondary}>
           {label}
         </AppText>
       </View>
     );
   }
 
+  // Selected: a filled pill. Warnings fill yellow; everything else fills with the primary colour.
+  const fill = warning ? theme.blocks.yellow : theme.primary;
+  const onFill = warning ? theme.ink : theme.onPrimary;
   return (
     <Pressable
       onPress={onPress}
@@ -36,12 +39,9 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
       accessibilityState={role === 'radio' ? { selected } : { checked: selected }}
       style={[
         styles.button,
-        {
-          backgroundColor: selected ? accent : theme.surface,
-          borderColor: selected ? accent : theme.border,
-        },
+        { backgroundColor: selected ? fill : 'transparent', borderColor: selected ? fill : theme.border },
       ]}>
-      <AppText variant="label" color={selected ? theme.onPrimary : theme.text}>
+      <AppText variant="label" color={selected ? onFill : theme.text}>
         {label}
       </AppText>
     </Pressable>

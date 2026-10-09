@@ -3,6 +3,7 @@ import { StyleSheet, View, type ViewProps } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { radii, spacing } from '@/theme';
 
+/** A plain outlined card. For a block of colour, use Tile instead. */
 export function Card({ style, ...rest }: ViewProps) {
   const theme = useTheme();
   return (
@@ -16,7 +17,7 @@ export function Card({ style, ...rest }: ViewProps) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: radii.card,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1.5,
     padding: spacing.lg,
     gap: spacing.sm,
   },

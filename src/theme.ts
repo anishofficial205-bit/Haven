@@ -1,25 +1,33 @@
 /**
  * Every visual value in the app lives here, so the look can be tuned in one place.
  * Screens and components read these through `useTheme()` (src/hooks/useTheme.ts).
+ *
+ * The look: a near-black (or paper-white) page, solid blocks of bright colour
+ * with black text on them, white pill buttons, and big rounded tiles that fit
+ * together like puzzle pieces.
  */
 
+/** The four block colours. Text on a block is always `ink`. */
+export type BlockTone = 'yellow' | 'pink' | 'green' | 'blue';
+
 export type Palette = {
-  /** Page background behind cards */
+  /** Page background */
   background: string;
-  /** Cards and sheets */
+  /** Plain (outlined) cards and sheets */
   surface: string;
-  /** Quieter blocks inside a card: chips, input fields */
+  /** Quieter blocks inside a card: chips, input fields, speech bubbles */
   surfaceAlt: string;
   text: string;
   textSecondary: string;
+  /** Outline of plain cards */
   border: string;
-  /** Primary actions: buttons, active tab, links */
+  /** Primary actions and the active tab: a white pill on dark, a black pill on light */
   primary: string;
   onPrimary: string;
-  /** Header and hero surfaces: start and end of the violet gradient */
-  gradient: readonly [string, string];
-  onGradient: string;
-  onGradientMuted: string;
+  /** Bright blocks of colour for tiles */
+  blocks: Record<BlockTone, string>;
+  /** Text and icons on top of a block colour. The same in light and dark. */
+  ink: string;
   /** The panic shield has its own calm colour. Deliberately not alarm red. */
   panic: string;
   onPanic: string;
@@ -28,64 +36,67 @@ export type Palette = {
   danger: string;
 };
 
+const blocks: Record<BlockTone, string> = {
+  yellow: '#F4E73A',
+  pink: '#F272B4',
+  green: '#3BDD5E',
+  blue: '#4F8FFF',
+};
+const ink = '#0B0B0C';
+
+const dark: Palette = {
+  background: '#050506',
+  surface: '#0F0F11',
+  surfaceAlt: '#1D1D21',
+  text: '#FFFFFF',
+  textSecondary: '#A9A9B4',
+  border: '#2E2E35',
+  primary: '#FFFFFF',
+  onPrimary: ink,
+  blocks,
+  ink,
+  panic: '#B9F6E6',
+  onPanic: '#0B3B34',
+  success: '#4BE272',
+  warning: '#F4E73A',
+  danger: '#FF8794',
+};
+
 const light: Palette = {
-  background: '#F7F4FD',
+  background: '#F3F1EA',
   surface: '#FFFFFF',
-  surfaceAlt: '#EFE9FB',
-  text: '#1E1633',
-  textSecondary: '#5E557A',
-  border: '#E2DAF3',
-  primary: '#6435C9',
+  surfaceAlt: '#E8E5DB',
+  text: ink,
+  textSecondary: '#55545C',
+  border: '#1B1B1F',
+  primary: ink,
   onPrimary: '#FFFFFF',
-  gradient: ['#5B2FC4', '#7F56D9'],
-  onGradient: '#FFFFFF',
-  onGradientMuted: '#E9E0FB',
-  panic: '#D6F5EF',
-  onPanic: '#0B5F58',
-  success: '#1B7A4B',
-  warning: '#8A5A00',
+  blocks,
+  ink,
+  panic: '#B9F6E6',
+  onPanic: '#0B3B34',
+  success: '#12733A',
+  warning: '#6E5A00',
   danger: '#B3261E',
 };
 
-const dark: Palette = {
-  background: '#120E1F',
-  surface: '#1D1730',
-  surfaceAlt: '#2A2244',
-  text: '#F3EFFC',
-  textSecondary: '#B9AFD6',
-  border: '#352C52',
-  primary: '#B39AF4',
-  onPrimary: '#170F2E',
-  gradient: ['#33207A', '#5236A8'],
-  onGradient: '#FFFFFF',
-  onGradientMuted: '#D9CEF7',
-  panic: '#123F3B',
-  onPanic: '#8FE6D8',
-  success: '#6FD3A0',
-  warning: '#F2C063',
-  danger: '#FFB4AB',
-};
-
 export const palettes = { light, dark } as const;
+export type SchemeName = keyof typeof palettes;
 
 /** Applied on top of the palette when High contrast is switched on in Settings. */
-export const highContrast: Record<'light' | 'dark', Partial<Palette>> = {
+export const highContrast: Record<SchemeName, Partial<Palette>> = {
   light: {
-    text: '#000000',
-    textSecondary: '#2B2540',
-    border: '#4A4166',
-    primary: '#45209A',
-    surfaceAlt: '#E4DAF8',
+    textSecondary: '#2A2A30',
+    border: '#000000',
+    surfaceAlt: '#DDD9CC',
   },
   dark: {
-    text: '#FFFFFF',
-    textSecondary: '#E6E0F5',
-    border: '#A99BD0',
-    primary: '#D2C2FF',
-    surfaceAlt: '#342A55',
+    background: '#000000',
+    textSecondary: '#E2E2EA',
+    border: '#B5B5C2',
+    surfaceAlt: '#2A2A30',
   },
 };
-export type SchemeName = keyof typeof palettes;
 
 export const spacing = {
   xs: 4,
@@ -97,31 +108,41 @@ export const spacing = {
   xxl: 32,
 } as const;
 
+/** Tiles sit this close together, so they read as one interlocking shape. */
+export const tileGap = 8;
+
 export const radii = {
-  chip: 12,
-  card: 20,
-  sheet: 24,
+  chip: 14,
+  card: 26,
+  sheet: 30,
   pill: 999,
 } as const;
 
 /** Smallest comfortable tap target (accessibility) */
 export const minTapSize = 44;
 
-/** Nunito, loaded in src/app/_layout.tsx */
+/** Loaded in src/app/_layout.tsx */
 export const fonts = {
-  regular: 'Nunito_400Regular',
-  semibold: 'Nunito_600SemiBold',
-  bold: 'Nunito_700Bold',
-  extrabold: 'Nunito_800ExtraBold',
+  // Outfit: the clean everyday face
+  regular: 'Outfit_400Regular',
+  semibold: 'Outfit_500Medium',
+  bold: 'Outfit_600SemiBold',
+  extrabold: 'Outfit_700Bold',
+  // Bagel Fat One: the bubbly one, for a few big words
+  display: 'BagelFatOne_400Regular',
+  // Gochi Hand: handwriting, for small asides
+  script: 'GochiHand_400Regular',
 } as const;
 
 /** Body text never goes below 16. */
 export const typography = {
-  title: { fontFamily: fonts.extrabold, fontSize: 26, lineHeight: 32 },
-  heading: { fontFamily: fonts.bold, fontSize: 20, lineHeight: 26 },
-  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 24 },
-  bodyStrong: { fontFamily: fonts.bold, fontSize: 16, lineHeight: 24 },
-  label: { fontFamily: fonts.semibold, fontSize: 14, lineHeight: 20 },
+  display: { fontFamily: fonts.display, fontSize: 34, lineHeight: 38 },
+  title: { fontFamily: fonts.extrabold, fontSize: 26, lineHeight: 31 },
+  heading: { fontFamily: fonts.bold, fontSize: 20, lineHeight: 25 },
+  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 23 },
+  bodyStrong: { fontFamily: fonts.bold, fontSize: 16, lineHeight: 23 },
+  label: { fontFamily: fonts.semibold, fontSize: 14, lineHeight: 19 },
   caption: { fontFamily: fonts.semibold, fontSize: 12, lineHeight: 16 },
+  script: { fontFamily: fonts.script, fontSize: 20, lineHeight: 24 },
 } as const;
 export type TextVariant = keyof typeof typography;
