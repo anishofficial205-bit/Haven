@@ -1,56 +1,144 @@
-# Welcome to your Expo app 👋
+# Consent App (working title)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An anonymous, mobile-first space where young people practise consent. The full
+product spec is in [docs/SPEC.md](docs/SPEC.md).
 
-## Get started
+This guide assumes you have never set up an app before.
 
-1. Install dependencies
+## 1. Run the app on your phone
 
-   ```bash
-   npm install
-   ```
+You need two things: this folder on your Mac, and the **Expo Go** app on your
+phone (free, from the Play Store or App Store). Your phone and Mac must be on
+the same Wi-Fi.
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Open the Terminal app, then:
 
 ```bash
-npm run reset-project
+cd "/Users/anish/Desktop/Haven VC/consent-app"
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+```bash
+npx expo start
+```
 
-### Other setup steps
+A QR code appears in the Terminal.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+- **Android:** open Expo Go and tap "Scan QR code".
+- **iPhone:** open the Camera app and point it at the QR code.
 
-## Learn more
+You should see a purple header saying "Hello", a shield and a profile icon,
+and five tabs along the bottom: Home, Scenarios, Confess, Spaces, Help.
 
-To learn more about developing your project with Expo, look at the following resources:
+To stop the app, press `Ctrl + C` in the Terminal.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 2. Set up the database (once)
 
-## Join the community
+The app stores accounts and posts in Supabase, a free hosted database.
 
-Join our community of developers creating universal apps.
+1. Go to [supabase.com](https://supabase.com), sign up, and click **New project**.
+   Pick any name, choose the region **Mumbai (ap-south-1)**, and save the
+   database password somewhere safe.
+2. Wait a minute or two until the project finishes setting up.
+3. In the left sidebar open **SQL Editor**. For each of these four files, in
+   this order: open the file on your Mac, copy everything in it, paste it into
+   the editor, and press **Run**. Each one should say "Success".
+   1. `supabase/migrations/0001_schema.sql`
+   2. `supabase/migrations/0002_security.sql`
+   3. `supabase/migrations/0003_feeds.sql`
+   4. `supabase/migrations/0004_seed.sql`
+4. Open **Authentication > Sign In / Providers > Email** and turn **Confirm
+   email** OFF. (The app never asks for a real email, so there is nothing to
+   confirm.)
+5. Open **Project Settings > API Keys**. Copy the **Project URL** and the
+   **Publishable key** (older projects call it the `anon` `public` key).
+6. In the `consent-app` folder, make a copy of the file `.env.example` and name
+   the copy `.env`. Paste your two values into it:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+   ```
+   EXPO_PUBLIC_SUPABASE_URL=https://abcdefgh.supabase.co
+   EXPO_PUBLIC_SUPABASE_KEY=sb_publishable_...
+   ```
+
+7. Stop the app (`Ctrl + C`) and start it again with `npx expo start`.
+
+On the Home tab, the grey "Setup check" card should now say
+**"Connected. Found 6 spaces in the database."**
+
+Never paste the **secret** / **service_role** key into `.env` or anywhere in
+this folder. The `.env` file itself is never uploaded to git.
+
+## 3. Everyday tasks
+
+### Add a scenario
+
+Add one JSON file to `content/scenarios/`, following the format in
+[docs/SPEC.md](docs/SPEC.md) section 5.3. No code changes needed. *(The
+scenario player arrives in phase 6.)*
+
+### Make someone a moderator
+
+They create an account in the app first. Then in the Supabase **SQL Editor**
+run this, with their username:
+
+```sql
+update public.profiles set role = 'moderator' where username = 'their_username';
+```
+
+To undo it, run the same line with `'user'` instead of `'moderator'`.
+
+### Reset the database
+
+This deletes every post, reply and setting. In the **SQL Editor**:
+
+1. Paste and run `supabase/reset.sql`.
+2. Run the four files from step 2.3 again, in order.
+
+Accounts are separate: delete them under **Authentication > Users**.
+
+### Remove the sample posts
+
+```sql
+delete from public.posts where is_seed;
+```
+
+### Change colours, spacing or fonts
+
+Everything visual is in [src/theme.ts](src/theme.ts).
+
+### Change any wording
+
+Every word the user sees is in [src/i18n/en.ts](src/i18n/en.ts).
+
+## 4. Checks (for whoever is writing code)
+
+```bash
+npx tsc --noEmit
+```
+
+```bash
+npx expo lint
+```
+
+```bash
+npm run test:db
+```
+
+`test:db` loads the SQL files into a temporary in-memory database and checks
+about 100 security rules: that one user can never find out who wrote a post,
+that nobody can approve their own reply, that deleting an account removes
+everything, and so on. It does not touch your Supabase project.
+
+## 5. Where things are
+
+```
+src/app/              screens (one file per screen)
+  (tabs)/             Home, Scenarios, Confess, Spaces, Help
+  profile/            profile and settings
+src/components/       reusable pieces (header, cards, panic button, ...)
+src/lib/              Supabase connection and helpers
+src/i18n/en.ts        all wording
+src/theme.ts          colours, type, spacing
+content/              scenarios and other bundled content
+supabase/migrations/  the database, as SQL
+docs/SPEC.md          the product spec
+```
