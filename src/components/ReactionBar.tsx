@@ -1,17 +1,30 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { BicepsFlexed, Eye, Handshake, Heart, HeartHandshake, type LucideIcon } from 'lucide-react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { REACTIONS, useReact, type Reaction, type TargetType } from '@/lib/posts';
-import { minTapSize, radii, spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
+
+/**
+ * Drawn in the app's own line style rather than as system emoji, so they
+ * look the same on every phone and sit properly with the rest of the design.
+ */
+const ICONS: Record<Reaction, LucideIcon> = {
+  with_you: Handshake,
+  hug: HeartHandshake,
+  love: Heart,
+  got_this: BicepsFlexed,
+  same_here: Eye,
+};
 
 type Props = {
   targetType: TargetType;
   id: string;
   counts: Partial<Record<Reaction, number>>;
   mine: Reaction | null;
-  /** Spell out each reaction ("Hug") beside its emoji */
+  /** Spell out each reaction ("Hug") beside its icon */
   showLabels?: boolean;
   /** For the composer preview: looks real, does nothing */
   disabled?: boolean;
@@ -24,7 +37,8 @@ export function ReactionBar({ targetType, id, counts, mine, showLabels, disabled
   return (
     <View style={styles.row}>
       {REACTIONS.map((key) => {
-        const { emoji, label } = strings.reactions[key];
+        const { label } = strings.reactions[key];
+        const Icon = ICONS[key];
         const count = counts[key] ?? 0;
         const selected = mine === key;
         return (
@@ -35,17 +49,18 @@ export function ReactionBar({ targetType, id, counts, mine, showLabels, disabled
             accessibilityRole="button"
             accessibilityLabel={strings.reactions.count(label, count)}
             accessibilityState={{ selected }}
+            hitSlop={{ top: 5, bottom: 5, left: 2, right: 2 }}
             style={[
               styles.pill,
               {
-                backgroundColor: selected ? theme.surfaceAlt : 'transparent',
-                borderColor: selected ? theme.primary : theme.border,
+                backgroundColor: selected ? theme.blocks.lime : 'transparent',
+                borderColor: selected ? theme.ink : theme.surfaceAlt,
               },
             ]}>
-            <Text style={styles.emoji}>{emoji}</Text>
+            <Icon size={17} strokeWidth={2} color={theme.ink} fill={selected && key === 'love' ? theme.ink : 'transparent'} />
             {showLabels ? <AppText variant="label">{label}</AppText> : null}
             {count > 0 ? (
-              <AppText variant="label" color={selected ? theme.primary : theme.textSecondary}>
+              <AppText variant="strip" style={styles.count}>
                 {count}
               </AppText>
             ) : null}
@@ -60,20 +75,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.sm,
+    gap: 6,
   },
   pill: {
-    minHeight: minTapSize,
-    minWidth: minTapSize,
-    paddingHorizontal: spacing.md,
+    height: 34,
+    minWidth: 38,
+    paddingHorizontal: spacing.sm + 2,
     borderRadius: radii.pill,
     borderWidth: 1.5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.xs,
+    gap: 5,
   },
-  emoji: {
-    fontSize: 18,
+  count: {
+    fontSize: 12,
+    lineHeight: 14,
+    letterSpacing: 0,
   },
 });

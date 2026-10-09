@@ -41,10 +41,10 @@ export function Button({ label, variant = 'primary', loading, disabled, ...rest 
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: minTapSize + 6,
+    minHeight: minTapSize + 2,
     borderRadius: radii.pill,
     paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.sm + 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

@@ -34,7 +34,7 @@ export function Strip({ left, right, stars }: StripProps) {
       {stars !== undefined ? (
         <View style={styles.stars} accessibilityLabel={`${stars} of 3`} accessibilityRole="text">
           {[1, 2, 3].map((n) => (
-            <Star key={n} size={12} color={theme.ink} fill={n <= stars ? theme.ink : 'transparent'} />
+            <Star key={n} size={11} color={theme.ink} fill={n <= stars ? theme.ink : 'transparent'} />
           ))}
         </View>
       ) : right ? (
@@ -100,10 +100,11 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   frame: {
-    borderWidth: 1.5,
+    borderWidth: 1.25,
     borderRadius: 16,
-    borderBottomRightRadius: radii.sharp - 2,
-    padding: spacing.md,
+    borderBottomRightRadius: radii.sharp,
+    paddingVertical: spacing.sm + 2,
+    paddingHorizontal: spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
@@ -114,19 +115,22 @@ const styles = StyleSheet.create({
   },
   stat: {
     flex: 1,
-    borderWidth: 1.5,
-    borderRadius: radii.chip,
-    alignItems: 'center',
-    paddingTop: spacing.xs + 2,
-    paddingBottom: spacing.xs,
+    borderWidth: 1.25,
+    borderRadius: radii.chip + 2,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    gap: 5,
+    paddingVertical: 7,
   },
   statValue: {
-    fontSize: 22,
-    lineHeight: 24,
+    fontSize: 17,
+    lineHeight: 19,
+    letterSpacing: -0.6,
   },
   badge: {
-    width: 58,
-    height: 58,
+    width: 50,
+    height: 50,
     borderRadius: radii.pill,
     borderWidth: 2,
     alignItems: 'center',
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '10deg' }],
   },
   badgeText: {
-    fontSize: 17,
-    lineHeight: 19,
+    fontSize: 14,
+    lineHeight: 16,
   },
 });

@@ -116,10 +116,10 @@ export const tileGap = 5;
 
 export const radii = {
   /** The one sharp corner every tile has */
-  sharp: 7,
-  chip: 12,
-  card: 24,
-  sheet: 28,
+  sharp: 6,
+  chip: 10,
+  card: 22,
+  sheet: 26,
   pill: 999,
 } as const;
 
@@ -140,19 +140,23 @@ export const fonts = {
   monoMedium: 'DMMono_500Medium',
 } as const;
 
-/** Body text never goes below 16. */
+/**
+ * Reading text (posts, stories, messages) is `body` and never goes below 16.
+ * Everything around it is deliberately smaller and tighter, so screens feel
+ * composed rather than blown up.
+ */
 export const typography = {
-  display: { fontFamily: fonts.display, fontSize: 28, lineHeight: 29 },
-  script: { fontFamily: fonts.display, fontSize: 18, lineHeight: 20 },
-  title: { fontFamily: fonts.extrabold, fontSize: 24, lineHeight: 28 },
-  heading: { fontFamily: fonts.extrabold, fontSize: 19, lineHeight: 23 },
-  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 22 },
-  bodyStrong: { fontFamily: fonts.bold, fontSize: 16, lineHeight: 22 },
-  label: { fontFamily: fonts.semibold, fontSize: 14, lineHeight: 18 },
-  caption: { fontFamily: fonts.semibold, fontSize: 12, lineHeight: 16 },
+  display: { fontFamily: fonts.display, fontSize: 23, lineHeight: 24 },
+  script: { fontFamily: fonts.display, fontSize: 15, lineHeight: 17 },
+  title: { fontFamily: fonts.extrabold, fontSize: 21, lineHeight: 25, letterSpacing: -0.3 },
+  heading: { fontFamily: fonts.extrabold, fontSize: 17, lineHeight: 21, letterSpacing: -0.2 },
+  body: { fontFamily: fonts.regular, fontSize: 16, lineHeight: 23 },
+  bodyStrong: { fontFamily: fonts.bold, fontSize: 15, lineHeight: 20 },
+  label: { fontFamily: fonts.semibold, fontSize: 13, lineHeight: 17 },
+  caption: { fontFamily: fonts.semibold, fontSize: 11, lineHeight: 14 },
   /** The typed strip: "SCENARIO · NO.001" */
-  strip: { fontFamily: fonts.mono, fontSize: 11, lineHeight: 14, letterSpacing: 0.6 },
+  strip: { fontFamily: fonts.mono, fontSize: 10, lineHeight: 13, letterSpacing: 0.9 },
   /** Big monospaced numbers */
-  numeral: { fontFamily: fonts.monoMedium, fontSize: 34, lineHeight: 36, letterSpacing: -1.2 },
+  numeral: { fontFamily: fonts.monoMedium, fontSize: 30, lineHeight: 31, letterSpacing: -1.5 },
 } as const;
 export type TextVariant = keyof typeof typography;

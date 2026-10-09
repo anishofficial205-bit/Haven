@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
-import { minTapSize, radii, spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 
 type Props = {
   label: string;
@@ -37,6 +37,7 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
       onPress={onPress}
       accessibilityRole={role}
       accessibilityState={role === 'radio' ? { selected } : { checked: selected }}
+      hitSlop={{ top: 5, bottom: 5 }}
       style={[
         styles.button,
         { backgroundColor: selected ? fill : 'transparent', borderColor: selected ? fill : theme.border },
@@ -50,15 +51,15 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
 
 const styles = StyleSheet.create({
   label: {
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 3,
     borderRadius: radii.pill,
   },
   button: {
-    minHeight: minTapSize,
-    paddingHorizontal: spacing.lg,
+    minHeight: 34,
+    paddingHorizontal: spacing.md + 2,
     borderRadius: radii.pill,
-    borderWidth: 1.5,
+    borderWidth: 1.25,
     alignItems: 'center',
     justifyContent: 'center',
   },

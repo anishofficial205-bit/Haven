@@ -47,17 +47,22 @@ export function ScenarioCard({ scenario, progress, tone }: Props) {
       tone={tone ?? look.tone}
       accessibilityLabel={`${scenario.title}. ${scenario.hook} ${copy.status[status]}.`}
       onPress={() => router.push({ pathname: '/scenario/[id]', params: { id: scenario.id } })}>
-      <Strip left={`${copy.domains[scenario.domain]} · No.${number}`} stars={stars} />
+      <Strip
+        left={`${copy.domains[scenario.domain]} · No.${number}${scenario.draft ? ` · ${copy.draft}` : ''}`}
+        stars={stars}
+      />
       <View>
         <Frame>
-          <Avatar id={look.avatar} size={62} bare />
+          <Avatar id={look.avatar} size={50} bare />
           <AppText variant="display" style={styles.title}>
             {scenario.title}
           </AppText>
         </Frame>
         <Badge label={status === 'done' ? copy.again : status === 'in_progress' ? copy.resume : copy.play} style={styles.badge} />
       </View>
-      <AppText variant="label">{scenario.hook}</AppText>
+      <AppText variant="label" style={styles.hook}>
+        {scenario.hook}
+      </AppText>
       <Stats
         items={[
           { value: '03', label: copy.statMinutes },
@@ -65,9 +70,8 @@ export function ScenarioCard({ scenario, progress, tone }: Props) {
           { value: endings, label: copy.statEndings },
         ]}
       />
-      {scenario.draft || scenario.trigger_warnings.length > 0 ? (
+      {scenario.trigger_warnings.length > 0 ? (
         <View style={styles.chips}>
-          {scenario.draft ? <Chip label={copy.draft} /> : null}
           {scenario.trigger_warnings.map((warning) => (
             <Chip key={warning} tone="warning" label={strings.triggerWarnings[warning]} />
           ))}
@@ -80,12 +84,17 @@ export function ScenarioCard({ scenario, progress, tone }: Props) {
 const styles = StyleSheet.create({
   title: {
     flex: 1,
-    paddingRight: spacing.xxl + spacing.md,
+    paddingRight: spacing.xxl + spacing.sm,
+    // A slight tilt, the way a title is scrawled across a card
+    transform: [{ rotate: '-2deg' }],
   },
   badge: {
     position: 'absolute',
-    right: -4,
-    top: 8,
+    right: -5,
+    top: -10,
+  },
+  hook: {
+    paddingHorizontal: 2,
   },
   chips: {
     flexDirection: 'row',

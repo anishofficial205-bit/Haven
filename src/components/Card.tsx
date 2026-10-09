@@ -4,7 +4,7 @@ import { SurfaceContext } from '@/hooks/useTheme';
 import { paperPalette, radii, spacing } from '@/theme';
 
 /**
- * A paper card: off-white with an ink outline and one sharp corner.
+ * A paper card: plain off-white, evenly rounded.
  * Everything inside it automatically uses dark-on-light colours.
  * For a block of pastel colour, use Tile instead.
  */
@@ -13,7 +13,7 @@ export function Card({ style, ...rest }: ViewProps) {
     <SurfaceContext value={paperPalette}>
       <View
         {...rest}
-        style={[styles.card, { backgroundColor: paperPalette.surface, borderColor: paperPalette.border }, style]}
+        style={[styles.card, { backgroundColor: paperPalette.surface }, style]}
       />
     </SurfaceContext>
   );
@@ -22,9 +22,7 @@ export function Card({ style, ...rest }: ViewProps) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: radii.card,
-    borderBottomRightRadius: radii.sharp,
-    borderWidth: 1.5,
-    padding: spacing.lg,
-    gap: spacing.sm,
+    padding: spacing.md + 2,
+    gap: spacing.sm + 2,
   },
 });

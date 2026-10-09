@@ -13,7 +13,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import type { PostCard as Post } from '@/lib/posts';
 import { timeAgo } from '@/lib/time';
-import { minTapSize, radii, spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 
 type Props = {
   post: Post;
@@ -64,8 +64,8 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
       <Strip left={`${kind} · ${timeAgo(post.created_at)}`} right={flag} />
 
       <View style={styles.top}>
-        <AnonymousAvatar />
-        <AppText variant="bodyStrong" style={styles.flex}>
+        <AnonymousAvatar size={26} />
+        <AppText variant="label" style={styles.flex}>
           {strings.post.anonymous}
         </AppText>
         {onMenu && !preview ? (
@@ -73,8 +73,9 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
             onPress={onMenu}
             accessibilityRole="button"
             accessibilityLabel={strings.post.moreOptions}
+            hitSlop={8}
             style={styles.menu}>
-            <Ellipsis size={22} color={theme.text} />
+            <Ellipsis size={20} color={theme.textSecondary} />
           </Pressable>
         ) : null}
       </View>
@@ -134,7 +135,7 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
       ) : null}
 
       {post.status === 'published' || preview ? (
-        <>
+        <View style={[styles.footer, { borderTopColor: theme.surfaceAlt }]}>
           <ReactionBar
             targetType="post"
             id={post.id}
@@ -148,14 +149,15 @@ function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
               onPress={onOpen}
               disabled={preview}
               accessibilityRole="button"
+              hitSlop={8}
               style={styles.replies}>
-              <MessageCircle size={18} color={theme.textSecondary} />
+              <MessageCircle size={15} color={theme.textSecondary} />
               <AppText variant="label" color={theme.textSecondary}>
                 {strings.post.replies(post.reply_count)}
               </AppText>
             </Pressable>
           ) : null}
-        </>
+        </View>
       ) : null}
     </>
   );
@@ -171,11 +173,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menu: {
-    width: minTapSize,
-    height: minTapSize,
+    width: 28,
+    height: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: -spacing.sm,
+  },
+  footer: {
+    borderTopWidth: 1,
+    paddingTop: spacing.sm + 2,
+    marginTop: 2,
+    gap: spacing.sm,
   },
   status: {
     borderRadius: radii.chip,
@@ -201,7 +208,6 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
   },
   replies: {
-    minHeight: minTapSize,
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,

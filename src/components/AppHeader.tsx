@@ -10,7 +10,7 @@ import { PressableScale } from '@/components/PressableScale';
 import { Tile } from '@/components/Tile';
 import { strings } from '@/i18n/en';
 import { useAuth } from '@/lib/auth';
-import { minTapSize, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 /**
  * The header on every tab: a lime tile with the greeting, the panic shield
@@ -20,14 +20,14 @@ export function AppHeader() {
   const { profile } = useAuth();
   const insets = useSafeAreaInsets();
   // Long usernames shrink to stay on one line.
-  const nameSize = Math.max(15, Math.min(24, Math.floor(300 / Math.max(profile?.username.length ?? 1, 1))));
+  const nameSize = Math.max(14, Math.min(20, Math.floor(280 / Math.max(profile?.username.length ?? 1, 1))));
 
   return (
     <View style={[styles.wrap, { paddingTop: insets.top + spacing.sm }]}>
       <Dots />
       <Tile tone="lime" sharp="bottomLeft" style={styles.tile}>
         <View style={styles.greeting} accessibilityRole="header">
-          <AppText variant="label">{strings.header.greeting}</AppText>
+          <AppText variant="caption">{strings.header.greeting}</AppText>
           <AppText variant="title" numberOfLines={1} style={{ fontSize: nameSize, lineHeight: nameSize * 1.2 }}>
             {profile?.username ?? ''}
           </AppText>
@@ -38,7 +38,7 @@ export function AppHeader() {
           accessibilityRole="button"
           accessibilityLabel={strings.header.openProfile}
           hitSlop={4}>
-          <Avatar id={profile?.avatar_id ?? 1} size={minTapSize} />
+          <Avatar id={profile?.avatar_id ?? 1} size={38} />
         </PressableScale>
       </Tile>
     </View>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    paddingVertical: spacing.sm + 2,
+    paddingVertical: spacing.sm,
   },
   greeting: {
     flex: 1,

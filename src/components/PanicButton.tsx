@@ -5,7 +5,7 @@ import { PressableScale } from '@/components/PressableScale';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { usePanic } from '@/lib/panic';
-import { minTapSize, radii } from '@/theme';
+import { radii } from '@/theme';
 
 /**
  * The shield in the header of every signed-in screen.
@@ -21,17 +21,17 @@ export function PanicButton() {
       accessibilityRole="button"
       accessibilityLabel={strings.header.panicButton}
       accessibilityHint={strings.header.panicHint}
-      hitSlop={4}
+      hitSlop={6}
       style={[styles.button, { backgroundColor: theme.ink, borderColor: theme.blocks.lime }]}>
-      <ShieldCheck size={22} color={theme.blocks.lime} />
+      <ShieldCheck size={19} color={theme.blocks.lime} />
     </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: minTapSize,
-    height: minTapSize,
+    width: 38,
+    height: 38,
     borderRadius: radii.pill,
     borderWidth: 1.5,
     alignItems: 'center',

@@ -30,7 +30,7 @@ export function QuestionCard({ question, spaceName }: Props) {
           <AppText variant="numeral">{String(answers).padStart(2, '0')}</AppText>
           <AppText variant="caption">{strings.spaces.answersLabel(answers)}</AppText>
         </View>
-        <ArrowUpRight size={24} color={paperPalette.ink} />
+        <ArrowUpRight size={20} color={paperPalette.ink} />
       </View>
     </Tile>
   );

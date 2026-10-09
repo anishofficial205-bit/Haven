@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   tile: {
     borderRadius: radii.card,
     padding: spacing.md + 2,
-    gap: spacing.sm,
+    gap: spacing.sm + 2,
   },
 });

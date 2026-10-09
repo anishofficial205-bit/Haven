@@ -11,6 +11,7 @@ import { ScenarioCard } from '@/components/ScenarioCard';
 import { Screen } from '@/components/Screen';
 import { SetupCheck } from '@/components/SetupCheck';
 import { Tile } from '@/components/Tile';
+import { usePageTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useConfessionOfTheDay } from '@/lib/posts';
 import { scenarios, statusOf, useScenarioProgress } from '@/lib/scenarios';
@@ -21,6 +22,7 @@ const copy = strings.home;
 const ink = paperPalette.ink;
 
 export default function HomeScreen() {
+  const pageTheme = usePageTheme();
   const progress = useScenarioProgress();
   const spaces = useSpaces();
   const questions = useWeeklyQuestions();
@@ -48,7 +50,7 @@ export default function HomeScreen() {
         <View style={styles.pair}>
           <View style={styles.wide}>
             <Tile tone="rose" style={styles.fill}>
-              <EyeOff size={22} color={ink} />
+              <EyeOff size={19} color={ink} />
               <AppText variant="bodyStrong">{copy.anonymousTitle}</AppText>
               <AppText variant="label">{copy.anonymousShort}</AppText>
             </Tile>
@@ -59,7 +61,7 @@ export default function HomeScreen() {
               style={styles.fill}
               accessibilityLabel={copy.helpTitle}
               onPress={() => router.navigate('/help')}>
-              <LifeBuoy size={22} color={ink} />
+              <LifeBuoy size={19} color={ink} />
               <AppText variant="bodyStrong">{copy.helpTitle}</AppText>
               <AppText variant="label">{copy.helpShort}</AppText>
             </Tile>
@@ -69,8 +71,8 @@ export default function HomeScreen() {
 
       {featured.data ? (
         <View style={styles.section}>
-          <AppText variant="heading" accessibilityRole="header">
-            {copy.confessionTitle}
+          <AppText variant="strip" color={pageTheme.textSecondary} accessibilityRole="header">
+            {copy.confessionTitle.toUpperCase()}
           </AppText>
           <PostCard
             post={featured.data}
@@ -112,9 +114,9 @@ const styles = StyleSheet.create({
   },
   fill: {
     flexGrow: 1,
-    minHeight: 140,
+    minHeight: 118,
   },
   section: {
-    gap: spacing.md,
+    gap: spacing.sm,
   },
 });
