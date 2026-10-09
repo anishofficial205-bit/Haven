@@ -42,10 +42,10 @@ export function TabBar({ tabs, active, onSelect }: Props) {
             accessibilityRole="tab"
             accessibilityLabel={label}
             accessibilityState={{ selected }}
-            style={[styles.tab, selected && { backgroundColor: theme.primary, paddingHorizontal: spacing.lg }]}>
-            <Icon size={22} color={selected ? theme.onPrimary : theme.textSecondary} />
+            style={[styles.tab, selected && { backgroundColor: theme.blocks.mint, paddingHorizontal: spacing.lg }]}>
+            <Icon size={22} color={selected ? theme.ink : theme.textSecondary} />
             {selected ? (
-              <AppText variant="label" color={theme.onPrimary} numberOfLines={1}>
+              <AppText variant="label" color={theme.ink} numberOfLines={1}>
                 {label}
               </AppText>
             ) : null}

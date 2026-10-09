@@ -7,12 +7,15 @@ Full spec: `docs/SPEC.md`. Read it before changing anything. Expo-specific rules
 
 - Expo SDK 57 (React Native 0.86) + TypeScript, Expo Router. Routes live in `src/app/`.
 - Styling: `StyleSheet` + tokens in `src/theme.ts`, read through `useTheme()`.
-- Look (designer's references, Oct 2026; replaces the spec's purple gradients): near-black page,
-  solid colour blocks (`Tile`, tones yellow/pink/green/blue, text in `theme.ink`), white pill buttons,
-  plain outlined `Card`s, tiles packed with `tileGap`. Dark is the default theme.
+- Look: "Collector" (chosen by the designer, Oct 2026; replaces the spec's purple gradients).
+  Black dotted page (`Dots`), pastel puzzle tiles with one sharp corner (`Tile`, tones
+  lime/mint/rose/sky), paper cards (`Card`), and collectible-card parts in `Collector.tsx`
+  (`Strip`, `Frame`, `Stats`, `Badge`). `Card` and `Tile` set `SurfaceContext`, so `useTheme()`
+  inside them returns dark-on-light colours automatically; use `usePageTheme()` for the page itself.
+  Mockups the designer approved: https://claude.ai/artifact/4TciLai121jRAy66WMKGqg (variation 4).
 - Backend: Supabase (Postgres, Auth, RLS). SQL in `supabase/migrations/`.
 - Data: TanStack Query + `src/lib/supabase.ts`.
-- Icons: `lucide-react-native`. Fonts: Outfit (text), Bagel Fat One (`display`), Gochi Hand (`script`).
+- Icons: `lucide-react-native`. Fonts: Bricolage Grotesque (text), Knewave brush (`display`), DM Mono (`strip`, `numeral`).
 
 ## Commands
 

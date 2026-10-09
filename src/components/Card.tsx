@@ -1,22 +1,28 @@
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
-import { useTheme } from '@/hooks/useTheme';
-import { radii, spacing } from '@/theme';
+import { SurfaceContext } from '@/hooks/useTheme';
+import { paperPalette, radii, spacing } from '@/theme';
 
-/** A plain outlined card. For a block of colour, use Tile instead. */
+/**
+ * A paper card: off-white with an ink outline and one sharp corner.
+ * Everything inside it automatically uses dark-on-light colours.
+ * For a block of pastel colour, use Tile instead.
+ */
 export function Card({ style, ...rest }: ViewProps) {
-  const theme = useTheme();
   return (
-    <View
-      {...rest}
-      style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }, style]}
-    />
+    <SurfaceContext value={paperPalette}>
+      <View
+        {...rest}
+        style={[styles.card, { backgroundColor: paperPalette.surface, borderColor: paperPalette.border }, style]}
+      />
+    </SurfaceContext>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     borderRadius: radii.card,
+    borderBottomRightRadius: radii.sharp,
     borderWidth: 1.5,
     padding: spacing.lg,
     gap: spacing.sm,

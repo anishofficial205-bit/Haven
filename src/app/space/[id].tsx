@@ -84,7 +84,7 @@ export default function SpaceScreen() {
               </View>
             </View>
 
-            {question ? <QuestionCard question={question} /> : null}
+            {question ? <QuestionCard question={question} spaceName={space.name} /> : null}
 
             <View style={styles.filters}>
               <ScrollView

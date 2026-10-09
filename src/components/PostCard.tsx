@@ -7,6 +7,7 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Chip } from '@/components/Chip';
+import { Strip } from '@/components/Collector';
 import { ReactionBar } from '@/components/ReactionBar';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
@@ -26,10 +27,19 @@ type Props = {
 };
 
 /**
- * One post, for confessions and space posts alike. It never shows who wrote
- * it: everyone is "Anonymous" with the same avatar.
+ * One post, for confessions and space posts alike, as a paper card. It never
+ * shows who wrote it: everyone is "Anonymous" with the same avatar.
  */
-export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
+export function PostCard(props: Props) {
+  return (
+    <Card>
+      <PostBody {...props} />
+    </Card>
+  );
+}
+
+/** The inside of the card. A separate component so it picks up the card's colours. */
+function PostBody({ post, onOpen, onMenu, preview, detail }: Props) {
   const theme = useTheme();
   // Content with trigger warnings stays out of sight until the reader chooses.
   // Authors already know what they wrote.
@@ -46,26 +56,25 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
     : post.status === 'hidden' ? strings.post.hidden
     : null;
 
+  const kind = post.post_type ? strings.spaces.postTypes[post.post_type] : strings.tabs.confess;
+  const flag = post.is_mine ? strings.post.yours : post.is_seed ? strings.post.sample : undefined;
+
   return (
-    <Card>
+    <>
+      <Strip left={`${kind} · ${timeAgo(post.created_at)}`} right={flag} />
+
       <View style={styles.top}>
         <AnonymousAvatar />
-        <View style={styles.flex}>
-          <AppText variant="label">{strings.post.anonymous}</AppText>
-          <AppText variant="caption" color={theme.textSecondary}>
-            {timeAgo(post.created_at)}
-          </AppText>
-        </View>
-        {post.post_type ? <Chip label={strings.spaces.postTypes[post.post_type]} /> : null}
-        {post.is_mine ? <Chip label={strings.post.yours} /> : null}
-        {post.is_seed ? <Chip label={strings.post.sample} /> : null}
+        <AppText variant="bodyStrong" style={styles.flex}>
+          {strings.post.anonymous}
+        </AppText>
         {onMenu && !preview ? (
           <Pressable
             onPress={onMenu}
             accessibilityRole="button"
             accessibilityLabel={strings.post.moreOptions}
             style={styles.menu}>
-            <Ellipsis size={22} color={theme.textSecondary} />
+            <Ellipsis size={22} color={theme.text} />
           </Pressable>
         ) : null}
       </View>
@@ -79,10 +88,8 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
       ) : null}
 
       {hidden ? (
-        <View style={[styles.gate, { backgroundColor: theme.surfaceAlt }]}>
-          <AppText variant="label" color={theme.textSecondary}>
-            {strings.post.warningTitle}
-          </AppText>
+        <View style={[styles.gate, { backgroundColor: theme.blocks.rose }]}>
+          <AppText variant="label">{strings.post.warningTitle}</AppText>
           <View style={styles.chips}>
             {post.trigger_warnings.map((warning) => (
               <Chip key={warning} tone="warning" label={strings.triggerWarnings[warning]} />
@@ -93,7 +100,7 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
             {[1, 0.92, 0.6].map((width) => (
               <View
                 key={width}
-                style={[styles.blurLine, { width: `${width * 100}%`, backgroundColor: theme.border }]}
+                style={[styles.blurLine, { width: `${width * 100}%`, backgroundColor: theme.ink }]}
               />
             ))}
           </View>
@@ -150,7 +157,7 @@ export function PostCard({ post, onOpen, onMenu, preview, detail }: Props) {
           ) : null}
         </>
       ) : null}
-    </Card>
+    </>
   );
 }
 
@@ -175,7 +182,8 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   gate: {
-    borderRadius: radii.chip + 4,
+    borderRadius: radii.chip + 6,
+    borderTopRightRadius: radii.sharp,
     padding: spacing.md,
     gap: spacing.md,
   },
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
   },
   blurLines: {
     gap: spacing.sm,
-    opacity: 0.7,
+    opacity: 0.18,
   },
   blurLine: {
     height: 12,

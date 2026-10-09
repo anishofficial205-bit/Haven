@@ -5,6 +5,7 @@ import { ActivityIndicator, FlatList, Pressable, RefreshControl, ScrollView, Sty
 
 import { AppText } from '@/components/AppText';
 import { Chip } from '@/components/Chip';
+import { Dots } from '@/components/Dots';
 import { PostCard } from '@/components/PostCard';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
 import { useTheme } from '@/hooks/useTheme';
@@ -24,6 +25,7 @@ export default function ConfessScreen() {
 
   return (
     <View style={[styles.page, { backgroundColor: theme.background }]}>
+      <Dots />
       <FlatList
         data={feed.data ?? []}
         keyExtractor={(post) => post.id}

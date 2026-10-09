@@ -1,12 +1,12 @@
-import { BagelFatOne_400Regular } from '@expo-google-fonts/bagel-fat-one';
-import { GochiHand_400Regular } from '@expo-google-fonts/gochi-hand';
 import {
-  Outfit_400Regular,
-  Outfit_500Medium,
-  Outfit_600SemiBold,
-  Outfit_700Bold,
+  BricolageGrotesque_400Regular,
+  BricolageGrotesque_600SemiBold,
+  BricolageGrotesque_700Bold,
+  BricolageGrotesque_800ExtraBold,
   useFonts,
-} from '@expo-google-fonts/outfit';
+} from '@expo-google-fonts/bricolage-grotesque';
+import { DMMono_400Regular, DMMono_500Medium } from '@expo-google-fonts/dm-mono';
+import { Knewave_400Regular } from '@expo-google-fonts/knewave';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import { Stack } from 'expo-router/stack';
@@ -27,12 +27,13 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Outfit_400Regular,
-    Outfit_500Medium,
-    Outfit_600SemiBold,
-    Outfit_700Bold,
-    BagelFatOne_400Regular,
-    GochiHand_400Regular,
+    BricolageGrotesque_400Regular,
+    BricolageGrotesque_600SemiBold,
+    BricolageGrotesque_700Bold,
+    BricolageGrotesque_800ExtraBold,
+    DMMono_400Regular,
+    DMMono_500Medium,
+    Knewave_400Regular,
   });
   if (!fontsLoaded && fontError == null) return null;
 

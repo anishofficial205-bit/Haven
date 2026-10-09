@@ -1,21 +1,22 @@
-import { ScrollView, StyleSheet, type ScrollViewProps } from 'react-native';
+import { ScrollView, StyleSheet, View, type ScrollViewProps } from 'react-native';
 
-import { useTheme } from '@/hooks/useTheme';
+import { Dots } from '@/components/Dots';
 import { spacing } from '@/theme';
 
-/** Scrolling page body with the standard 16px gutters. */
+/** Scrolling page body on the dotted background, with the standard 16px gutters. */
 export function Screen({ contentContainerStyle, style, ...rest }: ScrollViewProps) {
-  const theme = useTheme();
   return (
-    <ScrollView
-      {...rest}
-      style={[{ backgroundColor: theme.background }, style]}
-      contentContainerStyle={[styles.content, contentContainerStyle]}
-    />
+    <View style={styles.fill}>
+      <Dots />
+      <ScrollView {...rest} style={style} contentContainerStyle={[styles.content, contentContainerStyle]} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
   content: {
     padding: spacing.lg,
     gap: spacing.lg,

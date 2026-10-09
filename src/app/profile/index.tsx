@@ -47,9 +47,9 @@ export default function ProfileScreen() {
           avatarId={profile?.avatar_id ?? 1}
           starred={profile?.role === 'moderator'}
           stats={[
-            { label: copy.statPosts, value: mine.data?.length ?? 0 },
-            { label: copy.statSaved, value: saved.data?.length ?? 0 },
-            { label: copy.statScenarios, value: scenariosDone },
+            { label: copy.statPosts, value: String(mine.data?.length ?? 0).padStart(2, '0') },
+            { label: copy.statSaved, value: String(saved.data?.length ?? 0).padStart(2, '0') },
+            { label: copy.statScenarios, value: String(scenariosDone).padStart(2, '0') },
           ]}
           footnote={copy.onlyYou}
         />

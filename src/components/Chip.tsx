@@ -21,17 +21,17 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
 
   if (!onPress) {
     return (
-      <View style={[styles.label, { backgroundColor: warning ? theme.blocks.yellow : theme.surfaceAlt }]}>
-        <AppText variant="caption" color={warning ? theme.ink : theme.textSecondary}>
+      <View style={[styles.label, { backgroundColor: warning ? theme.primary : theme.surfaceAlt }]}>
+        <AppText variant="caption" color={warning ? theme.onPrimary : theme.textSecondary}>
           {label}
         </AppText>
       </View>
     );
   }
 
-  // Selected: a filled pill. Warnings fill yellow; everything else fills with the primary colour.
-  const fill = warning ? theme.blocks.yellow : theme.primary;
-  const onFill = warning ? theme.ink : theme.onPrimary;
+  // Selected: a filled pill.
+  const fill = theme.primary;
+  const onFill = theme.onPrimary;
   return (
     <Pressable
       onPress={onPress}

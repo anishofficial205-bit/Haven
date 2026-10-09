@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
+import { Dots } from '@/components/Dots';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { goBack } from '@/lib/nav';
@@ -29,6 +30,7 @@ export function FormScreen({ title, subtitle, canGoBack = true, children, footer
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={[styles.page, { backgroundColor: theme.background, paddingTop: insets.top }]}>
+      <Dots />
       <View style={styles.bar}>
         {canGoBack ? (
           <Pressable

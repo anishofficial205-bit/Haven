@@ -22,8 +22,8 @@ export function PanicButton() {
       accessibilityLabel={strings.header.panicButton}
       accessibilityHint={strings.header.panicHint}
       hitSlop={4}
-      style={[styles.button, { backgroundColor: theme.panic }]}>
-      <ShieldCheck size={24} color={theme.onPanic} />
+      style={[styles.button, { backgroundColor: theme.ink, borderColor: theme.blocks.lime }]}>
+      <ShieldCheck size={22} color={theme.blocks.lime} />
     </PressableScale>
   );
 }
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     width: minTapSize,
     height: minTapSize,
     borderRadius: radii.pill,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },

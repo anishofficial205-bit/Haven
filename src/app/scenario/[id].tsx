@@ -1,11 +1,11 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Lightbulb } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { Strip } from '@/components/Collector';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { StoryText } from '@/components/StoryText';
 import { Tile } from '@/components/Tile';
@@ -115,13 +115,9 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
           </AppText>
           {node.text ? <StoryText text={node.text} /> : null}
 
-          <Tile tone="pink">
-            <AppText variant="script" color={theme.ink}>
-              {copy.takeaway}
-            </AppText>
-            <AppText variant="display" color={theme.ink}>
-              {node.takeaway}
-            </AppText>
+          <Tile tone="lime">
+            <Strip left={copy.takeaway} stars={3} />
+            <AppText variant="display">{node.takeaway}</AppText>
           </Tile>
         </ScrollView>
         <View style={[styles.footer, { paddingBottom: insets.bottom + spacing.lg }]}>
@@ -146,7 +142,7 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
         {chosen ? (
           <>
             <View style={styles.youRow}>
-              <View style={[styles.youBubble, { backgroundColor: theme.blocks.blue }]}>
+              <View style={[styles.youBubble, { backgroundColor: theme.blocks.lime }]}>
                 <AppText variant="caption" color={theme.ink}>
                   {copy.you}
                 </AppText>
@@ -161,14 +157,11 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
               <StoryText text={chosen.consequence} />
             </View>
 
-            <Tile tone="green">
-              <View style={styles.noteTitle}>
-                <Lightbulb size={20} color={theme.ink} />
-                <AppText variant="bodyStrong" color={theme.ink}>
-                  {copy.whyItMatters}
-                </AppText>
-              </View>
-              <AppText color={theme.ink}>{chosen.expert_note}</AppText>
+            <Tile tone="rose">
+              <AppText variant="display" style={styles.noteTitle}>
+                {copy.whyItMatters}
+              </AppText>
+              <AppText>{chosen.expert_note}</AppText>
             </Tile>
           </>
         ) : (
@@ -184,11 +177,13 @@ function Player({ scenario, startNode, startPath }: PlayerProps) {
                 style={({ pressed }) => [
                   styles.choice,
                   {
-                    backgroundColor: pressed ? theme.surfaceAlt : theme.surface,
-                    borderColor: theme.text,
+                    backgroundColor: pressed ? theme.blocks.lime : theme.paper,
+                    borderColor: theme.ink,
                   },
                 ]}>
-                <AppText variant="bodyStrong">{choice.label}</AppText>
+                <AppText variant="bodyStrong" color={theme.ink}>
+                  {choice.label}
+                </AppText>
               </Pressable>
             ))}
           </View>
@@ -220,8 +215,9 @@ const styles = StyleSheet.create({
   },
   choice: {
     minHeight: minTapSize + 12,
-    borderWidth: 2,
     borderRadius: radii.card,
+    borderBottomRightRadius: radii.sharp,
+    borderWidth: 1.5,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     justifyContent: 'center',
@@ -233,16 +229,15 @@ const styles = StyleSheet.create({
   },
   youBubble: {
     borderRadius: radii.card,
-    borderBottomRightRadius: 4,
+    borderBottomRightRadius: radii.sharp,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     gap: 2,
     flexShrink: 1,
   },
   noteTitle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
+    fontSize: 22,
+    lineHeight: 24,
   },
   footer: {
     paddingHorizontal: spacing.lg,

@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "dependencies": {
     "@expo-google-fonts/bagel-fat-one": "^0.4.0",
+    "@expo-google-fonts/bricolage-grotesque": "^0.4.1",
+    "@expo-google-fonts/dm-mono": "^0.4.2",
     "@expo-google-fonts/gochi-hand": "^0.4.2",
+    "@expo-google-fonts/knewave": "^0.4.1",
     "@expo-google-fonts/nunito": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo/ui": "~57.0.22",

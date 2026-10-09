@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AnonymousAvatar } from '@/components/AnonymousAvatar';
 import { AppText } from '@/components/AppText';
+import { Card } from '@/components/Card';
 import { Chip } from '@/components/Chip';
 import { ReactionBar } from '@/components/ReactionBar';
 import { useTheme } from '@/hooks/useTheme';
@@ -18,14 +19,20 @@ type Props = {
 
 export function ReplyCard({ reply, onMenu }: Props) {
   const theme = useTheme();
+  return (
+    <Card style={[styles.card, reply.highlighted && { backgroundColor: theme.blocks.lime }]}>
+      <ReplyBody reply={reply} onMenu={onMenu} />
+    </Card>
+  );
+}
+
+/** The inside of a reply. A separate component so it picks up the card's colours. */
+function ReplyBody({ reply, onMenu }: Props) {
+  const theme = useTheme();
   const waiting = reply.status === 'pending';
   const removed = reply.status === 'rejected' || reply.status === 'hidden';
   return (
-    <View
-      style={[
-        styles.card,
-        { backgroundColor: theme.surface, borderColor: reply.highlighted ? theme.primary : theme.border },
-      ]}>
+    <>
       <View style={styles.top}>
         <AnonymousAvatar size={28} />
         <View style={styles.flex}>
@@ -56,16 +63,15 @@ export function ReplyCard({ reply, onMenu }: Props) {
       ) : (
         <ReactionBar targetType="reply" id={reply.id} counts={reply.reaction_counts} mine={reply.my_reaction} />
       )}
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: radii.card,
-    borderWidth: 1.5,
     padding: spacing.md,
-    gap: spacing.sm,
+    borderBottomRightRadius: radii.card,
+    borderTopLeftRadius: radii.sharp,
   },
   top: {
     flexDirection: 'row',

@@ -5,13 +5,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
+import { Dots } from '@/components/Dots';
 import { Starburst } from '@/components/Starburst';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { minTapSize, radii, spacing, type BlockTone } from '@/theme';
 
 /** Each slide has its own colour for the big star. */
-const TONES: BlockTone[] = ['pink', 'yellow', 'green'];
+const TONES: BlockTone[] = ['rose', 'lime', 'mint'];
 
 export default function WelcomeScreen() {
   const theme = useTheme();
@@ -23,6 +24,7 @@ export default function WelcomeScreen() {
 
   return (
     <View style={[styles.page, { backgroundColor: theme.background, paddingTop: insets.top }]}>
+      <Dots />
       <View style={styles.skipRow}>
         {isLast ? null : (
           <Pressable onPress={() => router.push('/age')} accessibilityRole="button" style={styles.skip}>

@@ -23,8 +23,8 @@ export function HelplineList() {
             styles.row,
             { backgroundColor: theme.surface, borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
           ]}>
-          <View style={[styles.icon, { backgroundColor: theme.panic }]}>
-            <Phone size={20} color={theme.onPanic} />
+          <View style={[styles.icon, { backgroundColor: theme.blocks.lime }]}>
+            <Phone size={20} color={theme.ink} />
           </View>
           <View style={styles.text}>
             <AppText variant="bodyStrong">{line.name}</AppText>
@@ -32,7 +32,7 @@ export function HelplineList() {
               {line.description}
             </AppText>
           </View>
-          <AppText variant="heading" color={theme.primary}>
+          <AppText variant="numeral" style={styles.number}>
             {line.number}
           </AppText>
         </Pressable>
@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     padding: spacing.md,
     borderRadius: radii.card,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderTopLeftRadius: radii.sharp,
+    borderWidth: 1.5,
     minHeight: minTapSize + 16,
   },
   icon: {
@@ -63,5 +64,9 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  number: {
+    fontSize: 22,
+    lineHeight: 26,
   },
 });

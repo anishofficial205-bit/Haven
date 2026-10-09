@@ -35,7 +35,7 @@ export default function QuestionScreen() {
       <ScreenHeader title={copy.questionScreen} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {question ? (
-          <Tile tone="pink">
+          <Tile tone="rose">
             {space ? (
               <AppText variant="label" color={theme.ink}>
                 {space.name}

@@ -7,21 +7,20 @@ import { AppText } from '@/components/AppText';
 import { PostCard } from '@/components/PostCard';
 import { PostMenu, type MenuTarget } from '@/components/PostMenu';
 import { QuestionCard } from '@/components/QuestionCard';
+import { ScenarioCard } from '@/components/ScenarioCard';
 import { Screen } from '@/components/Screen';
 import { SetupCheck } from '@/components/SetupCheck';
-import { Starburst } from '@/components/Starburst';
 import { Tile } from '@/components/Tile';
-import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useConfessionOfTheDay } from '@/lib/posts';
 import { scenarios, statusOf, useScenarioProgress } from '@/lib/scenarios';
 import { useSpaces, useWeeklyQuestions } from '@/lib/spaces';
-import { spacing, tileGap } from '@/theme';
+import { paperPalette, spacing, tileGap } from '@/theme';
 
 const copy = strings.home;
+const ink = paperPalette.ink;
 
 export default function HomeScreen() {
-  const theme = useTheme();
   const progress = useScenarioProgress();
   const spaces = useSpaces();
   const questions = useWeeklyQuestions();
@@ -37,59 +36,32 @@ export default function HomeScreen() {
   const question = space ? questions.data?.[space.id] : undefined;
 
   return (
-    <Screen>
+    <Screen contentContainerStyle={styles.content}>
       {/* The tiles sit close together so they read as one interlocking shape. */}
       <View style={styles.puzzle}>
         {scenario ? (
-          <Tile
-            tone="yellow"
-            arrow
-            accessibilityLabel={`${inProgress ? copy.continueTitle : copy.startTitle}: ${scenario.title}`}
-            onPress={() => router.push({ pathname: '/scenario/[id]', params: { id: scenario.id } })}>
-            <View style={styles.star}>
-              <Starburst size={64} fill={theme.ink} points={8} inner={0.16} />
-            </View>
-            <AppText variant="script" color={theme.ink}>
-              {inProgress ? copy.continueTitle : copy.startTitle}
-            </AppText>
-            <AppText variant="display" color={theme.ink} style={styles.scenarioTitle}>
-              {scenario.title}
-            </AppText>
-            <AppText color={theme.ink} style={styles.scenarioHook}>
-              {scenario.hook}
-            </AppText>
-          </Tile>
+          <ScenarioCard scenario={scenario} progress={progress.data?.[scenario.id]} tone="mint" />
         ) : null}
 
-        {question && space ? (
-          <QuestionCard question={question} label={`${copy.questionTitle} · ${space.name}`} />
-        ) : null}
+        {question && space ? <QuestionCard question={question} spaceName={space.name} /> : null}
 
         <View style={styles.pair}>
-          <View style={styles.half}>
-            <Tile tone="green" style={styles.fill}>
-              <EyeOff size={24} color={theme.ink} />
-              <AppText variant="bodyStrong" color={theme.ink}>
-                {copy.anonymousTitle}
-              </AppText>
-              <AppText variant="label" color={theme.ink}>
-                {copy.anonymousShort}
-              </AppText>
+          <View style={styles.wide}>
+            <Tile tone="rose" style={styles.fill}>
+              <EyeOff size={22} color={ink} />
+              <AppText variant="bodyStrong">{copy.anonymousTitle}</AppText>
+              <AppText variant="label">{copy.anonymousShort}</AppText>
             </Tile>
           </View>
-          <View style={styles.half}>
+          <View style={styles.narrow}>
             <Tile
-              tone="blue"
+              tone="sky"
               style={styles.fill}
               accessibilityLabel={copy.helpTitle}
               onPress={() => router.navigate('/help')}>
-              <LifeBuoy size={24} color={theme.ink} />
-              <AppText variant="bodyStrong" color={theme.ink}>
-                {copy.helpTitle}
-              </AppText>
-              <AppText variant="label" color={theme.ink}>
-                {copy.helpShort}
-              </AppText>
+              <LifeBuoy size={22} color={ink} />
+              <AppText variant="bodyStrong">{copy.helpTitle}</AppText>
+              <AppText variant="label">{copy.helpShort}</AppText>
             </Tile>
           </View>
         </View>
@@ -122,30 +94,25 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  content: {
+    paddingTop: tileGap,
+  },
   puzzle: {
     gap: tileGap,
-  },
-  star: {
-    position: 'absolute',
-    top: spacing.md,
-    right: spacing.md,
-  },
-  scenarioTitle: {
-    paddingRight: 64,
-  },
-  scenarioHook: {
-    paddingRight: spacing.xxl,
   },
   pair: {
     flexDirection: 'row',
     gap: tileGap,
   },
-  half: {
+  wide: {
+    flex: 1.15,
+  },
+  narrow: {
     flex: 1,
   },
   fill: {
     flexGrow: 1,
-    minHeight: 150,
+    minHeight: 140,
   },
   section: {
     gap: spacing.md,

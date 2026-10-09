@@ -30,13 +30,13 @@ export function StoryText({ text }: { text: string }) {
               style={[
                 styles.bubble,
                 mine
-                  ? { backgroundColor: theme.blocks.blue, borderBottomRightRadius: 4 }
-                  : { backgroundColor: theme.surfaceAlt, borderBottomLeftRadius: 4 },
+                  ? { backgroundColor: theme.blocks.lime, borderBottomRightRadius: radii.sharp }
+                  : { backgroundColor: theme.blocks.mint, borderTopLeftRadius: radii.sharp },
               ]}>
-              <AppText variant="caption" color={mine ? theme.ink : theme.textSecondary}>
+              <AppText variant="caption" color={theme.ink}>
                 {speaker}
               </AppText>
-              <AppText color={mine ? theme.ink : theme.text}>{words}</AppText>
+              <AppText color={theme.ink}>{words}</AppText>
             </View>
           </View>
         );

@@ -1,41 +1,37 @@
 import { router } from 'expo-router';
-import { Pin } from 'lucide-react-native';
+import { ArrowUpRight } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
+import { Strip } from '@/components/Collector';
 import { Tile } from '@/components/Tile';
-import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
-import type { WeeklyQuestion } from '@/lib/spaces';
-import { spacing } from '@/theme';
+import { useQuestionReplies, type WeeklyQuestion } from '@/lib/spaces';
+import { paperPalette, spacing } from '@/theme';
 
 type Props = {
   question: WeeklyQuestion;
-  /** Shown above the question, e.g. the space it belongs to */
-  label?: string;
+  /** The space it belongs to, shown on the right of the strip */
+  spaceName?: string;
 };
 
 /** The pinned weekly question. Shown at the top of its space and on Home. */
-export function QuestionCard({ question, label }: Props) {
-  const theme = useTheme();
+export function QuestionCard({ question, spaceName }: Props) {
+  const answers = useQuestionReplies(question.id).data?.filter((reply) => reply.status === 'approved').length ?? 0;
   return (
     <Tile
-      tone="pink"
-      arrow
+      tone="lime"
       accessibilityLabel={`${question.question}. ${strings.spaces.answerThis}`}
       onPress={() => router.push({ pathname: '/question/[id]', params: { id: question.id } })}>
+      <Strip left={strings.spaces.weekly} right={spaceName} />
+      <AppText variant="heading">{question.question}</AppText>
       <View style={styles.row}>
-        <Pin size={16} color={theme.ink} />
-        <AppText variant="label" color={theme.ink} style={styles.flex}>
-          {label ?? strings.spaces.weekly}
-        </AppText>
+        <View style={styles.count}>
+          <AppText variant="numeral">{String(answers).padStart(2, '0')}</AppText>
+          <AppText variant="caption">{strings.spaces.answersLabel(answers)}</AppText>
+        </View>
+        <ArrowUpRight size={24} color={paperPalette.ink} />
       </View>
-      <AppText variant="heading" color={theme.ink} style={styles.question}>
-        {question.question}
-      </AppText>
-      <AppText variant="script" color={theme.ink}>
-        {strings.spaces.answerThis}
-      </AppText>
     </Tile>
   );
 }
@@ -43,14 +39,12 @@ export function QuestionCard({ question, label }: Props) {
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
   },
-  flex: {
-    flex: 1,
-  },
-  question: {
-    // Leaves room for the arrow button in the corner
-    paddingRight: spacing.lg,
+  count: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: spacing.xs + 2,
   },
 });

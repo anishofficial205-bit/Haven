@@ -11,21 +11,21 @@ type Shape = 'circle' | 'square' | 'drop' | 'blob' | 'ghost' | 'flower';
 type Eyes = 'dots' | 'big' | 'sleepy' | 'wink';
 type Mouth = 'smile' | 'flat' | 'oh' | 'grin';
 
-const INK = '#0B0B0C';
+const INK = '#111312';
 
 export const AVATARS: { shape: Shape; color: string; card: string; eyes: Eyes; mouth: Mouth }[] = [
-  { shape: 'blob', color: '#F4E73A', card: '#F272B4', eyes: 'big', mouth: 'smile' },
-  { shape: 'ghost', color: '#FFFFFF', card: '#4F8FFF', eyes: 'dots', mouth: 'oh' },
-  { shape: 'circle', color: '#F272B4', card: '#3BDD5E', eyes: 'wink', mouth: 'grin' },
-  { shape: 'square', color: '#4F8FFF', card: '#F4E73A', eyes: 'big', mouth: 'flat' },
-  { shape: 'flower', color: '#FF8A3D', card: '#B9F6E6', eyes: 'dots', mouth: 'smile' },
-  { shape: 'drop', color: '#3BDD5E', card: '#F272B4', eyes: 'sleepy', mouth: 'smile' },
-  { shape: 'circle', color: '#B79CFF', card: '#F4E73A', eyes: 'big', mouth: 'oh' },
-  { shape: 'blob', color: '#FF8A3D', card: '#4F8FFF', eyes: 'wink', mouth: 'flat' },
-  { shape: 'square', color: '#3BDD5E', card: '#FF8A3D', eyes: 'dots', mouth: 'grin' },
-  { shape: 'ghost', color: '#F272B4', card: '#F4E73A', eyes: 'sleepy', mouth: 'flat' },
-  { shape: 'flower', color: '#F4E73A', card: '#B79CFF', eyes: 'big', mouth: 'grin' },
-  { shape: 'drop', color: '#4F8FFF', card: '#3BDD5E', eyes: 'dots', mouth: 'smile' },
+  { shape: 'blob', color: '#D7F56A', card: '#BDEFD9', eyes: 'big', mouth: 'smile' },
+  { shape: 'ghost', color: '#FFFFFF', card: '#BFE3F5', eyes: 'dots', mouth: 'oh' },
+  { shape: 'circle', color: '#F8C9DD', card: '#D7F56A', eyes: 'wink', mouth: 'grin' },
+  { shape: 'square', color: '#BFE3F5', card: '#F8C9DD', eyes: 'big', mouth: 'flat' },
+  { shape: 'flower', color: '#FFD9A8', card: '#BDEFD9', eyes: 'dots', mouth: 'smile' },
+  { shape: 'drop', color: '#BDEFD9', card: '#F8C9DD', eyes: 'sleepy', mouth: 'smile' },
+  { shape: 'circle', color: '#D9CCFF', card: '#D7F56A', eyes: 'big', mouth: 'oh' },
+  { shape: 'blob', color: '#FFD9A8', card: '#BFE3F5', eyes: 'wink', mouth: 'flat' },
+  { shape: 'square', color: '#D7F56A', card: '#D9CCFF', eyes: 'dots', mouth: 'grin' },
+  { shape: 'ghost', color: '#F8C9DD', card: '#BDEFD9', eyes: 'sleepy', mouth: 'flat' },
+  { shape: 'flower', color: '#D7F56A', card: '#F8C9DD', eyes: 'big', mouth: 'grin' },
+  { shape: 'drop', color: '#BFE3F5', card: '#D7F56A', eyes: 'dots', mouth: 'smile' },
 ];
 
 export function avatarOf(id: number) {
@@ -143,6 +143,8 @@ export function Avatar({ id, size = 56, bare }: Props) {
         height: size,
         borderRadius: size / 2,
         backgroundColor: avatar.card,
+        borderWidth: 1.5,
+        borderColor: INK,
         alignItems: 'center',
         justifyContent: 'center',
       }}>

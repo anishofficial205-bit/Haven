@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
+import { Dots } from '@/components/Dots';
 import { PanicButton } from '@/components/PanicButton';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
@@ -19,7 +20,9 @@ export function ScreenHeader({ title }: { title: string }) {
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
   return (
-    <View style={[styles.bar, { paddingTop: insets.top + spacing.xs, backgroundColor: theme.background }]}>
+    <View style={[styles.bar, { paddingTop: insets.top + spacing.xs }]}>
+      {/* The header is the first thing on its page, so the texture drawn here sits behind everything else. */}
+      <Dots window />
       <Pressable
         onPress={() => goBack(pathname)}
         accessibilityRole="button"

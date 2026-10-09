@@ -15,21 +15,23 @@ export function AnonymousAvatar({ size = 36 }: { size?: number }) {
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: theme.surfaceAlt,
+        backgroundColor: theme.blocks.sky,
+        borderWidth: 1.5,
+        borderColor: theme.ink,
         alignItems: 'center',
         justifyContent: 'center',
       }}>
       <Svg width={size * 0.74} height={size * 0.74} viewBox="0 0 100 100">
         <Path
           d="M18 88 V46 A32 32 0 0 1 82 46 V88 L69 77 L56 88 L44 77 L31 88 Z"
-          fill={theme.text}
-          stroke={theme.text}
+          fill={theme.ink}
+          stroke={theme.ink}
           strokeWidth={4}
           strokeLinejoin="round"
         />
-        <Rect x={26} y={40} width={21} height={14} rx={6} fill={theme.background} />
-        <Rect x={53} y={40} width={21} height={14} rx={6} fill={theme.background} />
-        <Rect x={44} y={44} width={12} height={4} fill={theme.background} />
+        <Rect x={26} y={40} width={21} height={14} rx={6} fill={theme.paper} />
+        <Rect x={53} y={40} width={21} height={14} rx={6} fill={theme.paper} />
+        <Rect x={44} y={44} width={12} height={4} fill={theme.paper} />
       </Svg>
     </View>
   );
