@@ -144,14 +144,25 @@ npx eas-cli@latest env:create --environment preview --name EXPO_PUBLIC_SUPABASE_
 npx eas-cli@latest env:create --environment preview --name EXPO_PUBLIC_SUPABASE_KEY --value "your-publishable-key" --visibility plaintext
 ```
 
-### If your phone can't open the app from the QR code
+### Run it on your phone (the way that works on this Wi-Fi)
 
-Some Wi-Fi networks stop devices talking to each other. Start the app this way
-instead, and scan the new QR code:
+Expo Go needs you signed in to the same free Expo account on the phone and on
+the Mac. Do this once on the Mac (it opens your browser, so it works with a
+Google sign-in):
+
+```bash
+npx expo login --browser
+```
+
+Then start the app in tunnel mode, which reaches the phone over the internet
+instead of the local Wi-Fi, and scan the QR code with Expo Go:
 
 ```bash
 npx expo start --tunnel
 ```
+
+Leave that terminal running while you use the app. The address changes each
+time you restart it, so scan the new code.
 
 ### Remove the sample posts
 
