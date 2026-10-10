@@ -7,6 +7,8 @@ import { glows, radii, spacing, type GlowTone } from '@/theme';
 
 type Props = {
   tone: GlowTone;
+  /** Override the tone's three stops (light, mid, deep), for shades inside one area */
+  colors?: readonly [string, string, string];
   children?: ReactNode;
   onPress?: () => void;
   /** Screen-reader description of where tapping leads */
@@ -21,9 +23,9 @@ type Props = {
  * shade of the same colour. Text on a glow is white. Use it for things that
  * are special (a hero, a feature, a warning), not for long reading.
  */
-export function Glow({ tone, children, onPress, accessibilityLabel, light = 'left', style }: Props) {
+export function Glow({ tone, colors, children, onPress, accessibilityLabel, light = 'left', style }: Props) {
   const id = useId().replace(/:/g, '');
-  const [bright, mid, deep] = glows[tone];
+  const [bright, mid, deep] = colors ?? glows[tone];
   const body = (
     <>
       <View style={StyleSheet.absoluteFill} pointerEvents="none" aria-hidden>
