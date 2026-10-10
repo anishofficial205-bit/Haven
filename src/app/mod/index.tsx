@@ -97,7 +97,7 @@ function Queue({ tab }: { tab: ModTab }) {
               <Chip
                 label={
                   item.target_type === 'reply'
-                    ? strings.replies.kinds[item.kind as 'advice' | 'solidarity']
+                    ? strings.replies.kinds[item.kind as 'advice' | 'solidarity' | 'response']
                     : item.kind === 'confession'
                       ? strings.tabs.confess
                       : strings.spaces.postTitle

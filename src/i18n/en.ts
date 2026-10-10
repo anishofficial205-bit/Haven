@@ -318,6 +318,7 @@ export const en = {
     kinds: {
       advice: 'Advice',
       solidarity: 'Support',
+      response: 'Reply',
     },
     kindLabel: 'What kind of reply is this?',
     placeholder: {
@@ -325,6 +326,12 @@ export const en = {
       solidarity: "Let them know they're not alone.",
     },
     replyingAs: 'Replying as Anonymous',
+    reply: 'Reply',
+    replyingTo: 'Replying to',
+    cancelReply: 'Cancel reply',
+    responsePlaceholder: 'Say something back',
+    fromAuthor: 'Posted this',
+    emptyMine: 'No replies yet. When someone replies, you can answer them here.',
     reviewNote: 'Replies are checked by a moderator before anyone sees them.',
     send: 'Send reply',
     pending: "Your reply is with our moderators. It'll show up once it's checked.",

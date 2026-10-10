@@ -11,7 +11,10 @@ export type Tag = (typeof TAGS)[number];
 export type TriggerWarning = (typeof TRIGGER_WARNINGS)[number];
 export type Reaction = (typeof REACTIONS)[number];
 export type ReportReason = (typeof REPORT_REASONS)[number];
+/** What someone else can send. */
 export type ReplyKind = 'advice' | 'solidarity';
+/** 'response' is the post's author answering one of those. */
+export type AnyReplyKind = ReplyKind | 'response';
 export type TargetType = 'post' | 'reply';
 export type ConfessionSort = 'recent' | 'supported' | 'advice';
 
@@ -52,13 +55,17 @@ export type ReplyCard = ReactionState & {
   id: string;
   post_id: string | null;
   question_id: string | null;
-  kind: ReplyKind;
+  kind: AnyReplyKind;
   body: string;
   status: 'pending' | 'approved' | 'rejected' | 'hidden';
   moderation_reason: string | null;
   highlighted: boolean;
   created_at: string;
   is_mine: boolean;
+  /** Set when this is the post's author answering another reply */
+  parent_id: string | null;
+  /** Written by whoever wrote the post. That is all it says about them. */
+  by_author: boolean;
 };
 
 // Query keys. Everything that lists posts starts with 'posts', so one
@@ -130,10 +137,14 @@ export function useCreateConfession() {
 export function useCreateReply(postId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ kind, body }: { kind: ReplyKind; body: string }) => {
+    mutationFn: async ({ kind, body, parentId }: { kind: ReplyKind; body: string; parentId?: string }) => {
+      // Answering a reply: the database works out the post and checks it is yours.
+      const row: Record<string, string> = parentId
+        ? { parent_id: parentId, kind: 'response', body: body.trim() }
+        : { post_id: postId, kind, body: body.trim() };
       const { data, error } = await supabase
         .from('replies')
-        .insert({ post_id: postId, kind, body: body.trim() })
+        .insert(row)
         .select('moderation_reason')
         .single();
       if (error) throw error;

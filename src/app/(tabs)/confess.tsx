@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router } from 'expo-router';
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,8 +8,8 @@ import {
   PenLine,
   SlidersHorizontal,
   X,
-} from "lucide-react-native";
-import { useMemo, useState } from "react";
+} from 'lucide-react-native';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -23,21 +23,21 @@ import {
   ScrollView,
   StyleSheet,
   View,
-} from "react-native";
+} from 'react-native';
 
-import { AnonymousAvatar } from "@/components/AnonymousAvatar";
-import { AppText } from "@/components/AppText";
-import { BottomSheet } from "@/components/BottomSheet";
-import { Button } from "@/components/Button";
-import { Chip } from "@/components/Chip";
-import { Dots } from "@/components/Dots";
-import { Glow } from "@/components/Glow";
-import { PostMenu, type MenuTarget } from "@/components/PostMenu";
-import { PressableScale } from "@/components/PressableScale";
-import { REACTION_ICONS } from "@/components/ReactionBar";
-import { ReplyComposer } from "@/components/ReplyComposer";
-import { useTheme } from "@/hooks/useTheme";
-import { strings } from "@/i18n/en";
+import { AnonymousAvatar } from '@/components/AnonymousAvatar';
+import { AppText } from '@/components/AppText';
+import { BottomSheet } from '@/components/BottomSheet';
+import { Button } from '@/components/Button';
+import { Chip } from '@/components/Chip';
+import { Dots } from '@/components/Dots';
+import { Glow } from '@/components/Glow';
+import { PostMenu, type MenuTarget } from '@/components/PostMenu';
+import { PressableScale } from '@/components/PressableScale';
+import { REACTION_ICONS } from '@/components/ReactionBar';
+import { ReplyComposer } from '@/components/ReplyComposer';
+import { useTheme } from '@/hooks/useTheme';
+import { strings } from '@/i18n/en';
 import {
   REACTIONS,
   TAGS,
@@ -49,23 +49,22 @@ import {
   type ConfessionSort,
   type PostCard as Post,
   type Tag,
-} from "@/lib/posts";
-import { timeAgo } from "@/lib/time";
-import { FEATURE_TONE, radii, shades, spacing } from "@/theme";
+} from '@/lib/posts';
+import { timeAgo } from '@/lib/time';
+import { FEATURE_TONE, radii, shades, spacing } from '@/theme';
 
 const copy = strings.confess;
 const P = shades[FEATURE_TONE.confess];
-const SORTS: ConfessionSort[] = ["recent", "supported", "advice"];
-type Mode = "read" | "mine";
+const SORTS: ConfessionSort[] = ['recent', 'supported', 'advice'];
+type Mode = 'read' | 'mine';
 
-const openPost = (id: string) =>
-  router.push({ pathname: "/post/[id]", params: { id } });
+const openPost = (id: string) => router.push({ pathname: '/post/[id]', params: { id } });
 const menuFor = (post: Post): MenuTarget => ({
-  targetType: "post",
+  targetType: 'post',
   id: post.id,
   isMine: post.is_mine,
   isSaved: post.is_saved,
-  canFeature: post.status === "published",
+  canFeature: post.status === 'published',
 });
 
 /**
@@ -74,23 +73,19 @@ const menuFor = (post: Post): MenuTarget => ({
  */
 export default function ConfessScreen() {
   const theme = useTheme();
-  const [mode, setMode] = useState<Mode>("read");
+  const [mode, setMode] = useState<Mode>('read');
   const [tag, setTag] = useState<Tag | null>(null);
-  const [sort, setSort] = useState<ConfessionSort>("recent");
+  const [sort, setSort] = useState<ConfessionSort>('recent');
   const [filterOpen, setFilterOpen] = useState(false);
   const [menu, setMenu] = useState<MenuTarget | null>(null);
-  const filtered = tag !== null || sort !== "recent";
+  const filtered = tag !== null || sort !== 'recent';
 
   return (
     <View style={[styles.page, { backgroundColor: theme.background }]}>
       <Dots />
       <View style={styles.controls}>
-        <View
-          style={styles.segment}
-          accessibilityRole="radiogroup"
-          accessibilityLabel={copy.modeLabel}
-        >
-          {(["read", "mine"] as const).map((option) => {
+        <View style={styles.segment} accessibilityRole="radiogroup" accessibilityLabel={copy.modeLabel}>
+          {(['read', 'mine'] as const).map((option) => {
             const selected = mode === option;
             return (
               <Pressable
@@ -98,70 +93,40 @@ export default function ConfessScreen() {
                 onPress={() => setMode(option)}
                 accessibilityRole="radio"
                 accessibilityState={{ selected }}
-                style={[
-                  styles.segmentItem,
-                  selected && { backgroundColor: P[1] },
-                ]}
+                style={[styles.segmentItem, selected && { backgroundColor: P[1] }]}
               >
-                <AppText
-                  variant="label"
-                  color={selected ? P[7] : P[1]}
-                  numberOfLines={1}
-                >
+                <AppText variant="label" color={selected ? P[7] : P[1]} numberOfLines={1}>
                   {copy.modes[option]}
                 </AppText>
               </Pressable>
             );
           })}
         </View>
-        {mode === "read" ? (
+        {mode === 'read' ? (
           <Pressable
             onPress={() => setFilterOpen(true)}
             accessibilityRole="button"
             accessibilityLabel={copy.filter}
-            style={[
-              styles.filter,
-              filtered && { backgroundColor: P[1], borderColor: P[1] },
-            ]}
+            style={[styles.filter, filtered && { backgroundColor: P[1], borderColor: P[1] }]}
           >
             <SlidersHorizontal size={18} color={filtered ? P[7] : P[1]} />
           </Pressable>
         ) : null}
       </View>
 
-      {mode === "read" ? (
+      {mode === 'read' ? (
         // A new filter starts a new deck from its first card.
-        <Deck
-          key={`${tag}-${sort}`}
-          tag={tag}
-          sort={sort}
-          filtered={filtered}
-          onMenu={setMenu}
-        />
+        <Deck key={`${tag}-${sort}`} tag={tag} sort={sort} filtered={filtered} onMenu={setMenu} />
       ) : (
         <Mine onMenu={setMenu} />
       )}
 
-      <BottomSheet
-        visible={filterOpen}
-        title={copy.filterTitle}
-        onClose={() => setFilterOpen(false)}
-      >
+      <BottomSheet visible={filterOpen} title={copy.filterTitle} onClose={() => setFilterOpen(false)}>
         <AppText variant="strip" color={P[2]}>
           {copy.topicLabel.toUpperCase()}
         </AppText>
-        <View
-          style={styles.wrap}
-          accessibilityRole="radiogroup"
-          accessibilityLabel={copy.topicLabel}
-        >
-          <Chip
-            role="radio"
-            shades={P}
-            label={strings.feed.all}
-            selected={tag === null}
-            onPress={() => setTag(null)}
-          />
+        <View style={styles.wrap} accessibilityRole="radiogroup" accessibilityLabel={copy.topicLabel}>
+          <Chip role="radio" shades={P} label={strings.feed.all} selected={tag === null} onPress={() => setTag(null)} />
           {TAGS.map((option) => (
             <Chip
               key={option}
@@ -176,11 +141,7 @@ export default function ConfessScreen() {
         <AppText variant="strip" color={P[2]}>
           {strings.feed.sortLabel.toUpperCase()}
         </AppText>
-        <View
-          style={styles.wrap}
-          accessibilityRole="radiogroup"
-          accessibilityLabel={strings.feed.sortLabel}
-        >
+        <View style={styles.wrap} accessibilityRole="radiogroup" accessibilityLabel={strings.feed.sortLabel}>
           {SORTS.map((option) => (
             <Chip
               key={option}
@@ -225,10 +186,7 @@ function Deck({ tag, sort, filtered, onMenu }: DeckProps) {
             <AppText variant="title" style={styles.centerText}>
               {done ? copy.endTitle : null}
             </AppText>
-            <AppText
-              color={feed.isError ? theme.danger : theme.textSecondary}
-              style={styles.centerText}
-            >
+            <AppText color={feed.isError ? theme.danger : theme.textSecondary} style={styles.centerText}>
               {feed.isError
                 ? strings.feed.loadError
                 : done
@@ -297,12 +255,7 @@ function Deck({ tag, sort, filtered, onMenu }: DeckProps) {
         <AppText variant="numeral" color={P[1]} style={styles.counter}>
           {copy.counter(index + 1, posts.length)}
         </AppText>
-        <AppText
-          variant="caption"
-          color={P[2]}
-          style={styles.flex}
-          numberOfLines={1}
-        >
+        <AppText variant="caption" color={P[2]} style={styles.flex} numberOfLines={1}>
           {copy.swipeHint}
         </AppText>
         <Pressable
@@ -316,9 +269,7 @@ function Deck({ tag, sort, filtered, onMenu }: DeckProps) {
         </Pressable>
       </View>
 
-      {replyTo ? (
-        <ReplySheet post={replyTo} onClose={() => setReplyTo(null)} />
-      ) : null}
+      {replyTo ? <ReplySheet post={replyTo} onClose={() => setReplyTo(null)} /> : null}
     </View>
   );
 }
@@ -343,8 +294,7 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
     () =>
       PanResponder.create({
         // Only sideways drags: up and down still scrolls a long confession.
-        onMoveShouldSetPanResponder: (_event, g) =>
-          Math.abs(g.dx) > 14 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
+        onMoveShouldSetPanResponder: (_event, g) => Math.abs(g.dx) > 14 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
         onPanResponderMove: (_event, g) => x.setValue(g.dx),
         onPanResponderRelease: (_event, g) => {
           const left = g.dx < -90 || g.vx < -0.8;
@@ -363,8 +313,7 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
             useNativeDriver: true,
           }).start(() => (left ? onNext() : onPrevious()));
         },
-        onPanResponderTerminate: () =>
-          Animated.spring(x, { toValue: 0, useNativeDriver: true }).start(),
+        onPanResponderTerminate: () => Animated.spring(x, { toValue: 0, useNativeDriver: true }).start(),
       }),
     [x, canGoBack, onNext, onPrevious],
   );
@@ -384,7 +333,7 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
             {
               rotate: x.interpolate({
                 inputRange: [-300, 300],
-                outputRange: ["-8deg", "8deg"],
+                outputRange: ['-8deg', '8deg'],
               }),
             },
           ],
@@ -397,13 +346,8 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
           <AppText variant="label" numberOfLines={1} style={styles.flex}>
             {strings.post.anonymous}
             <AppText variant="caption" color={P[0]}>
-              {"  "}
-              {[
-                timeAgo(post.created_at),
-                post.is_seed ? strings.post.sample : null,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
+              {'  '}
+              {[timeAgo(post.created_at), post.is_seed ? strings.post.sample : null].filter(Boolean).join(' · ')}
             </AppText>
           </AppText>
           <Pressable
@@ -422,32 +366,16 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
             <AppText variant="label">{strings.post.warningTitle}</AppText>
             <View style={styles.wrap}>
               {post.trigger_warnings.map((warning) => (
-                <Chip
-                  key={warning}
-                  tone="warning"
-                  label={strings.triggerWarnings[warning]}
-                />
+                <Chip key={warning} tone="warning" label={strings.triggerWarnings[warning]} />
               ))}
             </View>
-            <Button
-              variant="secondary"
-              label={strings.post.showAnyway}
-              onPress={() => setRevealed(true)}
-            />
+            <Button variant="secondary" label={strings.post.showAnyway} onPress={() => setRevealed(true)} />
           </View>
         ) : (
-          <ScrollView
-            style={styles.flex}
-            contentContainerStyle={styles.words}
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView style={styles.flex} contentContainerStyle={styles.words} showsVerticalScrollIndicator={false}>
             <AppText
-              variant={size > 16 ? "title" : "body"}
-              style={
-                size > 16
-                  ? { fontSize: size, lineHeight: size * 1.22 }
-                  : undefined
-              }
+              variant={size > 16 ? 'title' : 'body'}
+              style={size > 16 ? { fontSize: size, lineHeight: size * 1.22 } : undefined}
             >
               {post.body}
             </AppText>
@@ -460,12 +388,7 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
           accessibilityHint={strings.post.openPost}
         >
           <AppText variant="strip" color={P[0]}>
-            {copy
-              .cardMeta(
-                post.tags.map((tag) => strings.tags[tag]).join(", "),
-                replies,
-              )
-              .toUpperCase()}
+            {copy.cardMeta(post.tags.map((tag) => strings.tags[tag]).join(', '), replies).toUpperCase()}
           </AppText>
         </Pressable>
 
@@ -478,7 +401,7 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
                 key={key}
                 onPress={() =>
                   react.mutate({
-                    targetType: "post",
+                    targetType: 'post',
                     id: post.id,
                     current: post.my_reaction,
                     emoji: key,
@@ -491,16 +414,9 @@ function SwipeCard({ post, canGoBack, onNext, onPrevious, onMenu }: CardProps) {
                 )}
                 accessibilityState={{ selected }}
                 hitSlop={4}
-                style={[
-                  styles.reaction,
-                  { backgroundColor: selected ? P[0] : theme.wash },
-                ]}
+                style={[styles.reaction, { backgroundColor: selected ? P[0] : theme.wash }]}
               >
-                <Icon
-                  size={19}
-                  color={selected ? P[6] : "#FFFFFF"}
-                  fill={selected && key === "love" ? P[6] : "none"}
-                />
+                <Icon size={19} color={selected ? P[6] : '#FFFFFF'} fill={selected && key === 'love' ? P[6] : 'none'} />
               </Pressable>
             );
           })}
@@ -525,26 +441,16 @@ function ReplySheet({ post, onClose }: { post: Post; onClose: () => void }) {
   const reply = useCreateReply(post.id);
   return (
     <Modal visible transparent animationType="slide" onRequestClose={onClose}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.sheetFill}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.sheetFill}>
         <Pressable
           style={styles.backdrop}
           onPress={onClose}
           accessibilityRole="button"
           accessibilityLabel={strings.common.close}
         />
-        <View
-          accessibilityViewIsModal
-          style={[styles.sheet, { backgroundColor: theme.background }]}
-        >
+        <View accessibilityViewIsModal style={[styles.sheet, { backgroundColor: theme.background }]}>
           <View style={styles.sheetTitle}>
-            <AppText
-              variant="heading"
-              accessibilityRole="header"
-              style={styles.flex}
-            >
+            <AppText variant="heading" accessibilityRole="header" style={styles.flex}>
               {copy.replyTitle}
             </AppText>
             <Pressable
@@ -556,10 +462,7 @@ function ReplySheet({ post, onClose }: { post: Post; onClose: () => void }) {
               <X size={24} color={theme.text} />
             </Pressable>
           </View>
-          <ReplyComposer
-            onSend={(input) => reply.mutateAsync(input)}
-            sending={reply.isPending}
-          />
+          <ReplyComposer onSend={(input) => reply.mutateAsync(input)} sending={reply.isPending} />
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -570,7 +473,7 @@ function Compose() {
   const theme = useTheme();
   return (
     <PressableScale
-      onPress={() => router.push("/compose")}
+      onPress={() => router.push('/compose')}
       accessibilityRole="button"
       accessibilityLabel={strings.feed.compose}
       style={[styles.compose, { backgroundColor: theme.primary }]}
@@ -586,20 +489,14 @@ function Compose() {
 function Mine({ onMenu }: { onMenu: (target: MenuTarget) => void }) {
   const theme = useTheme();
   const mine = useMyPosts();
-  const posts = (mine.data ?? []).filter((post) => post.kind === "confession");
+  const posts = (mine.data ?? []).filter((post) => post.kind === 'confession');
   return (
     <View style={styles.flex}>
       <FlatList
         data={posts}
         keyExtractor={(post) => post.id}
         contentContainerStyle={styles.list}
-        refreshControl={
-          <RefreshControl
-            refreshing={mine.isRefetching}
-            onRefresh={mine.refetch}
-            tintColor={P[1]}
-          />
-        }
+        refreshControl={<RefreshControl refreshing={mine.isRefetching} onRefresh={mine.refetch} tintColor={P[1]} />}
         ListEmptyComponent={
           mine.isPending ? (
             <ActivityIndicator color={P[1]} style={styles.empty} />
@@ -612,9 +509,7 @@ function Mine({ onMenu }: { onMenu: (target: MenuTarget) => void }) {
             </AppText>
           )
         }
-        renderItem={({ item }) => (
-          <MinePanel post={item} onMenu={() => onMenu(menuFor(item))} />
-        )}
+        renderItem={({ item }) => <MinePanel post={item} onMenu={() => onMenu(menuFor(item))} />}
       />
       <View style={styles.floating}>
         <Compose />
@@ -627,14 +522,14 @@ function Mine({ onMenu }: { onMenu: (target: MenuTarget) => void }) {
 function MinePanel({ post, onMenu }: { post: Post; onMenu: () => void }) {
   const replies = useReplies(post.id);
   const newest = (replies.data ?? [])
-    .filter((reply) => reply.status === "approved" && !reply.is_mine)
+    .filter((reply) => reply.status === 'approved' && !reply.is_mine && !reply.parent_id)
     .sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
   const status =
-    post.status === "pending"
+    post.status === 'pending'
       ? strings.post.pending
-      : post.status === "rejected"
+      : post.status === 'rejected'
         ? strings.post.rejected
-        : post.status === "hidden"
+        : post.status === 'hidden'
           ? strings.post.hidden
           : null;
 
@@ -645,11 +540,8 @@ function MinePanel({ post, onMenu }: { post: Post; onMenu: () => void }) {
         <AppText variant="label" numberOfLines={1} style={styles.flex}>
           {copy.you}
           <AppText variant="caption" color={P[2]}>
-            {"  "}
-            {[
-              timeAgo(post.created_at),
-              ...post.tags.map((tag) => strings.tags[tag]),
-            ].join(" · ")}
+            {'  '}
+            {[timeAgo(post.created_at), ...post.tags.map((tag) => strings.tags[tag])].join(' · ')}
           </AppText>
         </AppText>
         <Pressable
@@ -694,21 +586,9 @@ function MinePanel({ post, onMenu }: { post: Post; onMenu: () => void }) {
             </View>
             {newest ? (
               <View style={styles.inset}>
-                <View
-                  style={[
-                    styles.kind,
-                    newest.kind === "advice"
-                      ? styles.kindOutline
-                      : { backgroundColor: P[1] },
-                  ]}
-                >
-                  <AppText
-                    variant="strip"
-                    color={newest.kind === "advice" ? P[1] : P[7]}
-                  >
-                    {copy
-                      .newest(strings.replies.kinds[newest.kind])
-                      .toUpperCase()}
+                <View style={[styles.kind, newest.kind === 'advice' ? styles.kindOutline : { backgroundColor: P[1] }]}>
+                  <AppText variant="strip" color={newest.kind === 'advice' ? P[1] : P[7]}>
+                    {copy.newest(strings.replies.kinds[newest.kind]).toUpperCase()}
                   </AppText>
                 </View>
                 <AppText variant="label" color={P[0]} numberOfLines={3}>
@@ -731,24 +611,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.sm,
   },
   wrap: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.sm,
   },
   controls: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: spacing.sm,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
   },
   segment: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 4,
     borderRadius: radii.pill,
     backgroundColor: P[8],
@@ -759,16 +639,16 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 36,
     borderRadius: radii.pill,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: spacing.sm,
   },
   filter: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: P[8],
     borderWidth: 1,
     borderColor: P[6],
@@ -784,7 +664,7 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   behind: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     height: 60,
     borderRadius: 28,
@@ -811,32 +691,32 @@ const styles = StyleSheet.create({
   },
   words: {
     flexGrow: 1,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
   gate: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
     gap: spacing.md,
   },
   reactions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   reaction: {
     width: 46,
     height: 46,
     borderRadius: 23,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   replyBar: {
     height: 52,
     borderRadius: radii.pill,
     paddingLeft: spacing.lg + 2,
     paddingRight: 6,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: P[8],
     borderWidth: 1,
     borderColor: P[6],
@@ -845,13 +725,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: P[1],
   },
   pager: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.md,
   },
   counter: {
@@ -862,8 +742,8 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: P[5],
   },
@@ -872,13 +752,13 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: spacing.xl,
     gap: spacing.md,
   },
   centerText: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   empty: {
     paddingVertical: spacing.xxl,
@@ -903,8 +783,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm + 2,
   },
   count: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 5,
     marginRight: spacing.sm,
   },
@@ -912,21 +792,21 @@ const styles = StyleSheet.create({
     borderRadius: radii.chip + 4,
     padding: spacing.md,
     gap: 6,
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
     backgroundColor: P[7],
   },
   kind: {
     height: 20,
     paddingHorizontal: spacing.sm,
     borderRadius: radii.pill,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   kindOutline: {
     borderWidth: 1,
     borderColor: P[3],
   },
   floating: {
-    position: "absolute",
+    position: 'absolute',
     right: spacing.lg,
     bottom: spacing.lg,
   },
@@ -934,10 +814,10 @@ const styles = StyleSheet.create({
     minHeight: 52,
     paddingHorizontal: spacing.xl,
     borderRadius: radii.pill,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: spacing.sm,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.4,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
@@ -945,15 +825,15 @@ const styles = StyleSheet.create({
   },
   sheetFill: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
   backdrop: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: "rgba(18, 14, 31, 0.5)",
+    backgroundColor: 'rgba(18, 14, 31, 0.5)',
   },
   sheet: {
     borderTopLeftRadius: radii.sheet,
@@ -961,8 +841,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
   },
   sheetTitle: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xs,
   },

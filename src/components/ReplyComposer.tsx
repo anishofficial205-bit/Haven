@@ -1,4 +1,4 @@
-import { ArrowUp } from 'lucide-react-native';
+import { ArrowUp, X } from 'lucide-react-native';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,20 +18,23 @@ type Props = {
   sending: boolean;
   /** Overrides the hint inside the text box */
   placeholder?: string;
+  /** The post's author answering one reply: shows its words instead of the Support / Advice choice */
+  replyingTo?: string;
+  onCancelReply?: () => void;
 };
 
 /**
  * The reply box under a post or weekly question. Replies are always anonymous
  * and always wait for a moderator.
  */
-export function ReplyComposer({ onSend, sending, placeholder }: Props) {
+export function ReplyComposer({ onSend, sending, placeholder, replyingTo, onCancelReply }: Props) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { openHelp } = usePanic();
   const [kind, setKind] = useState<ReplyKind>('solidarity');
   const [body, setBody] = useState('');
   const [notice, setNotice] = useState<{ text: string; isError: boolean } | null>(null);
-  const hint = placeholder ?? strings.replies.placeholder[kind];
+  const hint = placeholder ?? (replyingTo ? strings.replies.responsePlaceholder : strings.replies.placeholder[kind]);
   const canSend = body.trim().length > 0 && !sending;
 
   const send = async () => {
@@ -50,20 +53,40 @@ export function ReplyComposer({ onSend, sending, placeholder }: Props) {
 
   return (
     <View style={[styles.composer, { backgroundColor: theme.background, paddingBottom: insets.bottom + spacing.md }]}>
-      <View style={styles.kindRow} accessibilityRole="radiogroup" accessibilityLabel={strings.replies.kindLabel}>
-        {KINDS.map((option) => (
-          <Chip
-            key={option}
-            role="radio"
-            label={strings.replies.kinds[option]}
-            selected={kind === option}
-            onPress={() => setKind(option)}
-          />
-        ))}
-        <AppText variant="caption" color={theme.textSecondary} style={styles.replyingAs}>
-          {strings.replies.replyingAs}
-        </AppText>
-      </View>
+      {replyingTo ? (
+        <View style={styles.kindRow}>
+          <View style={[styles.quote, { borderLeftColor: theme.border }]}>
+            <AppText variant="caption" color={theme.textSecondary}>
+              {strings.replies.replyingTo}
+            </AppText>
+            <AppText variant="label" numberOfLines={2}>
+              {replyingTo}
+            </AppText>
+          </View>
+          <Pressable
+            onPress={onCancelReply}
+            accessibilityRole="button"
+            accessibilityLabel={strings.replies.cancelReply}
+            hitSlop={10}>
+            <X size={20} color={theme.textSecondary} />
+          </Pressable>
+        </View>
+      ) : (
+        <View style={styles.kindRow} accessibilityRole="radiogroup" accessibilityLabel={strings.replies.kindLabel}>
+          {KINDS.map((option) => (
+            <Chip
+              key={option}
+              role="radio"
+              label={strings.replies.kinds[option]}
+              selected={kind === option}
+              onPress={() => setKind(option)}
+            />
+          ))}
+          <AppText variant="caption" color={theme.textSecondary} style={styles.replyingAs}>
+            {strings.replies.replyingAs}
+          </AppText>
+        </View>
+      )}
       <View style={[styles.field, { backgroundColor: theme.surface, borderColor: theme.border }]}>
         <TextInput
           value={body}
@@ -73,6 +96,7 @@ export function ReplyComposer({ onSend, sending, placeholder }: Props) {
           placeholder={hint}
           placeholderTextColor={theme.textSecondary}
           accessibilityLabel={hint}
+          autoFocus={Boolean(replyingTo)}
           style={[styles.input, typography.body, { color: theme.text }]}
         />
         <Pressable
@@ -104,6 +128,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
+  },
+  quote: {
+    flex: 1,
+    borderLeftWidth: 2,
+    paddingLeft: spacing.sm + 2,
   },
   replyingAs: {
     flex: 1,

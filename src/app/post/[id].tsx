@@ -11,7 +11,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { goBack } from '@/lib/nav';
-import { useCreateReply, usePost, useReplies } from '@/lib/posts';
+import { useCreateReply, usePost, useReplies, type ReplyCard as ReplyItem } from '@/lib/posts';
 import { useBlockScreenshots } from '@/lib/privacy';
 import { spacing } from '@/theme';
 
@@ -24,6 +24,7 @@ export default function PostDetailScreen() {
   const replies = useReplies(id);
   const createReply = useCreateReply(id);
   const [menu, setMenu] = useState<MenuTarget | null>(null);
+  const [answering, setAnswering] = useState<ReplyItem | null>(null);
 
   const card = post.data;
   const title = card?.kind === 'space_post' ? strings.spaces.postTitle : strings.confess.title;
@@ -60,22 +61,58 @@ export default function PostDetailScreen() {
               {strings.replies.title}
             </AppText>
             {replies.data?.length === 0 ? (
-              <AppText color={theme.textSecondary}>{strings.replies.empty}</AppText>
+              <AppText color={theme.textSecondary}>
+                {card.is_mine ? strings.replies.emptyMine : strings.replies.empty}
+              </AppText>
             ) : null}
-            {replies.data?.map((reply) => (
-              <ReplyCard
-                key={reply.id}
-                reply={reply}
-                onMenu={() => setMenu({ targetType: 'reply', id: reply.id, isMine: reply.is_mine })}
-              />
-            ))}
+            {(replies.data ?? [])
+              .filter((reply) => !reply.parent_id)
+              .map((reply) => (
+                <View key={reply.id} style={styles.thread}>
+                  <ReplyCard
+                    reply={reply}
+                    onMenu={() => setMenu({ targetType: 'reply', id: reply.id, isMine: reply.is_mine })}
+                    // Your own post: answer the people who replied.
+                    onReply={
+                      card.is_mine && card.status === 'published' && reply.status === 'approved' && !reply.is_mine
+                        ? () => setAnswering(reply)
+                        : undefined
+                    }
+                  />
+                  {(replies.data ?? [])
+                    .filter((child) => child.parent_id === reply.id)
+                    .map((child) => (
+                      <View key={child.id} style={[styles.child, { borderLeftColor: theme.border }]}>
+                        <ReplyCard
+                          reply={child}
+                          onMenu={() => setMenu({ targetType: 'reply', id: child.id, isMine: child.is_mine })}
+                        />
+                      </View>
+                    ))}
+                </View>
+              ))}
           </View>
         ) : null}
       </ScrollView>
 
-      {card?.status === 'published' ? (
+      {card?.status !== 'published' ? null : card.is_mine ? (
+        // On your own post there is nothing to send until you pick a reply to answer.
+        answering ? (
+          <ReplyComposer
+            key={answering.id}
+            replyingTo={answering.body}
+            onCancelReply={() => setAnswering(null)}
+            onSend={async (reply) => {
+              const result = await createReply.mutateAsync({ ...reply, parentId: answering.id });
+              setAnswering(null);
+              return result;
+            }}
+            sending={createReply.isPending}
+          />
+        ) : null
+      ) : (
         <ReplyComposer onSend={(reply) => createReply.mutateAsync(reply)} sending={createReply.isPending} />
-      ) : null}
+      )}
 
       <PostMenu target={menu} onClose={() => setMenu(null)} onBlocked={() => goBack('/post/')} />
     </KeyboardAvoidingView>
@@ -92,6 +129,14 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: spacing.md,
+  },
+  thread: {
+    gap: spacing.sm,
+  },
+  child: {
+    marginLeft: spacing.md,
+    paddingLeft: spacing.md,
+    borderLeftWidth: 2,
   },
   center: {
     textAlign: 'center',

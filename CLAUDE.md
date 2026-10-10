@@ -58,6 +58,9 @@ Expo imports that changed in SDK 57: `Tabs` from `expo-router/js-tabs`, `Stack` 
   featured_on and author_id are set by triggers. New tables need RLS, policies and explicit grants.
 - Blocking goes through `block_author(target_type, target_id)`; the app never handles a user id
   other than its own.
+- On your own post there is no reply box. Instead the author can answer each approved reply
+  (`replies.parent_id`, kind `response`, `0007_reply_threads.sql`); the insert trigger enforces that only
+  the post's author can, one level deep. `list_replies` adds `by_author` so others see "Posted this".
 - After changing any SQL, run `npm run test:db` and add a test for the new rule.
 
 ## Routing

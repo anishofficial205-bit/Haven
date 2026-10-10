@@ -143,6 +143,24 @@ ok('approved reply visible, no author fields', rr.length === 1 && !('author_id' 
 ok('advice sort finds it', (await q(`select * from feed_confessions(null, 'advice')`)).length === 1);
 ok('tag filter', (await q(`select * from feed_confessions('digital')`)).length === 1);
 
+console.log('\nanswering replies on your own post');
+const resp = (await q(`insert into replies (parent_id, kind, body) values ($1, 'advice', 'Thank you, that helped') returning post_id, kind, status`, [r1.id]))[0];
+ok('author can answer a reply; database sets post, kind and pending', resp.post_id === p1.id && resp.kind === 'response' && resp.status === 'pending');
+await denied('a response needs a parent', `insert into replies (post_id, kind, body) values ('${p1.id}', 'response', 'x')`);
+const pendingResp = (await q(`select id from replies where kind='response'`))[0].id;
+await denied('cannot answer a reply that is itself an answer', `insert into replies (parent_id, kind, body) values ('${pendingResp}', 'response', 'x')`);
+await as(C);
+await denied('someone else cannot answer replies on A\'s post', `insert into replies (parent_id, kind, body) values ('${r1.id}', 'response', 'x')`);
+await root();
+await db.exec(`update replies set status='approved' where kind='response'`);
+await as(B);
+const thread = await q(`select * from list_replies($1)`, [p1.id]);
+const answer = thread.find(r => r.kind === 'response');
+ok('answer is listed under its parent, marked by_author, no author fields', answer && answer.parent_id === r1.id && answer.by_author === true && !('author_id' in answer));
+ok('ordinary reply is not marked by_author', thread.find(r => r.id === r1.id).by_author === false);
+await root();
+await db.exec(`delete from replies where kind='response'`);
+
 console.log('\nspaces');
 await as(C);
 const sp = (await q(`select id from spaces where slug='family-pressure'`))[0].id;

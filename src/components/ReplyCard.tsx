@@ -1,4 +1,4 @@
-import { Ellipsis } from 'lucide-react-native';
+import { CornerDownRight, Ellipsis } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
@@ -14,10 +14,12 @@ import { spacing } from '@/theme';
 type Props = {
   reply: Reply;
   onMenu: () => void;
+  /** Shown to the post's author: answer this reply */
+  onReply?: () => void;
 };
 
 /** One reply. Its kind (Advice or Support) is a small label; a highlighted answer gets a yellow edge. */
-export function ReplyCard({ reply, onMenu }: Props) {
+export function ReplyCard({ reply, onMenu, onReply }: Props) {
   const theme = useTheme();
   const waiting = reply.status === 'pending';
   const removed = reply.status === 'rejected' || reply.status === 'hidden';
@@ -32,7 +34,7 @@ export function ReplyCard({ reply, onMenu }: Props) {
       <View style={styles.top}>
         <View style={styles.flex}>
           <AppText variant="label" numberOfLines={1}>
-            {reply.is_mine ? strings.help.you : strings.post.anonymous}
+            {reply.is_mine ? strings.help.you : reply.by_author ? strings.replies.fromAuthor : strings.post.anonymous}
             <AppText variant="caption" color={theme.textSecondary}>
               {'  '}
               {meta}
@@ -60,6 +62,12 @@ export function ReplyCard({ reply, onMenu }: Props) {
       ) : waiting ? null : (
         <ReactionBar targetType="reply" id={reply.id} counts={reply.reaction_counts} mine={reply.my_reaction} />
       )}
+      {onReply ? (
+        <Pressable onPress={onReply} accessibilityRole="button" hitSlop={8} style={styles.reply}>
+          <CornerDownRight size={16} color={theme.text} />
+          <AppText variant="label">{strings.replies.reply}</AppText>
+        </Pressable>
+      ) : null}
     </Card>
   );
 }
@@ -75,6 +83,13 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  reply: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    alignSelf: 'flex-start',
+    paddingVertical: 4,
   },
   menu: {
     width: 26,
