@@ -373,7 +373,11 @@ export const en = {
     helpShort: 'Helplines and people who listen.',
     continueTitle: 'Pick up where you left off',
     daily: 'Daily scenario',
-    ask: 'What do you need right now?',
+    // Two lines on purpose: the break is part of the design.
+    ask: 'What do you need\nright now?',
+    weekTitle: 'This week in Spaces',
+    confessionMeta: (reactions: number, replies: number) =>
+      `${reactions === 1 ? '1 reaction' : `${reactions} reactions`} · ${replies === 1 ? '1 reply' : `${replies} replies`}`,
     doors: {
       scenarios: 'Practise a hard moment',
       confess: 'Get it off your chest',
