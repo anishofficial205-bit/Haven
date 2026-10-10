@@ -15,6 +15,18 @@ export const DOMAIN_TAG: Record<Domain, Tag> = {
   college_work: 'college_work',
 };
 
+export type ArtKind = 'hug' | 'phone' | 'ask' | 'two' | 'work' | 'photo';
+const DOMAIN_ART: Record<Domain, ArtKind> = {
+  family: 'hug',
+  friends: 'two',
+  relationships: 'two',
+  digital: 'phone',
+  college_work: 'work',
+};
+export function artOf(scenario: Scenario): ArtKind {
+  return scenario.art ?? DOMAIN_ART[scenario.domain];
+}
+
 export type Choice = { label: string; consequence: string; expert_note: string; next: string };
 export type StoryNode = { text: string; choices: Choice[] };
 export type OutcomeNode = { outcome: true; title: string; text?: string; takeaway: string };
@@ -26,6 +38,8 @@ export type Scenario = {
   domain: Domain;
   hook: string;
   trigger_warnings: TriggerWarning[];
+  /** Which picture to show (src/components/ScenarioArt.tsx). Falls back to one for the domain. */
+  art?: ArtKind;
   /** First drafts stay marked until the designer and the expert have reviewed them */
   draft?: boolean;
   order?: number;

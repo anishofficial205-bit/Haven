@@ -4,6 +4,7 @@
   "domain": "family",
   "hook": "Your uncle insists on a hug. Everyone's watching.",
   "trigger_warnings": [],
+  "art": "hug",
   "draft": true,
   "order": 1,
   "start": "n1",

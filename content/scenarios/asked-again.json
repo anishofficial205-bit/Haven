@@ -4,6 +4,7 @@
   "domain": "relationships",
   "hook": "You said no on Tuesday. It's Thursday and he's asking again.",
   "trigger_warnings": [],
+  "art": "ask",
   "draft": true,
   "order": 3,
   "start": "n1",

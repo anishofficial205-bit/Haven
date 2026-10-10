@@ -4,6 +4,7 @@
   "domain": "digital",
   "hook": "Your 1 a.m. rant just landed in the hostel group.",
   "trigger_warnings": [],
+  "art": "phone",
   "draft": true,
   "order": 2,
   "start": "n1",

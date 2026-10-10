@@ -4,6 +4,7 @@
   "domain": "digital",
   "hook": "You're tagged in a photo you hate. 40 likes and counting.",
   "trigger_warnings": [],
+  "art": "photo",
   "draft": true,
   "order": 6,
   "start": "n1",

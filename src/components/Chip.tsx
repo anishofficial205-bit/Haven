@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
-import { radii, spacing } from '@/theme';
+import { radii, spacing, type Shades } from '@/theme';
 
 type Props = {
   label: string;
@@ -13,15 +13,18 @@ type Props = {
   tone?: 'default' | 'warning';
   /** How a selectable chip is announced: one of several, or on/off */
   role?: 'radio' | 'checkbox';
+  /** Inside one area of the app: selected fills with that area's pale shade, not yellow */
+  shades?: Shades;
 };
 
 /**
  * With onPress: a pill you can select, which turns yellow when chosen.
  * Without: a small quiet label (yellow if it is a warning).
  */
-export function Chip({ label, onPress, selected = false, tone = 'default', role = 'checkbox' }: Props) {
+export function Chip({ label, onPress, selected = false, tone = 'default', role = 'checkbox', shades }: Props) {
   const theme = useTheme();
   const warning = tone === 'warning';
+  const fill = shades?.[1] ?? theme.primary;
 
   if (!onPress) {
     return (
@@ -42,11 +45,11 @@ export function Chip({ label, onPress, selected = false, tone = 'default', role 
       style={[
         styles.pill,
         {
-          backgroundColor: selected ? theme.primary : 'transparent',
-          borderColor: selected ? theme.primary : 'rgba(255, 255, 255, 0.55)',
+          backgroundColor: selected ? fill : 'transparent',
+          borderColor: selected ? fill : (shades?.[5] ?? 'rgba(255, 255, 255, 0.55)'),
         },
       ]}>
-      <AppText variant="label" color={selected ? theme.onPrimary : theme.text}>
+      <AppText variant="label" color={selected ? (shades?.[7] ?? theme.onPrimary) : (shades?.[1] ?? theme.text)}>
         {label}
       </AppText>
     </Pressable>

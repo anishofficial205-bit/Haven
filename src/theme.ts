@@ -22,6 +22,20 @@ export const glows: Record<GlowTone, readonly [string, string, string]> = {
   orange: ['#FFC56E', '#CF5A12', '#4A1803'],
 };
 
+/**
+ * Nine steps of each colour, palest (0) to near-black (8). Inside an area, build
+ * everything out of that area's shades: pale for text and selected chips, the
+ * middle for fills, the deep end for panels and their rims.
+ */
+export type Shades = readonly [string, string, string, string, string, string, string, string, string];
+export const shades: Record<GlowTone, Shades> = {
+  lilac: ['#F1EBFF', '#DCCFFF', '#C2ADFF', '#A085F5', '#7A55E6', '#5A36C4', '#3A1F8C', '#1F1052', '#120A2E'],
+  pink: ['#FFEAF5', '#FFCDE6', '#FFA6D5', '#F573B7', '#DB3D92', '#B81469', '#7D0C47', '#4D062B', '#2B0418'],
+  peri: ['#ECEFFF', '#D2DAFF', '#A9B8FF', '#7F92F5', '#536AE0', '#3148C8', '#1F2F94', '#0C1760', '#080E36'],
+  mint: ['#E8FFF5', '#C5F8E2', '#9AF0CC', '#5FD6A8', '#2BB088', '#17876A', '#0E5C49', '#06342A', '#041F19'],
+  orange: ['#FFF1DC', '#FFDFB0', '#FFC56E', '#FFA23F', '#EE7A1C', '#CF5A12', '#8C3A09', '#4A1803', '#2A0E02'],
+};
+
 export type Feature = 'scenarios' | 'confess' | 'spaces' | 'help' | 'profile';
 
 /** One colour per area of the app. Change an area's colour here and it changes everywhere. */

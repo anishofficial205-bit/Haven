@@ -13,6 +13,8 @@ Full spec: `docs/SPEC.md`. Read it before changing anything. Expo-specific rules
   (`variant="numeral"`); electric yellow (`theme.primary`) means selected or the main action only.
   One colour per area via `FEATURE_TONE` in `src/theme.ts`: scenarios lilac, confess pink, spaces
   periwinkle, help mint, profile orange. Home uses all five. Use the area's tone for any new Glow.
+  Inside an area, build panels, rims, chips and text out of that colour's nine `shades` (src/theme.ts);
+  Scenarios is the first screen done this way (picture hero + picture pills, `ScenarioArt`).
   Approved mockups: https://claude.ai/artifact/MmkAevChtn62VdSL1h4pxq and
   https://claude.ai/artifact/5PxDfxQRBMPEr4FfrNSdt4 (variation 1).
 - Backend: Supabase (Postgres, Auth, RLS). SQL in `supabase/migrations/`.

@@ -4,6 +4,7 @@
   "domain": "college_work",
   "hook": "You said no to dinner. Now he's gone cold.",
   "trigger_warnings": [],
+  "art": "work",
   "draft": true,
   "order": 5,
   "start": "n1",
