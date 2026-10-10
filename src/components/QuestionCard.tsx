@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Glow } from '@/components/Glow';
-import { Orb } from '@/components/Objects';
+import { Mascot } from '@/components/Mascot';
 import { useTheme } from '@/hooks/useTheme';
 import { strings } from '@/i18n/en';
 import { useQuestionReplies, type WeeklyQuestion } from '@/lib/spaces';
@@ -28,7 +28,7 @@ export function QuestionCard({ question, spaceName, tall }: Props) {
       accessibilityLabel={`${question.question}. ${strings.spaces.answerThis}`}
       onPress={() => router.push({ pathname: '/question/[id]', params: { id: question.id } })}>
       <View style={styles.orb}>
-        <Orb size={tall ? 58 : 70} />
+        <Mascot feature="spaces" size={tall ? 58 : 72} />
       </View>
       <AppText variant="strip" style={styles.eyebrow}>
         {[strings.spaces.thisWeek, spaceName].filter(Boolean).join(' · ').toUpperCase()}
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   },
   orb: {
     position: 'absolute',
-    right: -14,
-    top: -16,
+    right: -10,
+    top: -10,
   },
   eyebrow: {
     paddingRight: 56,

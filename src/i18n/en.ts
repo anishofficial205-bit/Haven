@@ -373,6 +373,17 @@ export const en = {
     helpShort: 'Helplines and people who listen.',
     continueTitle: 'Pick up where you left off',
     daily: 'Daily scenario',
+    ask: 'What do you need right now?',
+    doors: {
+      scenarios: 'Practise a hard moment',
+      confess: 'Get it off your chest',
+      spaces: 'Talk with people who get it',
+      help: 'Talk to someone now',
+    },
+    today: (title: string) => `Today: ${title}`,
+    continueWith: (title: string) => `Carry on: ${title}`,
+    weekInSpaces: (answers: number) =>
+      `This week in Spaces · ${answers === 1 ? '1 answer' : `${answers} answers`}`,
     forYou: 'For you',
     sayIt: 'Say it',
     you: 'You',

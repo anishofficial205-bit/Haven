@@ -2,8 +2,9 @@ import type { LucideIcon } from 'lucide-react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppText } from '@/components/AppText';
 import { useTheme } from '@/hooks/useTheme';
-import { radii, spacing } from '@/theme';
+import { spacing } from '@/theme';
 
 export type TabItem = { name: string; label: string; icon: LucideIcon };
 
@@ -14,7 +15,10 @@ type Props = {
   onSelect: (name: string) => void;
 };
 
-/** The bottom bar: a dark capsule of icons. The tab you're on is a yellow disc. */
+/**
+ * The bottom bar: a dark capsule with an icon and a name for each section.
+ * The one you're on is filled yellow.
+ */
 export function TabBar({ tabs, active, onSelect }: Props) {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -23,6 +27,7 @@ export function TabBar({ tabs, active, onSelect }: Props) {
       <View accessibilityRole="tablist" style={[styles.bar, { borderColor: 'rgba(255, 255, 255, 0.16)' }]}>
         {tabs.map(({ name, label, icon: Icon }) => {
           const selected = name === active;
+          const color = selected ? theme.onPrimary : '#A9A9B6';
           return (
             <Pressable
               key={name}
@@ -31,7 +36,10 @@ export function TabBar({ tabs, active, onSelect }: Props) {
               accessibilityLabel={label}
               accessibilityState={{ selected }}
               style={[styles.tab, selected && { backgroundColor: theme.primary }]}>
-              <Icon size={20} strokeWidth={2} color={selected ? theme.onPrimary : '#A9A9B6'} />
+              <Icon size={19} strokeWidth={2} color={color} />
+              <AppText variant="caption" color={color} numberOfLines={1} style={[styles.label, selected && styles.labelOn]}>
+                {label}
+              </AppText>
             </Pressable>
           );
         })}
@@ -42,24 +50,33 @@ export function TabBar({ tabs, active, onSelect }: Props) {
 
 const styles = StyleSheet.create({
   wrap: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
   },
   bar: {
-    height: 58,
+    height: 64,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 2,
     paddingHorizontal: 6,
-    borderRadius: radii.pill,
+    borderRadius: 28,
     borderWidth: 1,
     backgroundColor: 'rgba(22, 22, 26, 0.96)',
   },
   tab: {
-    width: 46,
-    height: 46,
-    borderRadius: radii.pill,
+    flex: 1,
+    height: 52,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 2,
+  },
+  label: {
+    fontSize: 10,
+    lineHeight: 13,
+    fontFamily: 'Poppins_500Medium',
+  },
+  labelOn: {
+    fontFamily: 'Poppins_600SemiBold',
   },
 });
