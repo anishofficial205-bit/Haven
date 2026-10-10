@@ -70,6 +70,10 @@ Call `useBlockScreenshots()` (src/lib/privacy.ts) on confession detail and help 
 
 ## Posts
 
+Confess (`src/app/(tabs)/confess.tsx`) has two modes: Read, a deck of other people's confessions swiped
+one card at a time (left = next, right = back), and My confessions, your own posts with the newest reply.
+Topic and sort filters sit behind the filter button. Built from the pink `shades`.
+
 `src/lib/posts.ts` holds every query and mutation for posts, replies, reactions, reports, blocks
 and saves. `PostCard`, `ReplyCard`, `ReactionBar` and `PostMenu` are shared by confessions and
 (phase 7) spaces. Posts with trigger warnings render placeholder lines, never the real text, until

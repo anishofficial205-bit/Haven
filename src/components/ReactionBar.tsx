@@ -8,7 +8,7 @@ import { REACTIONS, useReact, type Reaction, type TargetType } from '@/lib/posts
 import { radii, spacing } from '@/theme';
 
 /** Drawn in the app's own line style, so they look the same on every phone. */
-const ICONS: Record<Reaction, LucideIcon> = {
+export const REACTION_ICONS: Record<Reaction, LucideIcon> = {
   with_you: Handshake,
   hug: HeartHandshake,
   love: Heart,
@@ -35,7 +35,7 @@ export function ReactionBar({ targetType, id, counts, mine, showLabels, disabled
     <View style={styles.row}>
       {REACTIONS.map((key) => {
         const { label } = strings.reactions[key];
-        const Icon = ICONS[key];
+        const Icon = REACTION_ICONS[key];
         const count = counts[key] ?? 0;
         const selected = mine === key;
         const color = selected ? theme.onPrimary : '#D5D5DF';

@@ -16,7 +16,7 @@ type Props = {
   onMenu: () => void;
 };
 
-/** One reply. Its kind (Advice or Solidarity) is a small label; a highlighted answer gets a yellow edge. */
+/** One reply. Its kind (Advice or Support) is a small label; a highlighted answer gets a yellow edge. */
 export function ReplyCard({ reply, onMenu }: Props) {
   const theme = useTheme();
   const waiting = reply.status === 'pending';

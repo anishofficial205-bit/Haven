@@ -317,7 +317,7 @@ export const en = {
     empty: 'No replies yet. A kind word goes a long way.',
     kinds: {
       advice: 'Advice',
-      solidarity: 'Solidarity',
+      solidarity: 'Support',
     },
     kindLabel: 'What kind of reply is this?',
     placeholder: {
@@ -451,6 +451,26 @@ export const en = {
 
   confess: {
     title: 'Confess',
+    modes: { read: 'Read', mine: 'My confessions' },
+    modeLabel: 'What to show',
+    filter: 'Filter',
+    filterTitle: 'Show me',
+    topicLabel: 'Topic',
+    replyBar: 'Send support or advice',
+    replyTitle: 'Reply',
+    swipeHint: 'Swipe left for the next one',
+    counter: (current: number, total: number) => `${String(current).padStart(2, '0')}/${String(total).padStart(2, '0')}`,
+    next: 'Next confession',
+    previous: 'Previous confession',
+    cardMeta: (topic: string, replies: string) => (topic ? `${topic} · ${replies}` : replies),
+    endTitle: "That's all of them for now",
+    endBody: 'New confessions show up here as people post them.',
+    startAgain: 'Start again',
+    you: 'You',
+    newest: (kind: string) => `Newest · ${kind}`,
+    noRepliesYet: 'No replies yet',
+    mineEmpty: "You haven't confessed anything yet. Whatever you write is posted as Anonymous.",
+    reactionsTotal: (count: number) => (count === 1 ? '1 reaction' : `${count} reactions`),
     placeholder: 'Say the thing you could never say out loud. Always posted as Anonymous.',
   },
 
