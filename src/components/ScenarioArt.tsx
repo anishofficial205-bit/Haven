@@ -10,8 +10,8 @@ const INK = '#0C0C0C';
 
 type Props = {
   kind: ArtKind;
-  /** 'round' fills a circle on a pill; 'wide' sits the drawing in the top right of a hero */
-  frame?: 'round' | 'wide';
+  /** 'round' fills a circle on a pill; 'wide' sits the drawing in the top right of a hero; 'scene' stands it at the bottom of a tall picture */
+  frame?: 'round' | 'wide' | 'scene';
   style?: StyleProp<ViewStyle>;
 };
 
@@ -49,8 +49,8 @@ export function ScenarioArt({ kind, frame = 'round', style }: Props) {
       <Svg
         width="100%"
         height="100%"
-        viewBox={frame === 'wide' ? '-100 -6 220 137' : '0 0 100 100'}
-        preserveAspectRatio="xMidYMid slice">
+        viewBox={frame === 'wide' ? '-100 -6 220 137' : frame === 'scene' ? '-12 -46 124 140' : '0 0 100 100'}
+        preserveAspectRatio={frame === 'scene' ? 'xMidYMax slice' : 'xMidYMid slice'}>
         <Defs>
           <LinearGradient id={`${id}b`} x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor={L[2]} />

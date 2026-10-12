@@ -437,6 +437,8 @@ export const en = {
     resume: 'Go on',
     again: 'Play again',
     step: 'Step',
+    scene: (current: number, total: number) => `Scene ${current} of ${total}`,
+    theEnd: 'The end',
     statMinutes: 'min',
     statChoices: 'choices',
     statEndings: 'endings',

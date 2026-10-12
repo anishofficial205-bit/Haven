@@ -6,7 +6,7 @@ import { strings } from '@/i18n/en';
 import { radii, spacing } from '@/theme';
 
 // "Mom: Why are you being so stiff?" -> a speech bubble from Mom.
-const DIALOGUE = /^([A-Z][A-Za-z .']{0,24}): (.+)$/;
+export const DIALOGUE = /^([A-Z][A-Za-z .']{0,24}): (.+)$/;
 
 /**
  * Renders scenario text as a chat-like story. Each line of the JSON text is
